@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf8">
+	<title></title>
+	<meta charset="utf-8">
+	<script src="https://d3js.org/d3.v6.min.js"></script>
+	<style>
+		svg { border:1px; background-color: white; text-align:left; }
+		path { fill:white; stroke:black; stroke-width:0.25; }
+		h1,p { padding: 6px; text-align: center; }
+		.tooltip { 
+			position:absolute;
+			pointer-events: none;
+			padding: 5px 12px 10px;
+			background: #fff;
+			-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+			-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+			border-radius: 5px;
+			color : #666;
+			z-index:9999;
+		}
+	</style>
+  </head>
+  <body>
+    <h1>大阪市城東区ごみ収集時間マップ</h1>
+	  <p>町丁目をクリックするとごみ収集時刻が表示されます。</p>
+	<script>
+	//変数初期化
+	var geojsonfile = "joto.geojson";
+	//描画エリア
+	var width=window.innerWidth;
+	var height=window.innerHeight;
+	//svg
+	var svg=d3.select("body").append("svg").attr("width", width).attr("height", height);
+	//町丁目名、時刻を表示するツールチップを設定（コメントアウト分はSVGは改行できないので２つ作成する場合）
+	var tooltip = d3.select("body").append("div").attr("class", "tooltip");
+	//var tooltip2 = d3.select("body").append("div").attr("class", "tooltip");
+	//geojson読み込み
+	d3.json(geojsonfile).then(function(json){
+		//描画レスポンシブ対応 中心と移動も画面サイズで自動調整
+		var projection = d3.geoMercator()
+	    .fitExtent([[0, 0],[width, height-100]], json);
+		//path設定
+		var path = d3.geoPath(projection);
+		//描画、マウス反応
+		svg.append("g").selectAll("path")
+		    .data(json.features)
+			.enter()
+			.append("path")
+			.attr("d", path)
+			.style("fill", function(d,i){
+				if(d.properties.JINKO=="0"){
+					return "#EEEEEE";
+				}
+				return "#CEF6CE";
+			})
+			.on('click', function(event,d){
+				alert(d.properties.S_NAME+"【人口"+d.properties.JINKO+"人】")
+			})
+			.on('mouseover', function(event,d){
+				d3.select(this)
+				.style("fill","pink");
+				//町丁目名、情報をinfowindowに表示
+				var info = d.properties.S_NAME + "【人口" + d.properties.JINKO + "人】";
+				//var info2 = "人口:" + d.properties.JINKO + "人";
+				tooltip.style("font-size", "3vw")
+				       .style("left", (event.pageX)+"px")
+					   .style("top", (event.pageY)+"px")
+					   .style("visibility", "visible")
+					   .text(info);
+				/*tooltip2.style("font-size", "3vw")
+				       .style("left", (event.pageX)+"px")
+					   .style("top", (event.pageY+60)+"px")
+					   .style("visibility", "visible")
+					   .text(info2);*/
+			})
+			.on('mouseout', function(d,i){
+				d3.select(this)
+				.style("fill", function(d,i){
+					if(d.properties.JINKO=="0"){
+						return "#298A08";
+					}
+					return "#CEF6CE";
+				})
+			})
+	});
+	</script>
+  </body>
+</html>

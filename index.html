@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<meta http-equiv="content-language" content="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,user-scalable=yes">
+<link rel="stylesheet" href="style1.css">
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<style>
+	h1,p { padding: 5px; text-align: center; }
+	svg { background-color:#fff;}
+	path { fill:white; stroke:black; stroke-width:0.25;}
+	.tip {
+		position:absolute;
+		top:0px;
+		left:0px;
+		z-index:9999;
+		visibility:hidden;
+		background-color:white;
+		overflow:hidden;
+		text-align:center;
+		font-size:20pt;
+		font-family:Tahoma,Optima,Helvetica;
+		color:black;
+	}
+</style>
+</head>
+<body>
+	<h1>大阪市ごみ収集時間マップ</h1>
+	<p>お住いの区をクリックしてください</p> 
+	<div id="map"></div>
+<script type="text/javascript">
+	var g;
+	var width  = window.innerWidth;
+	var height = window.innerHeight;
+	//scaleはスクリーンの大きさによって変更
+	var scale;
+	//svg要素を作成し、データの受け皿となるg要素を追加している
+	map = d3.select('#map')
+		.append('svg')
+		.attr('width', width)
+		.attr('height', height)
+		.append('g');
+	//同じディレクトリにあるgeojsonファイルをhttp経由で読み込む
+	d3.json("ku.json", function(json) {
+		var projection,path;
+		//ツールチップを生成
+		var tooltip=d3.select("body").append("div").attr("class", "tip")
+		// 投影を処理する関数を用意する。データからSVGのPATHに変換するため。
+		//その前に、スケールを計算。PCはブラウザが横長だからwidthをベースに計算、でもスマホはブラウザが縦長だからheightをベースに計算する。
+		if (width > height){
+			scale = width * 100;
+		} else {
+			scale = height * 150;
+		}
+		projection = d3.geo.mercator()
+				.scale(scale)
+				.center(d3.geo.centroid(json))  // データから中心点を計算 .center(d3.geo.centroid(json))
+				.translate([width/2, height/2-100]);
+		// pathジェネレータ関数
+		path = d3.geo.path().projection(projection);
+		// これがenterしたデータ毎に呼び出されpath要素のd属性にgeoJSONデータから変換した値を入れる
+		map.selectAll('path')
+		   .data(json.features)
+		   .enter()
+		   .append('path')
+		   .attr('d', path)
+		   .style("fill", function(d){ return d.properties.N03_002; })
+		   .attr("fill", function(d){
+			// 適当に色を塗るなど
+			return "hsl(0,0%,80%)";
+			})
+		   .attr("stroke","white" )
+		   .on('mouseover', function(d){
+			// mouseoverの時のインタラクション
+			d3.select(this).style("fill", "red");
+			//ツールチップを表示
+			var name=d.properties.N03_004;
+			tooltip.style("font-size", "4vw")
+				.style("left", width/2+"px")
+				.style("top", "15%")
+				.style("visibility", "visible")
+				.text(name)
+		   })
+		   .on('mouseout', function(d){
+			var color2=d.properties.N03_002;
+			d3.select(this).style("fill", color2);
+			tooltip.style("visibility", "hidden")
+		   })
+		   .on('click', function(d) {
+			// clickされた時のインタラクション
+			if(d.properties.N03_001!=""){
+				  window.location.href=d.properties.N03_001;
+		   	}
+		   });
+		//区名表示ラベル追加
+		var xhr = new XMLHttpRequest();
+		xhr.onload = function(){
+			var tempArray = xhr.responseText.split("\n");
+			csvArray = new Array();
+			for(var i=0;i<tempArray.length;i++){
+				csvArray[i] = tempArray[i].split(",");
+				var data = csvArray[i];
+				var lonlat = [data[0], data[1]];
+				var xy = projection(lonlat);
+				//区名ラベル
+				map.append("text")
+				   .attr({
+					x: xy[0]-20,
+					y: xy[1]
+				    })
+				   .style("font-size", "10pt")
+				   .style("font-weight", "bold")
+				   .style("font-family", "ヒラギノ角ゴ Pro W3, Hiragino Kaku Gothic Pro, Osaka, ＭＳ Ｐゴシック, MS PGothic, sans-serif")
+				   .text(data[2]);
+			}
+		};
+		xhr.open("get", "ku_center.csv", true);
+		xhr.send(null);
+	});
+</script>
+</body>
