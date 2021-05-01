@@ -7,7 +7,8 @@
 <link rel="stylesheet" href="style1.css">
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <style>
-	h1,p { padding: 5px; text-align: center; }
+	body { font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif; }
+	h1,h2,p { padding: 5px; text-align: center; }
 	svg { background-color:#fff;}
 	path { fill:white; stroke:black; stroke-width:0.25;}
 	.tip {
@@ -26,7 +27,7 @@
 </style>
 </head>
 <body>
-	<h1>大阪市ごみ収集時間マップ</h1>
+	<h2>大阪市ごみ収集時間マップ</h2>
 	<p>お住いの区をクリックしてください</p> 
 	<div id="map"></div>
 <script type="text/javascript">
@@ -74,13 +75,13 @@
 		   .on('mouseover', function(d){
 			// mouseoverの時のインタラクション
 			d3.select(this).style("fill", "red");
-			//ツールチップを表示
+			/*//ツールチップを表示
 			var name=d.properties.N03_004;
 			tooltip.style("font-size", "4vw")
 				.style("left", width/2+"px")
 				.style("top", "15%")
 				.style("visibility", "visible")
-				.text(name)
+				.text(name)*/
 		   })
 		   .on('mouseout', function(d){
 			var color2=d.properties.N03_002;
@@ -111,7 +112,6 @@
 				    })
 				   .style("font-size", "10pt")
 				   .style("font-weight", "bold")
-				   .style("font-family", "ヒラギノ角ゴ Pro W3, Hiragino Kaku Gothic Pro, Osaka, ＭＳ Ｐゴシック, MS PGothic, sans-serif")
 				   .text(data[2]);
 			}
 		};
