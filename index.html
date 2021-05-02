@@ -4,7 +4,6 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,user-scalable=yes">
-<link rel="stylesheet" href="style1.css">
 <script src="https://d3js.org/d3.v3.min.js"></script>
 <style>
 	body { font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif; }
@@ -91,7 +90,7 @@
 		   .on('click', function(d) {
 			// clickされた時のインタラクション
 			if(d.properties.N03_001!=""){
-				  window.location.href=d.properties.N03_001;
+				  window.location.href="trashmap.html?ku="+d.properties.N03_004+"&file="+d.properties.N03_001;
 		   	}
 		   });
 		//区名表示ラベル追加
