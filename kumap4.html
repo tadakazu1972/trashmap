@@ -464,8 +464,8 @@
 				d3.select(this)
 				.style("fill","pink");
 				//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
-				var posX = event.pageX > innerWidth/2 ? event.pageX - 300 : event.pageX+20;
-				var posY = event.pageY > innerHeight/2 ? event.pageY -200 : event.pageY;
+				var posX = event.pageX > innerWidth/2 ? event.pageX - 320 : event.pageX+20;
+				var posY = event.pageY > innerHeight/2 ? event.pageY -80 : event.pageY;
 				
 				//町丁目名、情報をtooltipに表示
 				//マウスオーバーしているgeojsonの町丁目名と等しい町丁目名のレコードをcsvdataから検索する
