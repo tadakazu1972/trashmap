@@ -295,6 +295,8 @@
 						var $chome = '</ul></li><li>'+element.丁目+'<ul>';
 					}
 				}
+			} else if (isNextTown){
+				var $chome = '<li>'+element.丁目+'<ul>';
 			} else {
 				var $chome = "";
 			}
@@ -472,7 +474,9 @@
 				//filterで町丁目名一致を返すと、男、女、計の３つ配列を返す
 				//よって、[2]として計を読み込む
 				result = csvdata.filter(function (v) {
-					return v.町名+v.丁目 === d.properties.S_NAME;
+					//丁目にすべてが入っている場合はそのまま足すとgeojsonと一致しないので""にする
+					var v_chome = v.丁目 != "すべて" ? v.丁目 : "";
+					return v.町名+v_chome === d.properties.S_NAME;
 				});
 				//console.log(result);
 				var length = result.length;
@@ -490,6 +494,7 @@
 				//infowindow描画
 				//街区があるときはinfowindowのpointer-eventsをオンにする
 				//infowindow.style("pointer-events", "auto");
+				if (result[0].丁目==="すべて"){ result[0].丁目="";}
 				info[0] = result[0].町名+result[0].丁目; //とりあえずヒットした先頭の町名を選択
 				tooltip[0].style("font-weight", "bold")
 				        .style("font-size", fontSize)
@@ -524,6 +529,7 @@
 							infowindow2.style("left", (centerX-20)+"px")
 									   .style("opacity", "1");
 							//町名
+							if (info2[index].chome==="すべて"){ info2[index].chome="" }
 							tooltip2[0].style("font-size", fontSize)
 										.style("font-weight", "bold")
 										.style("left", (centerX)+"px")
