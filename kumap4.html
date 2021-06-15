@@ -459,13 +459,11 @@
 				}
 				return "#CEF6CE";
 			})
-			.on('click', function(d){
-				//alert(Object.keys(csvdata[0]));
-				//alert(csvdata[0]["町丁目名"]);
-				//const result = csvdata.find((v) => v.町丁目名 === d.properties.S_NAME);
-				//alert(result.町丁目名);
-			})
 			.on('mouseover', function(d){
+				d3.select(this)
+				.style("fill","pink");
+			})
+			.on('click', function(d){
 				d3.select(this)
 				.style("fill","pink");
 				//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
@@ -487,7 +485,8 @@
 				infowindow.style("height", (length*30+30)+"px")
 						  .style("left", (posX)+"px")
 				          .style("top",  (posY)+"px")
-						  .style("display", "block");
+						  .style("display", "block")
+						  .style("opacity", "1");
 				//console.log(length);
 				//行数が１行しか無い場合の処理
 				/*
@@ -503,6 +502,8 @@
 				        .style("font-size", fontSize)
 				        .style("left", (posX)+"px")
 					    .style("top",  (posY)+"px")
+						.style("opacity", "1")
+						.style("pointer-events", "auto")
 					    .text(info[0]);
 				//街区 備考欄 描画
 				for (var i=0; i<length; i++){
@@ -512,6 +513,8 @@
 					tooltip[i+1].style("font-size", fontSize)
 				        .style("left", (posX)+"px")
 					    .style("top",  (posY+(i+1)*30)+"px")
+						.style("opacity", "1")
+						.style("pointer-events", "auto")
 						.datum(i) //tooltipにインデックスをデータとしてバインディング。後でクリックしたときに配列result判別用
 					    .text(info[i+1])
 						.on('mouseover', function(d){
@@ -576,12 +579,14 @@
 										.style("top", "436px")
 										.text("閉じる")
 										.on('click', function(){
-											d3.selectAll(".tooltip2").style("opacity", "0")
+											d3.selectAll(".infowindow").style("opacity", "0").style("pointer-events", "none");
+											d3.selectAll(".tooltip").style("opacity", "0").style("pointer-events", "none");
+											d3.selectAll(".tooltip2").style("opacity", "0").style("pointer-events", "none");
 											d3.selectAll(".infowindow2")
-											  .style("pointer-events", "none")
 											  .style("opacity", "0")
+											  .style("pointer-events", "none");
 											d3.select(this).style("opacity", "0")
-											  .style("pointer-events", "none")
+											  .style("pointer-events", "none");
 										})
 						})
 				}
