@@ -470,30 +470,13 @@
 					//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
 				var posX0 = event.pageX > innerWidth/2 ? event.pageX : event.pageX;
 				var posY0 = event.pageY > innerHeight/2 ? event.pageY : event.pageY;
-				//町丁目名をtooltip0に表示
-				//マウスオーバーしているgeojsonの町丁目名と等しい町丁目名のレコードをcsvdataから検索する
-				//filterで町丁目名一致を返すと、男、女、計の３つ配列を返す
-				//よって、[2]として計を読み込む
-				result = csvdata.filter(function (v) {
-					//丁目にすべてが入っている場合はそのまま足すとgeojsonと一致しないので""にする
-					var v_chome = v.丁目 != "すべて" ? v.丁目 : "";
-					return v.町名+v_chome === d.properties.S_NAME;
-				});
-				//console.log(result);
-				var length = result.length;
-				//infowindow描画
-				//街区があるときはinfowindowのpointer-eventsをオンにする
-				//infowindow.style("pointer-events", "auto");
-				if (result[0].丁目==="すべて"){ result[0].丁目="";}
-				info[0] = result[0].町名+result[0].丁目; //とりあえずヒットした先頭の町名を選択
 				tooltip0.style("font-weight", "bold")
 				        .style("font-size", fontSize)
 				        .style("left", (posX0)+"px")
 					    .style("top",  (posY0)+"px")
 						.style("opacity", "1")
 						.style("pointer-events", "none")
-					    .text(info[0]);
-
+					    .text(d.properties.S_NAME); //geojsonの丁目名
 				}
 			})
 			.on('click', function(d){
