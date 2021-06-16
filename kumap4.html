@@ -363,6 +363,10 @@
 	var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
 	var projection;
 	//町丁目名を表示するツールチップを設定（コメントアウト分はSVGは改行できない）
+	var tooltip0 = ""; // mouseoverの時の丁目名表示用
+	var isInfowindowOpen = false; //infowindowsが表示されるとtooltip0は表示しないフラグ
+	tooltip0 = d3.select("body").append("div").attr("class", "tooltip").style("pointer-events", "none");
+	//click時に街区（備考欄）の表示用
 	//生野区勝山北2丁目は40個を超えるので50枠を用意しておく。
 	var tooltip = [];
 	var info = []; //tooltipに表示する文字列格納用変数
@@ -462,10 +466,41 @@
 			.on('mouseover', function(d){
 				d3.select(this)
 				.style("fill","pink");
+				if (!isInfowindowOpen){
+					//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
+				var posX0 = event.pageX > innerWidth/2 ? event.pageX : event.pageX;
+				var posY0 = event.pageY > innerHeight/2 ? event.pageY : event.pageY;
+				//町丁目名をtooltip0に表示
+				//マウスオーバーしているgeojsonの町丁目名と等しい町丁目名のレコードをcsvdataから検索する
+				//filterで町丁目名一致を返すと、男、女、計の３つ配列を返す
+				//よって、[2]として計を読み込む
+				result = csvdata.filter(function (v) {
+					//丁目にすべてが入っている場合はそのまま足すとgeojsonと一致しないので""にする
+					var v_chome = v.丁目 != "すべて" ? v.丁目 : "";
+					return v.町名+v_chome === d.properties.S_NAME;
+				});
+				//console.log(result);
+				var length = result.length;
+				//infowindow描画
+				//街区があるときはinfowindowのpointer-eventsをオンにする
+				//infowindow.style("pointer-events", "auto");
+				if (result[0].丁目==="すべて"){ result[0].丁目="";}
+				info[0] = result[0].町名+result[0].丁目; //とりあえずヒットした先頭の町名を選択
+				tooltip0.style("font-weight", "bold")
+				        .style("font-size", fontSize)
+				        .style("left", (posX0)+"px")
+					    .style("top",  (posY0)+"px")
+						.style("opacity", "1")
+						.style("pointer-events", "none")
+					    .text(info[0]);
+
+				}
 			})
 			.on('click', function(d){
 				d3.select(this)
 				.style("fill","pink");
+				//mouseover丁目名非表示
+				tooltip0.style("opacity", "0");
 				//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
 				var posX = event.pageX > innerWidth/2 ? event.pageX - 320 : event.pageX+20;
 				var posY = event.pageY > innerHeight/2 ? event.pageY -80 : event.pageY;
@@ -487,6 +522,8 @@
 				          .style("top",  (posY)+"px")
 						  .style("display", "block")
 						  .style("opacity", "1");
+				//isInfowindowOpenフラグオン
+				isInfowindowOpen = true;
 				//console.log(length);
 				//行数が１行しか無い場合の処理
 				/*
@@ -587,6 +624,8 @@
 											  .style("pointer-events", "none");
 											d3.select(this).style("opacity", "0")
 											  .style("pointer-events", "none");
+											//isInfowindowOpenフラグオフ
+											isInfowindowOpen = false;
 										})
 						})
 				}
