@@ -86,7 +86,7 @@
 			z-index:9999;
 		}
 		.label { position:absolute; pointer-events: none; font-size: 8px; color: black; }
-		.check { font-size:x-large; position: fixed; top: 17%; right:7%; border: 2px solid red; z-index:9999; }
+		.check { font-size:x-large; position: fixed; top: 150px; right:7%; border: 2px solid red; z-index:9999; }
 		.checkMap { font-size:x-large; position: fixed; top: 100px; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 		.station { pointer-events: none; }
 		/* アコーディオン */
@@ -222,13 +222,13 @@
   </head>
   <body>
 	<h1><div id="kuname"></div></h1>
-	<p>町丁目をタップするとごみ収集曜日が表示されます</p>
+	<h2>町丁目をクリックするとごみ収集曜日が表示されます</h2>
 	<p>大阪市ホームページ　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000370521.html">ごみの収集曜日一覧</a>
 	<div class="summary">
 		<p><div id="kuname2"></div></p>
 	</div>
 	<div id="accordion" style="float:left; width:100%"></div>
-	<button class="checkMap" onclick="displayMap()">地図　表示</button>
+	<button class="checkMap" onClick="displayMap()">地図　表示</button>
 	<script>
 	//
 	//-----第１段階　トップページでクリックした区の区名とcsv,geojsonのファイル名
@@ -248,7 +248,7 @@
 	var ku = decodeURIComponent(key["ku"]);
 	var file = decodeURIComponent(key["file"]);
 	//トップページからクリックで引き継いだ区名をidタグkunameに表示する処理
-	document.getElementById("kuname").innerHTML = ku + "　町丁目　ごみ収集曜日";
+	document.getElementById("kuname").innerHTML = ku + "　町丁目マップ";
 	//
 	//-----第２段階　町丁目ごとにデータを格納したCSV読み込み
 	//変数初期化
@@ -336,8 +336,15 @@
 				$paper = '<li>古紙衣類：'+element.古紙衣類_午前+"（午前）"+'</li>';
 			} else if (element.古紙衣類_午後 != ""){
 				$paper = '<li>古紙衣類：'+element.古紙衣類_午後+"（午後）"+'</li>';
+			} else if (element.古紙衣類_コミュニティ回収実施地域 != ""){
+				$paper = '<li>古紙衣類（コミュニティ回収）：'+element.古紙衣類_コミュニティ回収実施地域+'</li>';
 			}
-			var $gaiku = '<li>'+element.備考+'<ul class="content">'+ $normal + $res + $pla + $paper + '</ul></li>';
+			//ペットボトル　コミュニティ回収
+			var $pet = '';
+			if (element.ペットボトル_コミュニティ回収実施地域 != ""){
+				$pet = '<li>ペットボトル(コミュニティ回収)：'+element.ペットボトル_コミュニティ回収実施地域+'</li>';
+			}
+			var $gaiku = '<li>'+element.備考+'<ul class="content">'+ $normal + $res + $pla + $paper + $pet + '</ul></li>';
 			//console.log($gaiku);
 			//ため込む
 			str = str + $town + $chome + $gaiku;			
@@ -361,6 +368,10 @@
 	var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
 	var projection;
 	//町丁目名を表示するツールチップを設定（コメントアウト分はSVGは改行できない）
+	var tooltip0 = ""; // mouseoverの時の丁目名表示用
+	var isInfowindowOpen = false; //infowindowsが表示されるとtooltip0は表示しないフラグ
+	tooltip0 = d3.select("body").append("div").attr("class", "tooltip").style("pointer-events", "none");
+	//click時に街区（備考欄）の表示用
 	//生野区勝山北2丁目は40個を超えるので50枠を用意しておく。
 	var tooltip = [];
 	var info = []; //tooltipに表示する文字列格納用変数
@@ -457,15 +468,27 @@
 				}
 				return "#CEF6CE";
 			})
-			.on('click', function(d){
-				//alert(Object.keys(csvdata[0]));
-				//alert(csvdata[0]["町丁目名"]);
-				//const result = csvdata.find((v) => v.町丁目名 === d.properties.S_NAME);
-				//alert(result.町丁目名);
-			})
 			.on('mouseover', function(d){
 				d3.select(this)
 				.style("fill","pink");
+				if (!isInfowindowOpen){
+					//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
+				var posX0 = event.pageX > innerWidth/2 ? event.pageX : event.pageX;
+				var posY0 = event.pageY > innerHeight/2 ? event.pageY : event.pageY;
+				tooltip0.style("font-weight", "bold")
+				        .style("font-size", fontSize)
+				        .style("left", (posX0)+"px")
+					    .style("top",  (posY0)+"px")
+						.style("opacity", "1")
+						.style("pointer-events", "none")
+					    .text(d.properties.S_NAME); //geojsonの丁目名
+				}
+			})
+			.on('click', function(d){
+				d3.select(this)
+				.style("fill","pink");
+				//mouseover丁目名非表示
+				tooltip0.style("opacity", "0");
 				//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
 				var posX = event.pageX > innerWidth/2 ? event.pageX - 320 : event.pageX+20;
 				var posY = event.pageY > innerHeight/2 ? event.pageY -80 : event.pageY;
@@ -485,7 +508,10 @@
 				infowindow.style("height", (length*30+30)+"px")
 						  .style("left", (posX)+"px")
 				          .style("top",  (posY)+"px")
-						  .style("display", "block");
+						  .style("display", "block")
+						  .style("opacity", "1");
+				//isInfowindowOpenフラグオン
+				isInfowindowOpen = true;
 				//console.log(length);
 				//行数が１行しか無い場合の処理
 				/*
@@ -501,6 +527,8 @@
 				        .style("font-size", fontSize)
 				        .style("left", (posX)+"px")
 					    .style("top",  (posY)+"px")
+						.style("opacity", "1")
+						.style("pointer-events", "auto")
 					    .text(info[0]);
 				//街区 備考欄 描画
 				for (var i=0; i<length; i++){
@@ -510,6 +538,8 @@
 					tooltip[i+1].style("font-size", fontSize)
 				        .style("left", (posX)+"px")
 					    .style("top",  (posY+(i+1)*30)+"px")
+						.style("opacity", "1")
+						.style("pointer-events", "auto")
 						.datum(i) //tooltipにインデックスをデータとしてバインディング。後でクリックしたときに配列result判別用
 					    .text(info[i+1])
 						.on('mouseover', function(d){
@@ -561,25 +591,46 @@
 										.style("top", "352px")
 										.text("容包プラ：" + pla_str)
 							//古紙衣類
-							var paper_str = info2[index].paperAM != "" ? info2[index].paperAM + "（午前）" : info2[index].paperPM + "（午後）";
+							var paper_str = '';
+							if (info2[index].paperAM != ""){
+								paper_str = info2[index].paperAM + "（午前）";
+							} else if (info2[index].paperPM != ""){
+								paper_str = info2[index].paperPM + "（午後）";
+							} else if (info2[index].paperCOM != ""){
+								paper_str = "ｺﾐｭﾆﾃｨ回収 " + info2[index].paperCOM;
+							}
 							tooltip2[5].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "384px")
 										.text("古紙衣類：" + paper_str)
+							//ペットボトル　コミュニティ回収
+							//データが存在する場合のみ、表示するため他と異なりpet_strに"ペットボトル："を含んでいることに注意
+							var pet_str = '';
+							if (info2[index].petCOM != ""){
+								pet_str = "ペットボトル：ｺﾐｭﾆﾃｨ回収 " + info2[index].petCOM;
+							}
+							tooltip2[6].style("font-size", fontSize)
+										   .style("left", (centerX)+"px")
+										   .style("top", "416px")
+										   .text(pet_str);
 							//閉じるボタン
 							tooltip2[12].attr("class", "button")
 										.style("font-size", fontSize)
 										.style("font-weight", "bold")
 										.style("left", (centerX+100)+"px")
-										.style("top", "436px")
+										.style("top", "450px")
 										.text("閉じる")
 										.on('click', function(){
-											d3.selectAll(".tooltip2").style("opacity", "0")
+											d3.selectAll(".infowindow").style("opacity", "0").style("pointer-events", "none");
+											d3.selectAll(".tooltip").style("opacity", "0").style("pointer-events", "none");
+											d3.selectAll(".tooltip2").style("opacity", "0").style("pointer-events", "none");
 											d3.selectAll(".infowindow2")
-											  .style("pointer-events", "none")
 											  .style("opacity", "0")
+											  .style("pointer-events", "none");
 											d3.select(this).style("opacity", "0")
-											  .style("pointer-events", "none")
+											  .style("pointer-events", "none");
+											//isInfowindowOpenフラグオフ
+											isInfowindowOpen = false;
 										})
 						})
 				}
