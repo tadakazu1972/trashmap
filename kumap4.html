@@ -339,8 +339,15 @@
 				$paper = '<li>古紙衣類：'+element.古紙衣類_午前+"（午前）"+'</li>';
 			} else if (element.古紙衣類_午後 != ""){
 				$paper = '<li>古紙衣類：'+element.古紙衣類_午後+"（午後）"+'</li>';
+			} else if (element.古紙衣類_コミュニティ回収実施地域 != ""){
+				$paper = '<li>古紙衣類（コミュニティ回収）：'+element.古紙衣類_コミュニティ回収実施地域+'</li>';
 			}
-			var $gaiku = '<li>'+element.備考+'<ul class="content">'+ $normal + $res + $pla + $paper + '</ul></li>';
+			//ペットボトル　コミュニティ回収
+			var $pet = '';
+			if (element.ペットボトル_コミュニティ回収実施地域 != ""){
+				$pet = '<li>ペットボトル(コミュニティ回収)：'+element.ペットボトル_コミュニティ回収実施地域+'</li>';
+			}
+			var $gaiku = '<li>'+element.備考+'<ul class="content">'+ $normal + $res + $pla + $paper + $pet + '</ul></li>';
 			//console.log($gaiku);
 			//ため込む
 			str = str + $town + $chome + $gaiku;			
@@ -586,17 +593,34 @@
 										.style("top", "352px")
 										.text("容包プラ：" + pla_str)
 							//古紙衣類
-							var paper_str = info2[index].paperAM != "" ? info2[index].paperAM + "（午前）" : info2[index].paperPM + "（午後）";
+							var paper_str = '';
+							if (info2[index].paperAM != ""){
+								paper_str = info2[index].paperAM + "（午前）";
+							} else if (info2[index].paperPM != ""){
+								paper_str = info2[index].paperPM + "（午後）";
+							} else if (info2[index].paperCOM != ""){
+								paper_str = "ｺﾐｭﾆﾃｨ回収 " + info2[index].paperCOM;
+							}
 							tooltip2[5].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "384px")
 										.text("古紙衣類：" + paper_str)
+							//ペットボトル　コミュニティ回収
+							//データが存在する場合のみ、表示するため他と異なりpet_strに"ペットボトル："を含んでいることに注意
+							var pet_str = '';
+							if (info2[index].petCOM != ""){
+								pet_str = "ペットボトル：ｺﾐｭﾆﾃｨ回収 " + info2[index].petCOM;
+							}
+							tooltip2[6].style("font-size", fontSize)
+										   .style("left", (centerX)+"px")
+										   .style("top", "416px")
+										   .text(pet_str);
 							//閉じるボタン
 							tooltip2[12].attr("class", "button")
 										.style("font-size", fontSize)
 										.style("font-weight", "bold")
 										.style("left", (centerX+100)+"px")
-										.style("top", "436px")
+										.style("top", "450px")
 										.text("閉じる")
 										.on('click', function(){
 											d3.selectAll(".infowindow").style("opacity", "0").style("pointer-events", "none");

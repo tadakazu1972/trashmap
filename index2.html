@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+  <html lang="ja">
+  <meta http-equiv="content-language" content="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,user-scalable=yes">
+	<!--d3.js v6を採用しようとしたが、IE11はv4しか対応していない-->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <style>
+		body { font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif; }
+		h1,h2,p { padding: 5px; text-align: center; }
+		svg { background-color:#fff; }
+		path { fill:white; stroke:black; stroke-width:0.25;}
+    </style>
+	<script>
+	  function draw(){
+		//変数初期化
+		var fontSize = "0.8rem";
+		//描画エリア設定
+		var width  = window.innerWidth;
+		var height = window.innerHeight;
+		//svg
+		var svg = d3.select('body').append('svg').attr('width', width).attr('height', height);
+		//後でCSV読み込んで区名を描画の際にd3.jsonのフォーカスを超えてprojectionを使うためグローバル変数としてここで宣言しておく
+		var projection;
+		//geojson読み込み
+		d3.json("ku.json", function(json){
+			//描画レスポンシブ対応　中心と移動も画面サイズで自動調整
+			projection = d3.geoMercator()
+			.fitExtent([[0, 0],[width, height-100]], json);
+			//path設定
+			var path = d3.geoPath(projection);
+			//24区境界　描画
+			svg.append("g").selectAll("path")
+			.data(json.features)
+			.enter()
+			.append("path")
+			.attr("d", path)
+			.style("fill", function(d){
+				//パステルの色は区ごとにあらかじめjsonファイル中に記述している
+					return d.properties.N03_002;
+			})
+			.attr("fill", function(d){
+				//これをしておかないと区名のテキストが下になって見えない
+					return "hsl(0,0%,80%)";
+			})
+			.attr("stroke","white")
+			.on('mouseover', function(d){
+					//赤く塗る
+					d3.select(this)
+					.style("fill", "red");
+			})
+			.on('mouseout', function(d){
+				//初期設定の色に戻す
+					d3.select(this)
+					.style("fill", d.properties.N03_002);
+			})
+			.on('click', function(d) {
+					//将来：d3.js v6ではeventがリスナの引数として必要になることに注意
+					//結局、IE11はd3.js v4しか動かないのでかなり先のこと
+					//次ページへパラメータ渡しつつ遷移
+					if(d.properties.N03_001!=""){
+						window.location.href="kumap4.html?ku="+d.properties.N03_004+"&file="+d.properties.N03_001;
+					}
+			});
+			//区名　描画
+			//projectionに食わせる際には緯度経度をまとめてxyとして食わせることに注意
+			//var lonlat = [element.lon, element.lat];
+			//var xy = projection(lonlat);
+			var lonlat;
+			var xy;
+			svg.append("g")
+			   .selectAll("text")
+			   .data(json.features)
+			   .enter()
+			   .append("text")
+			   .style("font-size", fontSize)
+			   .style("font-weight", "bold")
+			   .style("text-anchor", "middle")
+			   .style("pointer-events", "none")
+			   .attr("x", function(d){
+				   lonlat = [d.properties.center_lon, d.properties.center_lat];
+				   xy = projection(lonlat);
+				   return xy[0];
+				})
+				.attr("y", function(d){
+				   lonlat = [d.properties.center_lon, d.properties.center_lat];
+				   xy = projection(lonlat);
+				   return xy[1];
+				})
+				.text(function(d){
+					return d.properties.N03_004;
+				});
+		});
+	  }
+	</script>
+  </head>
+  <body onload="draw()">
+	<h2>大阪市ごみ収集マップ</h2>
+	<p>お住いの区をクリックしてください</p>
+	<p>大阪市ホームページ　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000370521.html">ごみの収集曜日一覧</a>
+  </body>
+</html>
