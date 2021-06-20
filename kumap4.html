@@ -265,8 +265,8 @@
 	var chome_old = "";
 	var gaiku_old = "";
 	d3.csv(csvfile, function(data){
-		console.log(data);
-		//行ごとにcsvdataに格納していく
+		//console.log(data);
+		//csvdataに格納
 		data.forEach(function(element){
 			//console.log(element);
 			csvdata.push(element);
@@ -282,7 +282,7 @@
 			} else {
 				var $town = "";
 			}
-			console.log($town);
+			//console.log($town);
 			if (chome_old === ""){
 				chome_old = element.丁目;
 				var $chome = '<li>'+element.丁目+'<ul>';
@@ -303,7 +303,7 @@
 			} else {
 				var $chome = "";
 			}
-			console.log($chome);
+			//console.log($chome);
 			//普通ごみ　午前　午後　判定
 			var $normal = '';
 			if (element.普通ごみ_午前 === "※" || element.普通ごみ_午後 === "※"){
@@ -348,11 +348,11 @@
 				$pet = '<li>ペットボトル(コミュニティ回収)：'+element.ペットボトル_コミュニティ回収実施地域+'</li>';
 			}
 			var $gaiku = '<li>'+element.備考+'<ul class="content">'+ $normal + $res + $pla + $paper + $pet + '</ul></li>';
-			console.log($gaiku);
+			//console.log($gaiku);
 			//ため込む
 			str = str + $town + $chome + $gaiku;			
 		});
-		console.log(str);
+		//console.log(str);
 		//貼り付け
 		$('#accordion')
 			.append(str);
@@ -497,8 +497,7 @@
 				
 				//町丁目名、情報をtooltipに表示
 				//マウスオーバーしているgeojsonの町丁目名と等しい町丁目名のレコードをcsvdataから検索する
-				//filterで町丁目名一致を返すと、男、女、計の３つ配列を返す
-				//よって、[2]として計を読み込む
+				//filterで町丁目名一致を返す
 				result = csvdata.filter(function (v) {
 					//丁目にすべてが入っている場合はそのまま足すとgeojsonと一致しないので""にする
 					var v_chome = v.丁目 != "すべて" ? v.丁目 : "";

@@ -279,8 +279,8 @@
 	var banchi_old = "";
 	var gaiku_old = "";
 	d3.csv(csvfile, function(data){
-		console.log(data);
-		//行ごとにcsvdataに格納していく
+		//console.log(data);
+		//csvdataに格納
 		data.forEach(function(element){
 			//console.log(element);
 			csvdata.push(element);
@@ -304,7 +304,7 @@
 				chome_old = element.丁目;
 				var $chome = '<li>'+element.丁目+'<ul>';
 			} else if (chome_old != element.丁目){
-				if (element.丁目 === "1丁目"){
+				if (element.丁目 === "１丁目"){
 					chome_old = element.丁目;
 					var $chome = '<li>'+element.丁目+'<ul>';
 					isNextChome = true;
@@ -328,7 +328,7 @@
 				banchi_old = element.番地;
 				var $banchi = '<li>'+element.番地+'<ul>';
 			} else if (banchi_old != element.番地){
-				if (element.番地 === "1番"){
+				if (element.番地 === "１番"){
 					//東住吉区田辺４丁目はすべての後に1番が出てくるので以下の処理をはさまないと崩れる※最終的にデータが１番からなるなら削除でよいが...
 					if (banchi_old === "すべて" && isNextChome == false){
 						banchi_old = element.番地;
@@ -545,14 +545,13 @@
 				
 				//町丁目名、情報をtooltipに表示
 				//マウスオーバーしているgeojsonの町丁目名と等しい町丁目名のレコードをcsvdataから検索する
-				//filterで町丁目名一致を返すと、男、女、計の３つ配列を返す
-				//よって、[2]として計を読み込む
+				//filterで町丁目名一致を返す
 				result = csvdata.filter(function (v) {
 					//丁目にすべてが入っている場合はそのまま足すとgeojsonと一致しないので""にする
 					var v_chome = v.丁目 != "すべて" ? v.丁目 : "";
 					return v.町名+v_chome === d.properties.S_NAME;
 				});
-				//console.log(result);
+				console.log(result);
 				var length = result.length;
 				//infowindowの下地と枠 lengthの数によってinfowindowのheight増加させる
 				infowindow.style("height", (length*30+30)+"px")
