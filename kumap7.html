@@ -1,8 +1,7 @@
 <!DOCTYPE html>
   <head>
-    <meta charset="utf8">
 	<!--スマホレイアウトの調整つくまではviewport設定を無効にしておく-->
-	<!--<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />-->
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
 	<title></title>
 	<meta charset="utf-8">
 	<!--d3.js v6を採用しようとしたが、IE11はv4しか対応していない-->
@@ -235,16 +234,13 @@
   </head>
   <body>
 	<h1><div id="kuname"></div></h1>
-	<h2>町丁目をクリックするとごみ収集曜日が表示されます</h2>
+	<h2>町丁目をタップするとごみ収集曜日が表示されます</h2>
 	<p>大阪市ホームページ　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000370521.html">ごみの収集曜日一覧</a>
 	<div class="summary">
 		<p><div id="kuname2"></div></p>
 	</div>
-	<div id="accordion" style="float:left; width:30%"></div>
-	<button class="checkMap" onClick="hideMap()">地図　なし</button>
-	<form name="checkbox" class="check">
-		<label><input type="checkbox" onclick="drawStation()">鉄道駅　表示　</label>
-	</form>
+	<div id="accordion" style="float:left; width:100%"></div>
+	<button class="checkMap" onClick="displayMap()">地図　表示</button>
 	<script>
 	//
 	//-----第１段階　トップページでクリックした区の区名とcsv,geojsonのファイル名
@@ -407,6 +403,7 @@
 		addClickEvents();
 	});
 	
+	/*
 	//
 	//------第３段階　町丁目境界データgeojsonを読み込み描画する
 	//描画エリア設定
@@ -570,7 +567,7 @@
 				//infowindow描画
 				//街区があるときはinfowindowのpointer-eventsをオンにする
 				//infowindow.style("pointer-events", "auto");
-				if (result[0].丁目==="すべて"){ result[0].丁目="";}
+				/*if (result[0].丁目==="すべて"){ result[0].丁目="";}
 				info[0] = result[0].町名+result[0].丁目; //とりあえずヒットした先頭の町名を選択
 				tooltip[0].style("font-weight", "bold")
 				        .style("font-size", fontSize)
@@ -698,21 +695,13 @@
 				})
 			})
 	});
+	*/
 
-	//地図なし　チェックボックスを押すと地図なしcssのkumap7.htmlに遷移
-	function hideMap(){
-		window.location.href="kumap7.html?ku="+ku+"&file="+file;
+	//地図なし　チェックボックスを押すと地図なしcssのkumap5.htmlに遷移
+	function displayMap(){
+		window.location.href="kumap5.html?ku="+ku+"&file="+file;
 	}
 
-	//チェックボックスのON/OFFに応じて、駅と駅名を表示ON/OFF
-	function drawStation(){
-		//チェックをはずしていたら駅名　消去
-		if(!document.checkbox.elements[0].checked){
-			svg.selectAll(".station").attr("visibility", "hidden");
-		} else {
-			svg.selectAll(".station").attr("visibility", "visible");
-		}
-	}
 	//町丁目　街区名をクリックすると表示するアコーディオン生成
 	function addClickEvents(){
 		//親メニュー
