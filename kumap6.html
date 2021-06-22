@@ -27,7 +27,8 @@
 		}
 		body { font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif; }
 		h1,h2,p { text-align: center; }
-		svg { position:fixed; top:100px; left:30%; border:1px; background-color: white; text-align:left; }
+		h3 { text-align: left;}
+		svg { position:fixed; top:180px; left:30%; border:1px; background-color: white; text-align:left; }
 		path { fill:white; stroke:black; stroke-width:0.25; }
 		.tooltip {
 			position:absolute;
@@ -109,7 +110,7 @@
 			color: #333333;
 		}
 		.town:hover {
-			background-color: #ffff66;
+			background-color: #ffd1d1;
 		}
 		#accordion > ul > li  {
 			margin: 0 0 2px 0;
@@ -120,19 +121,19 @@
 			color: black
 		}
 		#accordion > ul > li:hover  {
-			background-color:#ffff66;
+			background-color:#ffd1d1;
 		}
 		#accordion > ul > li > ul > li  {
 			margin: 0 0 4px 0;
 			padding: 0 0 0 0;
 			border-radius: 5px;
 			cursor: pointer;
-			background:#ee5e97;
+			background:#c7b2de;
 			background-position: bottom;
-			color: white;
+			color: black;
 		}
 		#accordion > ul > li > ul > li:hover  {
-			background-color:#ffff66;
+			background-color:#ffd1d1;
 			color: black;
 		}
 		#accordion > ul > li > ul > li > ul > li {
@@ -140,12 +141,12 @@
 			padding: 0 0 0 0;
 			border-radius: 5px;
 			cursor: pointer;
-			background:#5eee97;
+			background:#cbf266;
 			background-position: bottom;
 			color: black;
 		}
 		#accordion > ul > li > ul > li > ul > li:hover  {
-			background-color:#ffff66;
+			background-color:#ffd1d1;
 			color: black;
 		}
 		
@@ -238,8 +239,9 @@
 	<div class="header">
 	<h1><div id="kuname"></div></h1>
 	<h2>町丁目をクリックするとごみ収集曜日が表示されます</h2>
-	<p>大阪市ホームページ　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000370521.html">ごみの収集曜日一覧</a>
-	</p>
+	<p>大阪市ホームページ　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000370521.html">ごみの収集曜日一覧</a></p>
+	<!--<h3>・午前の収集地域は８時30分、午後の収集地域は12時30分までにお出しください。</h3>
+	<h3>・コミュニティ回収実施地域は収集時間帯を定めておりませんので９時までにお出しください。</h3>-->
 	</div>
 	<div class="summary">
 		<p><div id="kuname2"></div></p>
@@ -521,11 +523,11 @@
 				if(d.properties.JINKO=="0"){
 					return "#EEEEEE";
 				}
-				return "#CEF6CE";
+				return "#8eb8ff";
 			})
 			.on('mouseover', function(d){
 				d3.select(this)
-				.style("fill","pink");
+				.style("fill","#ffd1d1");
 				if (!isInfowindowOpen){
 					//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
 				var posX0 = event.pageX > innerWidth/2 ? event.pageX : event.pageX;
@@ -541,7 +543,7 @@
 			})
 			.on('click', function(d){
 				d3.select(this)
-				.style("fill","pink");
+				.style("fill","#ffd1d1");
 				//mouseover丁目名非表示
 				tooltip0.style("opacity", "0");
 				//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
@@ -561,7 +563,7 @@
 				//infowindowの下地と枠 lengthの数によってinfowindowのheight増加させる
 				infowindow.style("height", (length*30+30)+"px")
 						  .style("left", (posX)+"px")
-				          .style("top",  (224)+"px")
+				          .style("top",  (posY)+"px")
 						  .style("display", "block")
 						  .style("opacity", "1");
 				//isInfowindowOpenフラグオン
@@ -580,7 +582,7 @@
 				tooltip[0].style("font-weight", "bold")
 				        .style("font-size", fontSize)
 				        .style("left", (posX)+"px")
-					    .style("top",  (224)+"px")
+					    .style("top",  (posY)+"px")
 						.style("opacity", "1")
 						.style("pointer-events", "auto")
 					    .text(info[0]);
@@ -595,13 +597,13 @@
 					//tooltip　描画
 					tooltip[i+1].style("font-size", fontSize)
 				        .style("left", (posX)+"px")
-					    .style("top",  (224+(i+1)*30)+"px")
+					    .style("top",  (posY+(i+1)*30)+"px")
 						.style("opacity", "1")
 						.style("pointer-events", "auto")
 						.datum(i) //tooltipにインデックスをデータとしてバインディング。後でクリックしたときに配列result判別用
 					    .text(info[i+1])
 						.on('mouseover', function(d){
-							d3.select(this).style("background", "#FF0");
+							d3.select(this).style("background", "#ffd1d1");
 						})
 						.on('mouseout', function(d){
 							d3.select(this).style("background", "#FFF");
@@ -710,7 +712,7 @@
 					if(d.properties.JINKO=="0"){
 						return "#EEEEEE";
 					}
-					return "#CEF6CE";
+					return "#8eb8ff";
 				})
 			})
 	});
