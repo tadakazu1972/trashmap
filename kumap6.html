@@ -87,10 +87,12 @@
 			z-index:9999;
 		}
 		.label { position:absolute; pointer-events: none; font-size: 8px; color: black; }
-		.header { position: fixed; top:0px; left:50%; }
-		.check { font-size:x-large; position: fixed; top: 150px; right:7%; border: 2px solid red; z-index:9999; }
-		.checkMap { font-size:x-large; position: fixed; top: 100px; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+		/*.header { position: fixed; top:0px; left:50%; }*/
+		#attention { position: fixed; top:85px; left: 30%; }
+		.checkMap { font-size:x-large; position: fixed; top: 20px; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+		.check { font-size:x-large; position: fixed; top: 70px; right:7%; border: 2px solid red; z-index:9999; }
 		.station { pointer-events: none; }
+		#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
 		/* アコーディオン */
 		ul {
 			list-style: none;
@@ -237,11 +239,14 @@
   </head>
   <body>
 	<div class="header">
+	<a href="https://www.city.osaka.lg.jp/index.html"><img src="osakacity_logo.png" style="position:absolute; top:0px; left:0px; width:200px; height:64px"></a>
 	<h1><div id="kuname"></div></h1>
 	<h2>町丁目をクリックするとごみ収集曜日が表示されます</h2>
 	<p>大阪市ホームページ　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000370521.html">ごみの収集曜日一覧</a></p>
-	<!--<h3>・午前の収集地域は８時30分、午後の収集地域は12時30分までにお出しください。</h3>
-	<h3>・コミュニティ回収実施地域は収集時間帯を定めておりませんので９時までにお出しください。</h3>-->
+		<div id="attention">
+			<h4>・午前の収集地域は８時30分、午後の収集地域は12時30分までにお出しください。</h4>
+			<h4>・コミュニティ回収実施地域は収集時間帯を定めておりませんので９時までにお出しください。</h4>
+		</div>
 	</div>
 	<div class="summary">
 		<p><div id="kuname2"></div></p>
@@ -251,6 +256,11 @@
 	<form name="checkbox" class="check">
 		<label><input type="checkbox" onclick="drawStation()">鉄道駅　表示　</label>
 	</form>
+	<div id="department">
+		<h2>このページの作成者・問合せ先</h2>
+		<h2>大阪市環境局事業部事業管理課</h2>
+			電話：０６−６６３０−３２２６</h3>
+	</div>
 	<script>
 	//
 	//-----第１段階　トップページでクリックした区の区名とcsv,geojsonのファイル名
@@ -486,7 +496,7 @@
 				.attr("visibility", "hidden")
 				.attr("d", path)
 				.style("stroke-width", "5")
-				.style("stroke", "blue");
+				.style("stroke", "#ffc753");
 			//駅名　描画
 			svg.append("g").selectAll("text")
 				.data(json.features)
