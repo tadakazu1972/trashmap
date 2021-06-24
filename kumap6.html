@@ -28,7 +28,6 @@
 		body { font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif; }
 		h1,h2,p { text-align: center; }
 		h3 { text-align: left;}
-		svg { position:fixed; top:180px; left:30%; border:1px; background-color: white; text-align:left; }
 		path { fill:white; stroke:black; stroke-width:0.25; }
 		.tooltip {
 			position:absolute;
@@ -87,11 +86,13 @@
 			z-index:9999;
 		}
 		.label { position:absolute; pointer-events: none; font-size: 8px; color: black; }
-		/*.header { position: fixed; top:0px; left:50%; }*/
+		img { position:absolute; top:0px; left:0px; width:200px; height:64px; }
+		.header { position: fixed; top:0px; left:50%; }
 		#attention { position: fixed; top:85px; left: 30%; }
-		.checkMap { font-size:x-large; position: fixed; top: 20px; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
-		.check { font-size:x-large; position: fixed; top: 70px; right:7%; border: 2px solid red; z-index:9999; }
+		.checkMap { font-size:x-large; position: fixed; top: 100px; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+		.check { font-size:x-large; position: fixed; top: 150px; right:7%; border: 2px solid red; z-index:9999; }
 		.station { pointer-events: none; }
+		svg { position:fixed; top:200px; left:30%; border:1px; background-color: white; text-align:left; }
 		#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
 		/* アコーディオン */
 		ul {
@@ -154,13 +155,22 @@
 		/*RESPONSIVE: スマートフォン ウィンドウ幅600px以下*/
 		@media screen and (max-width:600px) {
 			/*iPhone5s１行におさめるには4.35vw*/
+			img { position:absolute; top:0px; left:0px; width:100px; height:32px; }
+			.header { position: fixed; top:0px; left:30%; }
+			#attention { position: fixed; top:110px; left: 30%; }
+			.checkMap { font-size:small; position: fixed; top: 220px; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.check { font-size:small; position: fixed; width:100px; top: 220px; left:50%; border: 2px solid red; z-index:9999; }
+			.station { pointer-events: none; }
+			svg { position:fixed; top:220px; left:30%; border:1px; background-color: white; text-align:left; }
+			#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
 		}
 	</style>
   </head>
   <body>
-	<div class="header">
-		<a href="https://www.city.osaka.lg.jp/index.html"><img src="osakacity_logo.png" style="position:absolute; top:0px; left:0px; width:200px; height:64px"></a>
+	<div id="logo">
+		<a href="https://www.city.osaka.lg.jp/index.html"><img src="osakacity_logo.png"></a>
 	</div>
+	<div class="header">
 	<h1><div id="kuname"></div></h1>
 	<h2>お住まいの場所を選択していただくと、ごみ収集曜日が表示されます</h2>
 	<p>大阪市ホームページ　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000370521.html">ごみの収集曜日一覧</a></p>
@@ -172,7 +182,7 @@
 	<div class="summary">
 		<p><div id="kuname2"></div></p>
 	</div>
-	<div id="accordion" style="float:left; width:30%"></div>
+	<div id="accordion" style="position:absolute; top:85px; float:left; width:30%"></div>
 	<button class="checkMap" onClick="hideMap()">地図　なし</button>
 	<form name="checkbox" class="check">
 		<label><input type="checkbox" onclick="drawStation()">鉄道駅　表示　</label>
@@ -348,7 +358,7 @@
 	//------第３段階　町丁目境界データgeojsonを読み込み描画する
 	//描画エリア設定
 	var width  = window.innerWidth * 0.7;
-	var height = window.innerHeight;
+	var height = window.innerHeight * 0.9;
 	var centerX = width / 2;
 	var centerY = height / 2;
 	//svg
