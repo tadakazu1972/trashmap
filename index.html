@@ -7,10 +7,28 @@
 	<!--d3.js v6を採用しようとしたが、IE11はv4しか対応していない-->
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <style>
+		html, body, div, span, applet, object, iframe, h1, h2, h4, h5, h6, p, blockquote, pre, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, input, textarea, legend, article, aside, footer, header, hgroup, menu, nav, section {
+			border: 0;
+			color: #000;
+			font-size: 100%;
+			font: inherit;
+			margin: 0;
+			padding: 0;
+			vertical-align: baseline;
+		}
+		h1, h2, h3, h4, h5, h6 {
+			font-weight: bold;
+		}
+		h1 {
+			font-size: xx-large;
+		}
 		body { font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif; }
+		h3 { text-align: left;}
 		h1,h2,p { padding: 5px; text-align: center; }
 		svg { background-color:#fff; }
 		path { fill:white; stroke:black; stroke-width:0.25;}
+		/*.header { position: fixed; top:0px; left:50%; }*/
+		#department { position: absolute; bottom:0; right:0; z-index:9999; pointer-events: none; }
     </style>
 	<script>
 	  function draw(){
@@ -36,10 +54,7 @@
 			.enter()
 			.append("path")
 			.attr("d", path)
-			.style("fill", function(d){
-				//パステルの色は区ごとにあらかじめjsonファイル中に記述している
-					return d.properties.N03_002;
-			})
+			.style("fill", "#8eb8ff")
 			.attr("fill", function(d){
 				//これをしておかないと区名のテキストが下になって見えない
 					return "hsl(0,0%,80%)";
@@ -48,12 +63,12 @@
 			.on('mouseover', function(d){
 					//赤く塗る
 					d3.select(this)
-					.style("fill", "red");
+					.style("fill", "#ffd1d1");
 			})
 			.on('mouseout', function(d){
 				//初期設定の色に戻す
 					d3.select(this)
-					.style("fill", d.properties.N03_002);
+					.style("fill", "#8eb8ff");
 			})
 			.on('click', function(d) {
 					//将来：d3.js v6ではeventがリスナの引数として必要になることに注意
@@ -96,8 +111,16 @@
 	</script>
   </head>
   <body onload="draw()">
-	<h2>大阪市ごみ収集マップ</h2>
-	<p>お住いの区をクリックしてください</p>
+	<div class="header">
+		<a href="https://www.city.osaka.lg.jp/index.html"><img src="osakacity_logo.png" style="position:absolute; top:0px; left:0px; width:200px; height:64px"></a>
+	</div>
+	<h1>大阪市ごみ収集マップ</h1>
+	<p>お住まいの区を選択してください</p>
 	<p>大阪市ホームページ　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000370521.html">ごみの収集曜日一覧</a>
+	<div id="department">
+		<h2>このページの作成者・問合せ先</h2>
+		<h2>大阪市環境局事業部事業管理課</h2>
+			電話：０６−６６３０−３２２６</h3>
+	</div>
   </body>
 </html>
