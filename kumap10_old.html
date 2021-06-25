@@ -88,11 +88,11 @@
 		.label { position:absolute; pointer-events: none; font-size: 8px; color: black; }
 		img { position:absolute; top:0px; left:0px; width:200px; height:64px; }
 		.header { position: fixed; top:0px; left:30%; }
-		.checkMap { font-size:small; position: fixed; top: 160px; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
-		.check { font-size:small; position: fixed; top: 200px; right:8px; border: 2px solid red; z-index:9999; }
-		.backButton { font-size:small; position: fixed; bottom: 20%; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9998; }
+		.checkMap { font-size:x-large; position: fixed; top: 100px; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+		.check { font-size:x-large; position: fixed; top: 150px; right:7%; border: 2px solid red; z-index:9999; }
+		.backButton { font-size:x-large; position: fixed; bottom: 20%; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 		.station { pointer-events: none; }
-		svg { position:absolute; left:30%; top:25%; border:1px; background-color: white; text-align:left; }
+		svg { position:fixed; top:200px; left:30%; border:1px; background-color: white; text-align:left; }
 		#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
 		/* アコーディオン */
 		ul {
@@ -152,17 +152,17 @@
 			background-color:#ffd1d1;
 			color: black;
 		}		
-		/*RESPONSIVE: スマートフォンなどウィンドウ幅600px以下*/
-		@media screen and (max-width:600px) {
+		/*RESPONSIVE: スマートフォンなどウィンドウ幅1320px以下*/
+		@media screen and (max-width:1320px) {
 			/*iPhone5s１行におさめるには4.35vw*/
 			img { position:absolute; top:0px; left:0px; width:100px; height:32px; }
 			.header { position: fixed; top:0px; left:30%; }
 			#attention { position: fixed; top:110px; left: 30%; }
-			.checkMap { font-size:14px; position: fixed; top: 220px; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
-			.check { font-size:14px; position: fixed; width:100px; top: 220px; left:40%; border: 2px solid red; z-index:9999; }
-			.backButton { font-size:16px; position: fixed; bottom: 20%; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.checkMap { font-size:18px; position: fixed; top: 300px; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.check { font-size:18px; position: fixed; width:200px; top: 300px; left:40%; border: 2px solid red; z-index:9999; }
+			.backButton { font-size:18px; position: fixed; bottom: 20%; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.station { pointer-events: none; }
-			svg { position:absolute; top:35%; left:30%; border:1px; background-color: white; text-align:left; }
+			svg { position:fixed; top:290px; left:30%; border:1px; background-color: white; text-align:left; }
 			#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
 		}
 		@media screen and (max-width:460px) {
@@ -171,9 +171,9 @@
 			#attention { position: fixed; top:110px; left: 30%; }
 			.checkMap { font-size:14px; position: fixed; top: 260px; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.check { font-size:14px; position: fixed; width:100px; top: 260px; left:40%; border: 2px solid red; z-index:9999; }
-			.backButton { font-size:13px; position: fixed; bottom: 20%; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.backButton { font-size:14px; position: fixed; bottom: 20%; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.station { pointer-events: none; }
-			svg { position:absolute; top:250px; left:30%; border:1px; background-color: white; text-align:left; }
+			svg { position:fixed; top:250px; left:30%; border:1px; background-color: white; text-align:left; }
 			#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
 		}
 	</style>
@@ -184,9 +184,10 @@
 	</div>
 	<div class="header">
 		<h1><div id="kuname"></div></h1>
-		<h2>お住まいの地域を選択していただくと、ごみ収集曜日が表示されます</h2>
-		<h4>普通ごみ・資源ごみ・容器包装プラスチック・古紙衣類については、午前の収集地域は８時30分、午後の収集地域は12時30分までにお出しください。</h4>
-		<p><a href="https://www.city.osaka.lg.jp/kankyo/page/0000009337.html">・ごみの出し方について</a>　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000539144.html">・コミュニティ回収の収集時間について</a>　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000009981.html">・ごみ収集のお問い合わせ先</a></p>
+		<h2>お住まいの場所を選択していただくと、ごみ収集曜日が表示されます</h2>
+		<p>大阪市ホームページ　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000370521.html">ごみの収集曜日一覧</a></p>
+		<h4>・午前の収集地域は８時30分、午後の収集地域は12時30分までにお出しください。</h4>
+		<h4>・コミュニティ回収実施地域は収集時間帯を定めておりませんので９時までにお出しください。</h4>
 	</div>
 	<div class="summary">
 		<p><div id="kuname2"></div></p>
@@ -194,9 +195,9 @@
 	<div id="accordion" style="position:absolute; top:85px; float:left; width:30%"></div>
 	<button class="checkMap" onClick="hideMap()">地図　なし</button>
 	<form name="checkbox" class="check">
-		<label><input type="checkbox" onclick="drawStation()">鉄道駅　表示</label>
+		<label><input type="checkbox" onclick="drawStation()">鉄道駅　表示　</label>
 	</form>
-	<button class="backButton" onClick="backIndex()">区選択へ戻る</button>
+	<button class="backButton" onClick="backIndex()">区　選択</button>
 	<div id="department">
 		<h2>このページの作成者・問合せ先</h2>
 		<h2>大阪市環境局事業部事業管理課</h2>
@@ -283,28 +284,51 @@
 			//番地
 			if (banchi_old === ""){
 				banchi_old = element.番地;
-				var $banchi = element.番地 === "すべて" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
+				var $banchi = '<li>'+element.番地+'<ul>';
 			} else if (banchi_old != element.番地){
-					   banchi_old = element.番地;
-					if (isNextChome) {
-						var $banchi = element.番地 === "すべて" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
+				banchi_old = element.番地;
+				if (isNextChome){
+					var $banchi = '<li>'+element.番地+'<ul>';
+				} else {
+					var $banchi = '</ul></li><li>'+element.番地+'<ul>';
+				}
+				
+			/*} else if (banchi_old != element.番地){
+				if (element.番地 === "１番"){
+					//番地が１番からデータが始まるとは限らない（平野区）
+					//東住吉区田辺４丁目はすべての後に1番が出てくるので以下の処理をはさまないと崩れる※最終的にデータが１番からなるなら削除でよいが...
+					if (banchi_old === "すべて" && isNextChome == false){
+						banchi_old = element.番地;
+						var $banchi =  '</ul></li><li>'+element.番地+'<ul>';
 					} else {
-						var $banchi = element.番地 === "すべて" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
+						banchi_old = element.番地;
+						var $banchi = '<li>'+element.番地+'<ul>';
 					}
+				} else {
+					banchi_old = element.番地;
+					if (isNextChome) {
+						var $banchi = '<li>'+element.番地+'<ul>';
+					} else {
+						var $banchi = '</ul></li><li>'+element.番地+'<ul>';
+					}
+				}*/
 			} else if (isNextChome){
 				banchi_old = element.番地;
-				var $banchi = element.番地 === "すべて" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
+				var $banchi = '<li>'+element.番地+'<ul>';
+			} else if (banchi_old != element.番地){
+				var $banchi = '<li>'+element.番地;
 			} else {
 				var $banchi = "";
 			}
 			//console.log($banchi);
 			//号
-			//備考が「すべて」なら
-			if (element.備考==="すべて"){ 
-				var $gaiku = '<li>'+"▼";
+			//備考が「すべて」ならば、わざわざ<li>生成しない
+				if (element.備考==="すべて"){ 
+				var $gaiku = '';
 			} else {
 				var $gaiku = '<li>'+element.備考;
 			}
+			//console.log($gaiku);
 			//普通ごみ　午前　午後　判定
 			var $normal = '';
 			if (element.普通ごみ_午前 === "※" || element.普通ごみ_午後 === "※"){
@@ -352,7 +376,7 @@
 			var $content = '<ul class="content">'+ $normal + $res + $pla + $paper + $pet + '</ul></li>';
 
 			//ため込む
-			str = str + $town + $chome + $banchi + $gaiku + $content;
+			str = str + $town + $chome + $banchi + $gaiku + $content;	
 		});
 		//console.log(str);
 		//貼り付け
@@ -477,9 +501,9 @@
 				d3.select(this)
 				.style("fill","#ffd1d1");
 				if (!isInfowindowOpen){
-					//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-X) 3項演算子
-				var posX0 = event.pageX > innerWidth/2 ? event.pageX-100 : event.pageX;
-				var posY0 = event.pageY > innerHeight/2 ? event.pageY-40 : event.pageY;
+					//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
+				var posX0 = event.pageX > innerWidth/2 ? event.pageX : event.pageX;
+				var posY0 = event.pageY > innerHeight/2 ? event.pageY : event.pageY;
 				tooltip0.style("font-weight", "bold")
 				        .style("font-size", fontSize)
 				        .style("left", (posX0)+"px")
@@ -640,8 +664,7 @@
 					if (result[i].番地==="すべて" && result[i].備考==="すべて"){
 						info[i+1] = "すべて";
 					} else {
-						var _str = result[i].備考 === "すべて" ? "" : result[i].備考;
-						info[i+1]	= result[i].番地+" "+_str;
+						info[i+1]	= result[i].番地+" "+result[i].備考;
 					}
 					info2[i] = new infoData(result[i].町名, result[i].丁目, result[i].番地, result[i].備考, result[i].普通ごみ_午前, result[i].普通ごみ_午後, result[i].資源ごみ_午前, result[i].資源ごみ_午後, result[i].容器包装プラスチック_午前, result[i].容器包装プラスチック_午後, result[i].古紙衣類_午前, result[i].古紙衣類_午後, result[i].古紙衣類_コミュニティ回収実施地域, result[i].ペットボトル_コミュニティ回収実施地域)
 					//tooltip　描画

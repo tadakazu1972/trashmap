@@ -258,49 +258,60 @@
 			//丁目
 			var isNextChome = false;
 			if (chome_old === ""){
-				chome_old = element.丁目;
-				var $chome = '<li>'+element.丁目+'<ul>';
+				chome_old = element.丁目 === "" ? "▼" : element.丁目;
+				var $chome = '<li>'+chome_old+'<ul>';
 			} else if (chome_old != element.丁目){
 				if (element.丁目 === "１丁目"){
 					chome_old = element.丁目;
 					var $chome = '<li>'+element.丁目+'<ul>';
 					isNextChome = true;
 				} else {
-					chome_old = element.丁目;
+					chome_old = element.丁目 === "" ? "▼" : element.丁目;
 					if (isNextTown) {
-						var $chome = '<li>'+element.丁目+'<ul>';
+						var $chome = '<li>'+chome_old+'<ul>';
 					} else {
-						var $chome = '</ul></li></ul><li>'+element.丁目+'<ul>';
+						var $chome = '</ul></li></ul><li>'+chome_old+'<ul>';
 						isNextChome = true;
 					}
 				}
 			} else if (isNextTown){
-				var $chome = '<li>'+element.丁目+'<ul>';
+				var _chome = element.丁目 === "" ? "▼" : element.丁目;
+				var $chome = '<li>'+_chome+'<ul>';
 			} else {
 				var $chome = "";
 			}
 			//console.log($chome);
 			//番地
 			if (banchi_old === ""){
-				banchi_old = element.番地;
-				var $banchi = element.番地 === "すべて" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
+				banchi_old = element.番地 === "" ? "▼" : element.番地;
+				var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 			} else if (banchi_old != element.番地){
-					   banchi_old = element.番地;
-					if (isNextChome) {
-						var $banchi = element.番地 === "すべて" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
+				if (element.番地 === "1番" || element.番地 === "１番"){
+					//東住吉区田辺４丁目はすべての後に1番が出てくるので以下の処理をはさまないと崩れる※最終的にデータが１番からなるなら削除でよいが...
+					if (banchi_old === "▼" && isNextChome == false){
+						banchi_old = element.番地 === "" ? "▼" : element.番地;
+						var $banchi = element.番地 === "" ?  '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
 					} else {
-						var $banchi = element.番地 === "すべて" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
+						banchi_old = element.番地 === "" ? "▼" : element.番地;
+						var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 					}
+				} else {
+					banchi_old = element.番地 === "" ? "▼" : element.番地;
+					if (isNextChome) {
+						var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
+					} else {
+						var $banchi = element.番地 === "" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
+					}
+				}  	
 			} else if (isNextChome){
-				banchi_old = element.番地;
-				var $banchi = element.番地 === "すべて" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
+				var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 			} else {
 				var $banchi = "";
 			}
 			//console.log($banchi);
 			//号
 			//備考が「すべて」なら
-			if (element.備考==="すべて"){ 
+			if (element.備考===""){ 
 				var $gaiku = '<li>'+"▼";
 			} else {
 				var $gaiku = '<li>'+element.備考;
@@ -607,7 +618,7 @@
 											//isInfowindowOpenフラグオフ
 											isInfowindowOpen = false;
 										})
-				//番地を選択する場合
+				//番地が複数存在する場合
 				} else {
 					//infowindowの下地と枠 lengthの数によってinfowindowのheight増加させる
 				infowindow.style("height", (length*30+30)+"px")
@@ -626,7 +637,7 @@
 				//infowindow描画
 				//街区があるときはinfowindowのpointer-eventsをオンにする
 				//infowindow.style("pointer-events", "auto");
-				if (result[0].丁目==="すべて"){ result[0].丁目="";}
+				if (result[0].丁目==="すべて"){ result[0].丁目=""; }
 				info[0] = result[0].町名+result[0].丁目; //とりあえずヒットした先頭の町名を選択
 				tooltip[0].style("font-weight", "bold")
 				        .style("font-size", fontSize)
@@ -637,11 +648,12 @@
 					    .text(info[0]);
 				//街区 備考欄 描画
 				for (var i=0; i<length; i++){
-					if (result[i].番地==="すべて" && result[i].備考==="すべて"){
-						info[i+1] = "すべて";
+					if (result[i].番地==="" && result[i].備考===""){
+						info[i+1] = "▶";
 					} else {
-						var _str = result[i].備考 === "すべて" ? "" : result[i].備考;
-						info[i+1]	= result[i].番地+" "+_str;
+						var _banchi = result[i].番地 === "" ? "▶" : result[i].番地;
+						var _str = result[i].備考 === "" ? "" : result[i].備考;
+						info[i+1]	= _banchi+" "+_str;
 					}
 					info2[i] = new infoData(result[i].町名, result[i].丁目, result[i].番地, result[i].備考, result[i].普通ごみ_午前, result[i].普通ごみ_午後, result[i].資源ごみ_午前, result[i].資源ごみ_午後, result[i].容器包装プラスチック_午前, result[i].容器包装プラスチック_午後, result[i].古紙衣類_午前, result[i].古紙衣類_午後, result[i].古紙衣類_コミュニティ回収実施地域, result[i].ペットボトル_コミュニティ回収実施地域)
 					//tooltip　描画
