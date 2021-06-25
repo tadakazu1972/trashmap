@@ -88,9 +88,9 @@
 		.label { position:absolute; pointer-events: none; font-size: 8px; color: black; }
 		img { position:absolute; top:0px; left:0px; width:200px; height:64px; }
 		.header { position: fixed; top:0px; left:30%; }
-		.checkMap { font-size:x-large; position: fixed; top: 100px; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
-		.check { font-size:x-large; position: fixed; top: 150px; right:7%; border: 2px solid red; z-index:9999; }
-		.backButton { font-size:large; position: fixed; bottom: 20%; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9998; }
+		.checkMap { font-size:small; position: fixed; top: 160px; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+		.check { font-size:small; position: fixed; top: 200px; right:8px; border: 2px solid red; z-index:9999; }
+		.backButton { font-size:small; position: fixed; bottom: 20%; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9998; }
 		.station { pointer-events: none; }
 		svg { position:absolute; left:30%; top:25%; border:1px; background-color: white; text-align:left; }
 		#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
@@ -158,11 +158,11 @@
 			img { position:absolute; top:0px; left:0px; width:100px; height:32px; }
 			.header { position: fixed; top:0px; left:30%; }
 			#attention { position: fixed; top:110px; left: 30%; }
-			.checkMap { font-size:18px; position: fixed; top: 300px; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
-			.check { font-size:18px; position: fixed; width:200px; top: 300px; left:40%; border: 2px solid red; z-index:9999; }
-			.backButton { font-size:16px; position: fixed; bottom: 20%; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.checkMap { font-size:14px; position: fixed; top: 220px; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.check { font-size:14px; position: fixed; width:100px; top: 220px; left:40%; border: 2px solid red; z-index:9999; }
+			.backButton { font-size:16px; position: fixed; bottom: 20%; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.station { pointer-events: none; }
-			svg { position:absolute; top:290px; left:30%; border:1px; background-color: white; text-align:left; }
+			svg { position:absolute; top:35%; left:30%; border:1px; background-color: white; text-align:left; }
 			#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
 		}
 		@media screen and (max-width:460px) {
@@ -195,7 +195,7 @@
 	<div id="accordion" style="position:absolute; top:85px; float:left; width:30%"></div>
 	<button class="checkMap" onClick="hideMap()">地図　なし</button>
 	<form name="checkbox" class="check">
-		<label><input type="checkbox" onclick="drawStation()">鉄道駅　表示　</label>
+		<label><input type="checkbox" onclick="drawStation()">鉄道駅　表示</label>
 	</form>
 	<button class="backButton" onClick="backIndex()">区選択へ戻る</button>
 	<div id="department">
@@ -481,9 +481,9 @@
 				d3.select(this)
 				.style("fill","#ffd1d1");
 				if (!isInfowindowOpen){
-					//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
-				var posX0 = event.pageX > innerWidth/2 ? event.pageX : event.pageX;
-				var posY0 = event.pageY > innerHeight/2 ? event.pageY : event.pageY;
+					//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-X) 3項演算子
+				var posX0 = event.pageX > innerWidth/2 ? event.pageX-100 : event.pageX;
+				var posY0 = event.pageY > innerHeight/2 ? event.pageY-40 : event.pageY;
 				tooltip0.style("font-weight", "bold")
 				        .style("font-size", fontSize)
 				        .style("left", (posX0)+"px")
