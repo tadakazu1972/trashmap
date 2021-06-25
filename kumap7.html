@@ -88,6 +88,7 @@
 		img { position:absolute; top:0px; left:0px; width:200px; height:64px; }
 		.checkMap { font-size:x-large; position: fixed; top: 20px; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 		.check { font-size:x-large; position: fixed; top: 70px; right:7%; border: 2px solid red; z-index:9999; }
+		.backButton { font-size:x-large; position: fixed; bottom: 20%; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 		.station { pointer-events: none; }
 		/* アコーディオン */
 		ul {
@@ -155,6 +156,7 @@
 			#attention { position: fixed; top:110px; left: 30%; }
 			.checkMap { font-size:small; position: fixed; top: 85%; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.check { font-size:small; position: fixed; width:100px; top: 220px; left:50%; border: 2px solid red; z-index:9999; }
+			.backButton { font-size:small; position: fixed; bottom: 7%; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.station { pointer-events: none; }
 			svg { position:fixed; top:220px; left:30%; border:1px; background-color: white; text-align:left; }
 		}
@@ -174,6 +176,7 @@
 	</div>
 	<div id="accordion" style="float:left; width:100%"></div>
 	<button class="checkMap" onClick="displayMap()">地図　表示</button>
+	<button class="backButton" onClick="backIndex()">区　選択</button>
 	<div id="department">
 		<h2>このページの作成者・問合せ先</h2>
 		<h2>大阪市環境局事業部事業管理課</h2>
@@ -638,6 +641,11 @@
 	//地図なし　チェックボックスを押すと地図なしcssのkumap5.htmlに遷移
 	function displayMap(){
 		window.location.href="kumap6.html?ku="+ku+"&file="+file;
+	}
+
+	//24区選択画面に戻る
+	function backIndex(){
+		window.location.href="index.html";
 	}
 
 	//町丁目　街区名をクリックすると表示するアコーディオン生成

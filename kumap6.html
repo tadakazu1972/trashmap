@@ -90,6 +90,7 @@
 		.header { position: fixed; top:0px; left:30%; }
 		.checkMap { font-size:x-large; position: fixed; top: 100px; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 		.check { font-size:x-large; position: fixed; top: 150px; right:7%; border: 2px solid red; z-index:9999; }
+		.backButton { font-size:x-large; position: fixed; bottom: 20%; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 		.station { pointer-events: none; }
 		svg { position:fixed; top:200px; left:30%; border:1px; background-color: white; text-align:left; }
 		#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
@@ -159,6 +160,7 @@
 			#attention { position: fixed; top:110px; left: 30%; }
 			.checkMap { font-size:18px; position: fixed; top: 300px; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.check { font-size:18px; position: fixed; width:200px; top: 300px; left:40%; border: 2px solid red; z-index:9999; }
+			.backButton { font-size:18px; position: fixed; bottom: 20%; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.station { pointer-events: none; }
 			svg { position:fixed; top:290px; left:30%; border:1px; background-color: white; text-align:left; }
 			#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
@@ -169,6 +171,7 @@
 			#attention { position: fixed; top:110px; left: 30%; }
 			.checkMap { font-size:14px; position: fixed; top: 260px; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.check { font-size:14px; position: fixed; width:100px; top: 260px; left:40%; border: 2px solid red; z-index:9999; }
+			.backButton { font-size:14px; position: fixed; bottom: 20%; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.station { pointer-events: none; }
 			svg { position:fixed; top:250px; left:30%; border:1px; background-color: white; text-align:left; }
 			#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
@@ -194,6 +197,7 @@
 	<form name="checkbox" class="check">
 		<label><input type="checkbox" onclick="drawStation()">鉄道駅　表示　</label>
 	</form>
+	<button class="backButton" onClick="backIndex()">区　選択</button>
 	<div id="department">
 		<h2>このページの作成者・問合せ先</h2>
 		<h2>大阪市環境局事業部事業管理課</h2>
@@ -668,6 +672,11 @@
 	//地図なし　チェックボックスを押すと地図なしcssのkumap7.htmlに遷移
 	function hideMap(){
 		window.location.href="kumap7.html?ku="+ku+"&file="+file;
+	}
+
+	//24区選択画面に戻る
+	function backIndex(){
+		window.location.href="index.html";
 	}
 
 	//チェックボックスのON/OFFに応じて、駅と駅名を表示ON/OFF
