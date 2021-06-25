@@ -27,8 +27,16 @@
 		h1,h2,p { padding: 5px; text-align: center; }
 		svg { background-color:#fff; }
 		path { fill:white; stroke:black; stroke-width:0.25;}
-		/*.header { position: fixed; top:0px; left:50%; }*/
-		#department { position: absolute; bottom:0; right:0; z-index:9999; pointer-events: none; }
+		img { position:absolute; top:0px; left:0px; width:200px; height:64px; }
+		#department { position: absolute; bottom:0; left:0; z-index:9999; pointer-events: none; }
+		/*RESPONSIVE: スマートフォンなどウィンドウ幅600px以下*/
+		@media screen and (max-width:600px) {
+			/*iPhone5s１行におさめるには4.35vw*/
+			img { position:absolute; top:0px; left:0px; width:50px; height:16px; }
+			h1 { font-size: large; }
+			h1,h2,h3, p { padding: 0; text-align: center; }
+			#department { font-size:10px; position: fixed; bottom:0; left:0; z-index:9999; pointer-events: none; }
+		}
     </style>
 	<script>
 	  function draw(){
@@ -111,16 +119,16 @@
 	</script>
   </head>
   <body onload="draw()">
+	<a href="https://www.city.osaka.lg.jp/index.html"><img src="osakacity_logo.png"></a>
 	<div class="header">
-		<a href="https://www.city.osaka.lg.jp/index.html"><img src="osakacity_logo.png" style="position:absolute; top:0px; left:0px; width:200px; height:64px"></a>
+		<h1>大阪市ごみ収集マップ</h1>
+		<p>お住まいの区を選択してください</p>
+		<p>大阪市ホームページ　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000370521.html">ごみの収集曜日一覧</a>
 	</div>
-	<h1>大阪市ごみ収集マップ</h1>
-	<p>お住まいの区を選択してください</p>
-	<p>大阪市ホームページ　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000370521.html">ごみの収集曜日一覧</a>
 	<div id="department">
 		<h2>このページの作成者・問合せ先</h2>
 		<h2>大阪市環境局事業部事業管理課</h2>
-			電話：０６−６６３０−３２２６</h3>
+		<h2>電話：０６−６６３０−３２２６</h2>
 	</div>
   </body>
 </html>
