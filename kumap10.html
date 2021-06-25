@@ -90,9 +90,9 @@
 		.header { position: fixed; top:0px; left:30%; }
 		.checkMap { font-size:x-large; position: fixed; top: 100px; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 		.check { font-size:x-large; position: fixed; top: 150px; right:7%; border: 2px solid red; z-index:9999; }
-		.backButton { font-size:large; position: fixed; bottom: 20%; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9998; }
+		.backButton { font-size:x-large; position: fixed; bottom: 20%; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 		.station { pointer-events: none; }
-		svg { position:absolute; left:30%; top:20%; border:1px; background-color: white; text-align:left; }
+		svg { position:fixed; top:200px; left:30%; border:1px; background-color: white; text-align:left; }
 		#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
 		/* アコーディオン */
 		ul {
@@ -160,9 +160,9 @@
 			#attention { position: fixed; top:110px; left: 30%; }
 			.checkMap { font-size:18px; position: fixed; top: 300px; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.check { font-size:18px; position: fixed; width:200px; top: 300px; left:40%; border: 2px solid red; z-index:9999; }
-			.backButton { font-size:16px; position: fixed; bottom: 20%; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.backButton { font-size:18px; position: fixed; bottom: 20%; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.station { pointer-events: none; }
-			svg { position:absolute; top:290px; left:30%; border:1px; background-color: white; text-align:left; }
+			svg { position:fixed; top:290px; left:30%; border:1px; background-color: white; text-align:left; }
 			#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
 		}
 		@media screen and (max-width:460px) {
@@ -171,9 +171,9 @@
 			#attention { position: fixed; top:110px; left: 30%; }
 			.checkMap { font-size:14px; position: fixed; top: 260px; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.check { font-size:14px; position: fixed; width:100px; top: 260px; left:40%; border: 2px solid red; z-index:9999; }
-			.backButton { font-size:13px; position: fixed; bottom: 20%; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.backButton { font-size:14px; position: fixed; bottom: 20%; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.station { pointer-events: none; }
-			svg { position:absolute; top:250px; left:30%; border:1px; background-color: white; text-align:left; }
+			svg { position:fixed; top:250px; left:30%; border:1px; background-color: white; text-align:left; }
 			#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
 		}
 	</style>
@@ -184,7 +184,7 @@
 	</div>
 	<div class="header">
 		<h1><div id="kuname"></div></h1>
-		<h2>お住まいの地域を選択していただくと、ごみ収集曜日が表示されます</h2>
+		<h2>お住まいの場所を選択していただくと、ごみ収集曜日が表示されます</h2>
 		<p>大阪市ホームページ　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000370521.html">ごみの収集曜日一覧</a></p>
 		<h4>・午前の収集地域は８時30分、午後の収集地域は12時30分までにお出しください。</h4>
 		<h4>・コミュニティ回収実施地域は収集時間帯を定めておりませんので９時までにお出しください。</h4>
@@ -197,7 +197,7 @@
 	<form name="checkbox" class="check">
 		<label><input type="checkbox" onclick="drawStation()">鉄道駅　表示　</label>
 	</form>
-	<button class="backButton" onClick="backIndex()">区選択へ戻る</button>
+	<button class="backButton" onClick="backIndex()">区　選択</button>
 	<div id="department">
 		<h2>このページの作成者・問合せ先</h2>
 		<h2>大阪市環境局事業部事業管理課</h2>
@@ -286,7 +286,16 @@
 				banchi_old = element.番地;
 				var $banchi = '<li>'+element.番地+'<ul>';
 			} else if (banchi_old != element.番地){
+				banchi_old = element.番地;
+				if (isNextChome){
+					var $banchi = '<li>'+element.番地+'<ul>';
+				} else {
+					var $banchi = '</ul></li><li>'+element.番地+'<ul>';
+				}
+				
+			/*} else if (banchi_old != element.番地){
 				if (element.番地 === "１番"){
+					//番地が１番からデータが始まるとは限らない（平野区）
 					//東住吉区田辺４丁目はすべての後に1番が出てくるので以下の処理をはさまないと崩れる※最終的にデータが１番からなるなら削除でよいが...
 					if (banchi_old === "すべて" && isNextChome == false){
 						banchi_old = element.番地;
@@ -302,14 +311,24 @@
 					} else {
 						var $banchi = '</ul></li><li>'+element.番地+'<ul>';
 					}
-				}
+				}*/
 			} else if (isNextChome){
+				banchi_old = element.番地;
 				var $banchi = '<li>'+element.番地+'<ul>';
+			} else if (banchi_old != element.番地){
+				var $banchi = '<li>'+element.番地;
 			} else {
 				var $banchi = "";
 			}
 			//console.log($banchi);
 			//号
+			//備考が「すべて」ならば、わざわざ<li>生成しない
+				if (element.備考==="すべて"){ 
+				var $gaiku = '';
+			} else {
+				var $gaiku = '<li>'+element.備考;
+			}
+			//console.log($gaiku);
 			//普通ごみ　午前　午後　判定
 			var $normal = '';
 			if (element.普通ごみ_午前 === "※" || element.普通ごみ_午後 === "※"){
@@ -353,10 +372,11 @@
 			if (element.ペットボトル_コミュニティ回収実施地域 != ""){
 				$pet = '<li>ペットボトル(コミュニティ回収)：'+element.ペットボトル_コミュニティ回収実施地域+'</li>';
 			}
-			var $gaiku = '<li>'+element.備考+'<ul class="content">'+ $normal + $res + $pla + $paper + $pet + '</ul></li>';
-			//console.log($gaiku);
+			//ごみ収集情報　結合
+			var $content = '<ul class="content">'+ $normal + $res + $pla + $paper + $pet + '</ul></li>';
+
 			//ため込む
-			str = str + $town + $chome + $banchi + $gaiku;			
+			str = str + $town + $chome + $banchi + $gaiku + $content;	
 		});
 		//console.log(str);
 		//貼り付け

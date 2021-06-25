@@ -83,7 +83,12 @@
 					//結局、IE11はd3.js v4しか動かないのでかなり先のこと
 					//次ページへパラメータ渡しつつ遷移
 					if(d.properties.N03_001!=""){
-						window.location.href="kumap8.html?ku="+d.properties.N03_004+"&file="+d.properties.N03_001;
+						//スマホなら地図なしのほうへ遷移する
+						if (navigator.userAgent.match(/iPhone|Android.+Mobile/)){
+							window.location.href="kumap7.html?ku="+d.properties.N03_004+"&file="+d.properties.N03_001;
+						} else {
+							window.location.href="kumap8.html?ku="+d.properties.N03_004+"&file="+d.properties.N03_001;
+						}
 					}
 			});
 			//区名　描画

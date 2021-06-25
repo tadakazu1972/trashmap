@@ -167,7 +167,7 @@
 		<a href="https://www.city.osaka.lg.jp/index.html"><img src="osakacity_logo.png"></a>
   </div>
 	<h1><div id="kuname"></div></h1>
-	<h2>お住まいの場所を選択していただくと、ごみ収集曜日が表示されます</h2>
+	<h2>お住まいの地域を選択していただくと、ごみ収集曜日が表示されます</h2>
 	<p>大阪市ホームページ　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000370521.html">ごみの収集曜日一覧</a>
 	<h2>・午前の収集地域は８時30分、午後の収集地域は12時30分までにお出しください。</h2>
 	<h2>・コミュニティ回収実施地域は収集時間帯を定めておりませんので９時までにお出しください。</h2>
@@ -176,7 +176,7 @@
 	</div>
 	<div id="accordion" style="float:left; width:100%"></div>
 	<button class="checkMap" onClick="displayMap()">地図　表示</button>
-	<button class="backButton" onClick="backIndex()">区　選択</button>
+	<button class="backButton" onClick="backIndex()">区選択へ戻る</button>
 	<div id="department">
 		<h2>このページの作成者・問合せ先</h2>
 		<h2>大阪市環境局事業部事業管理課</h2>
@@ -205,7 +205,7 @@
 	//
 	//-----第２段階　町丁目ごとにデータを格納したCSV読み込み
 	//変数初期化
-	var csvfile = file + "2.csv";  //町丁目ごとのデータを記録したCSVファイル
+	var csvfile = file + ".csv";  //町丁目ごとのデータを記録したCSVファイル
 	var geojsonfile = file + ".geojson";  //eStatから取得した境界データshpをQJISでgeojsonに変換したファイル
 	var fontSize = "20px";
 	var csvdata = [];  //CSV格納先
