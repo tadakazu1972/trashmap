@@ -1,7 +1,8 @@
 <!DOCTYPE html>
   <head>
+    <meta charset="utf8">
 	<!--スマホレイアウトの調整つくまではviewport設定を無効にしておく-->
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />
+	<!--<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />-->
 	<title></title>
 	<meta charset="utf-8">
 	<!--d3.js v6を採用しようとしたが、IE11はv4しか対応していない-->
@@ -9,7 +10,7 @@
 	<!--jQueryライブラリ読み込み-->
 	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 	<style>
-		html, body, div, span, applet, object, iframe, h1, h2, h4, h5, h6, p, blockquote, pre, abbr, acronym, address, big, cite, code, del, dfn, em, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, input, textarea, legend, article, aside, footer, header, hgroup, menu, nav, section {
+		html, body, div, span, applet, object, iframe, h1, h2, h4, h5, h6, p, blockquote, pre, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, input, textarea, legend, article, aside, footer, header, hgroup, menu, nav, section {
 			border: 0;
 			color: #000;
 			font-size: 100%;
@@ -25,8 +26,8 @@
 			font-size: x-large;
 		}
 		body { font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif; }
-		h1,h2,h5,p { text-align: center; }
-		svg { position:fixed; left:30%; border:1px; background-color: white; text-align:left; }
+		h1,h2,p { text-align: center; }
+		h3 { text-align: left;}
 		path { fill:white; stroke:black; stroke-width:0.25; }
 		.tooltip {
 			position:absolute;
@@ -86,10 +87,13 @@
 		}
 		.label { position:absolute; pointer-events: none; font-size: 8px; color: black; }
 		img { position:absolute; top:0px; left:0px; width:200px; height:64px; }
-		.checkMap { font-size:x-large; position: fixed; bottom: 150px; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
-		.check { font-size:x-large; position: fixed; top: 70px; right:7%; border: 2px solid red; z-index:9999; }
-		.backButton { font-size:x-large; position: fixed; bottom: 100px; right:7%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+		.header { position: fixed; top:0px; left:30%; }
+		.checkMap { font-size:small; position: fixed; top: 160px; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+		.check { font-size:small; position: fixed; top: 200px; right:8px; border: 2px solid red; z-index:9999; }
+		.backButton { font-size:small; position: fixed; bottom: 20%; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9998; }
 		.station { pointer-events: none; }
+		svg { position:absolute; left:30%; top:25%; border:1px; background-color: white; text-align:left; }
+		#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
 		/* アコーディオン */
 		ul {
 			list-style: none;
@@ -129,7 +133,7 @@
 			cursor: pointer;
 			background:#c7b2de;
 			background-position: bottom;
-			color: white;
+			color: black;
 		}
 		#accordion > ul > li > ul > li:hover  {
 			background-color:#ffd1d1;
@@ -147,39 +151,56 @@
 		#accordion > ul > li > ul > li > ul > li:hover  {
 			background-color:#ffd1d1;
 			color: black;
-		}
-		
-		/*RESPONSIVE: スマートフォン ウィンドウ幅600px以下*/
+		}		
+		/*RESPONSIVE: スマートフォンなどウィンドウ幅600px以下*/
 		@media screen and (max-width:600px) {
-			img { position:absolute; top:0px; left:0px; width:50px; height:16px; }
+			/*iPhone5s１行におさめるには4.35vw*/
+			img { position:absolute; top:0px; left:0px; width:100px; height:32px; }
 			.header { position: fixed; top:0px; left:30%; }
 			#attention { position: fixed; top:110px; left: 30%; }
-			.checkMap { font-size:small; position: fixed; width: 120px; height: 32px; bottom: 150px; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
-			.check { font-size:small; position: fixed; width:100px; top: 220px; left:50%; border: 2px solid red; z-index:9999; }
-			.backButton { font-size:small; position: fixed; width: 120px; height: 32px; bottom: 100px; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.checkMap { font-size:14px; position: fixed; top: 220px; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.check { font-size:14px; position: fixed; width:100px; top: 220px; left:40%; border: 2px solid red; z-index:9999; }
+			.backButton { font-size:16px; position: fixed; bottom: 20%; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
 			.station { pointer-events: none; }
-			svg { position:fixed; top:220px; left:30%; border:1px; background-color: white; text-align:left; }
+			svg { position:absolute; top:35%; left:30%; border:1px; background-color: white; text-align:left; }
+			#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
+		}
+		@media screen and (max-width:460px) {
+			img { position:absolute; top:0px; left:0px; width:100px; height:32px; }
+			.header { position: fixed; top:0px; left:30%; }
+			#attention { position: fixed; top:110px; left: 30%; }
+			.checkMap { font-size:14px; position: fixed; top: 260px; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.check { font-size:14px; position: fixed; width:100px; top: 260px; left:40%; border: 2px solid red; z-index:9999; }
+			.backButton { font-size:13px; position: fixed; bottom: 20%; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.station { pointer-events: none; }
+			svg { position:absolute; top:250px; left:30%; border:1px; background-color: white; text-align:left; }
+			#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
 		}
 	</style>
   </head>
   <body>
 	<div id="logo">
 		<a href="https://www.city.osaka.lg.jp/index.html"><img src="osakacity_logo.png"></a>
-  </div>
-	<h1><div id="kuname"></div></h1>
-	<h2>お住まいの地域を選択していただくと、ごみ収集曜日が表示されます</h2>
-	<h2>コミュニティ回収を除くごみ収集については、午前８時30分・午後12時30分までにお出しください。</h2>
-	<p><a href="https://www.city.osaka.lg.jp/kankyo/page/0000009337.html">・ごみの出し方について</a>　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000539144.html">・コミュニティ回収の収集時間について</a>　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000009981.html">・ごみ収集のお問い合わせ先</a></p>
+	</div>
+	<div class="header">
+		<h1><div id="kuname"></div></h1>
+		<h2>お住まいの地域を選択していただくと、ごみ収集曜日が表示されます</h2>
+		<h4>コミュニティ回収を除くごみ収集については、午前８時30分・午後12時30分までにお出しください。</h4>
+		<p><a href="https://www.city.osaka.lg.jp/kankyo/page/0000009337.html">・ごみの出し方について</a>　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000539144.html">・コミュニティ回収の収集時間について</a>　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000009981.html">・ごみ収集のお問い合わせ先</a></p>
+	</div>
 	<div class="summary">
 		<p><div id="kuname2"></div></p>
 	</div>
-	<div id="accordion" style="float:left; width:100%"></div>
-	<button class="checkMap" onClick="displayMap()">地図　表示</button>
+	<div id="accordion" style="position:absolute; top:85px; float:left; width:30%"></div>
+	<button class="checkMap" onClick="hideMap()">地図　なし</button>
+	<form name="checkbox" class="check">
+		<label><input type="checkbox" onclick="drawStation()">鉄道駅　表示</label>
+	</form>
 	<button class="backButton" onClick="backIndex()">区選択へ戻る</button>
 	<div id="department">
 		<h2>このページの作成者・問合せ先</h2>
 		<h2>大阪市環境局事業部事業管理課</h2>
-		<h5>電話：０６−６６３０−３２２６</h5>
+			電話：０６−６６３０−３２２６</h3>
 	</div>
 	<script>
 	//
@@ -200,7 +221,7 @@
 	var ku = decodeURIComponent(key["ku"]);
 	var file = decodeURIComponent(key["file"]);
 	//トップページからクリックで引き継いだ区名をidタグkunameに表示する処理
-	document.getElementById("kuname").innerHTML = ku + "　町丁目一覧";
+	document.getElementById("kuname").innerHTML = ku + "　町丁目マップ";
 	//
 	//-----第２段階　町丁目ごとにデータを格納したCSV読み込み
 	//変数初期化
@@ -237,57 +258,62 @@
 			//丁目
 			var isNextChome = false;
 			if (chome_old === ""){
-				chome_old = element.丁目;
-				var $chome = '<li>'+element.丁目+'<ul>';
+				chome_old = element.丁目 === "" ? "▼" : element.丁目;
+				var $chome = '<li>'+chome_old+'<ul>';
 			} else if (chome_old != element.丁目){
-				if (element.丁目 === "１丁目"){
+				//住吉区万代は２丁目からスタート
+				if (element.町名 === "万代"){
+					if (element.丁目 === "２丁目"){
+						chome_old = element.丁目;
+						var $chome = '<li>'+element.丁目+'<ul>';
+						isNextChome = true;
+					}
+				} else if (element.丁目 === "１丁目"){
 					chome_old = element.丁目;
 					var $chome = '<li>'+element.丁目+'<ul>';
 					isNextChome = true;
 				} else {
-					chome_old = element.丁目;
+					chome_old = element.丁目 === "" ? "▼" : element.丁目;
 					if (isNextTown) {
-						var $chome = '<li>'+element.丁目+'<ul>';
+						var $chome = '<li>'+chome_old+'<ul>';
 					} else {
-						var $chome = '</ul></li></ul><li>'+element.丁目+'<ul>';
+						var $chome = '</ul></li></ul><li>'+chome_old+'<ul>';
 						isNextChome = true;
 					}
 				}
 			} else if (isNextTown){
-				var $chome = '<li>'+element.丁目+'<ul>';
+				var _chome = element.丁目 === "" ? "▼" : element.丁目;
+				var $chome = '<li>'+_chome+'<ul>';
 			} else {
 				var $chome = "";
 			}
 			//console.log($chome);
 			//番地
+			var isNextBanchi = false;
 			if (banchi_old === ""){
-				banchi_old = element.番地;
-				var $banchi = '<li>'+element.番地+'<ul>';
+				banchi_old = element.番地 === "" ? "▼" : element.番地;
+				var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 			} else if (banchi_old != element.番地){
-				if (element.番地 === "１番"){
-					//東住吉区田辺４丁目はすべての後に1番が出てくるので以下の処理をはさまないと崩れる※最終的にデータが１番からなるなら削除でよいが...
-					if (banchi_old === "すべて" && isNextChome == false){
-						banchi_old = element.番地;
-						var $banchi =  '</ul></li><li>'+element.番地+'<ul>';
-					} else {
-						banchi_old = element.番地;
-						var $banchi = '<li>'+element.番地+'<ul>';
-					}
-				} else {
-					banchi_old = element.番地;
+					banchi_old = element.番地 === "" ? "▼" : element.番地;
 					if (isNextChome) {
-						var $banchi = '<li>'+element.番地+'<ul>';
+						var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 					} else {
-						var $banchi = '</ul></li><li>'+element.番地+'<ul>';
-					}
-				}
+						var $banchi = element.番地 === "" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
+						isNextBanchi = true;
+					}  	
 			} else if (isNextChome){
-				var $banchi = '<li>'+element.番地+'<ul>';
+				var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 			} else {
 				var $banchi = "";
 			}
 			//console.log($banchi);
 			//号
+			//備考がスペースなら
+			if (isNextBanchi){
+				var $gaiku = element.備考 === "" ? '<li>'+"▼" : '<li>'+element.備考;
+			} else {
+				var $gaiku = element.備考 === "" ? '<li>'+"▼" : '<li>'+element.備考;
+			}
 			//普通ごみ　午前　午後　判定
 			var $normal = '';
 			if (element.普通ごみ_午前 === "※" || element.普通ごみ_午後 === "※"){
@@ -331,10 +357,11 @@
 			if (element.ペットボトル_コミュニティ回収実施地域 != ""){
 				$pet = '<li>ペットボトル(コミュニティ回収)：'+element.ペットボトル_コミュニティ回収実施地域+'</li>';
 			}
-			var $gaiku = '<li>'+element.備考+'<ul class="content">'+ $normal + $res + $pla + $paper + $pet + '</ul></li>';
-			//console.log($gaiku);
+			//ごみ収集情報　結合
+			var $content = '<ul class="content">'+ $normal + $res + $pla + $paper + $pet + '</ul></li>';
+
 			//ため込む
-			str = str + $town + $chome + $banchi + $gaiku;			
+			str = str + $town + $chome + $banchi + $gaiku + $content;
 		});
 		//console.log(str);
 		//貼り付け
@@ -343,12 +370,11 @@
 		addClickEvents();
 	});
 	
-	/*
 	//
 	//------第３段階　町丁目境界データgeojsonを読み込み描画する
 	//描画エリア設定
 	var width  = window.innerWidth * 0.7;
-	var height = window.innerHeight;
+	var height = window.innerHeight * 0.9;
 	var centerX = width / 2;
 	var centerY = height / 2;
 	//svg
@@ -359,10 +385,10 @@
 	var isInfowindowOpen = false; //infowindowsが表示されるとtooltip0は表示しないフラグ
 	tooltip0 = d3.select("body").append("div").attr("class", "tooltip").style("pointer-events", "none");
 	//click時に街区（備考欄）の表示用
-	//生野区勝山北2丁目は40個を超えるので50枠を用意しておく。
+	//東住吉区針中野1丁目は50個を超えるので50枠を用意しておく。
 	var tooltip = [];
 	var info = []; //tooltipに表示する文字列格納用変数
-	for (var i=0;i<50;i++){
+	for (var i=0;i<60;i++){
 		tooltip[i] = d3.select("body").append("div").attr("class", "tooltip");
 		info[i] = "";
 	}
@@ -374,9 +400,10 @@
 		tooltip2[i] = d3.select("body").append("div").attr("class", "tooltip2");
 	}
 	//info2でcsvから読み込んだごみ収集データを格納するクラス定義
-	function infoData(_town, _chome, _gaiku, _normalAM, _normalPM, _resAM, _resPM, _plaAM, _plaPM, _paperAM, _paperPM, _paperCOM, _petCOM){
+	function infoData(_town, _chome, _banchi, _gaiku, _normalAM, _normalPM, _resAM, _resPM, _plaAM, _plaPM, _paperAM, _paperPM, _paperCOM, _petCOM){
 		this.town = _town;
 		this.chome = _chome;
+		this.banchi = _banchi;
 		this.gaiku = _gaiku;
 		this.normalAM = _normalAM;
 		this.normalPM = _normalPM;
@@ -416,7 +443,7 @@
 				.attr("visibility", "hidden")
 				.attr("d", path)
 				.style("stroke-width", "5")
-				.style("stroke", "blue");
+				.style("stroke", "#ffc753");
 			//駅名　描画
 			svg.append("g").selectAll("text")
 				.data(json.features)
@@ -451,17 +478,17 @@
 			.attr("d", path)
 			.style("fill", function(d,i){
 				if(d.properties.JINKO=="0"){
-					return "#EEEEEE";
+					return "#8eb8ff";
 				}
-				return "#CEF6CE";
+				return "#8eb8ff";
 			})
 			.on('mouseover', function(d){
 				d3.select(this)
-				.style("fill","pink");
+				.style("fill","#ffd1d1");
 				if (!isInfowindowOpen){
-					//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
-				var posX0 = event.pageX > innerWidth/2 ? event.pageX : event.pageX;
-				var posY0 = event.pageY > innerHeight/2 ? event.pageY : event.pageY;
+					//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-X) 3項演算子
+				var posX0 = event.pageX > innerWidth/2 ? event.pageX-100 : event.pageX;
+				var posY0 = event.pageY > innerHeight/2 ? event.pageY-40 : event.pageY;
 				tooltip0.style("font-weight", "bold")
 				        .style("font-size", fontSize)
 				        .style("left", (posX0)+"px")
@@ -473,7 +500,7 @@
 			})
 			.on('click', function(d){
 				d3.select(this)
-				.style("fill","pink");
+				.style("fill","#ffd1d1");
 				//mouseover丁目名非表示
 				tooltip0.style("opacity", "0");
 				//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
@@ -488,9 +515,110 @@
 					var v_chome = v.丁目 != "すべて" ? v.丁目 : "";
 					return v.町名+v_chome === d.properties.S_NAME;
 				});
-				console.log(result);
+				//console.log(result);
 				var length = result.length;
-				//infowindowの下地と枠 lengthの数によってinfowindowのheight増加させる
+				//もし、length===1ならば、次の番地の選択の余地がないので、一気にごみ収集情報を表示させる
+				if (length < 2){
+					if (result[0].番地==="すべて" && result[0].備考==="すべて"){
+						info[1] = "すべて";
+					} else {
+						info[1]	= result[0].番地+" "+result[0].備考;
+					}
+					info2[0] = new infoData(result[0].町名, result[0].丁目, result[0].番地, result[0].備考, result[0].普通ごみ_午前, result[0].普通ごみ_午後, result[0].資源ごみ_午前, result[0].資源ごみ_午後, result[0].容器包装プラスチック_午前, result[0].容器包装プラスチック_午後, result[0].古紙衣類_午前, result[0].古紙衣類_午後, result[0].古紙衣類_コミュニティ回収実施地域, result[0].ペットボトル_コミュニティ回収実施地域)
+					//infowindow2ポインターイベント復活
+					d3.selectAll(".infowindow2").style("pointer-events", "auto");
+							//透明度100%
+							d3.selectAll(".tooltip2").style("opacity", "1")
+							//ボタン復活
+							d3.selectAll(".button").style("pointer-events", "auto").style("opacity", "1")
+							//自身にバインドされたインデックスを取り出してinfo2のインデックスとして使う
+							var index = d3.select(this).datum();
+							//console.log(index)
+							infowindow2.style("left", (centerX-20)+"px")
+									   .style("opacity", "1");
+							//町名
+							if (info2[0].chome==="すべて"){ info2[0].chome="" }
+							tooltip2[0].style("font-size", fontSize)
+										.style("font-weight", "bold")
+										.style("left", (centerX)+"px")
+										.style("top", "224px")
+										.text(info2[0].town+info2[0].chome)
+							//番地＋街区名
+							//番地：すべて　街区：すべての時、「すべて　すべて」と表示はさすがに見苦しいのですべて
+							var banchi_and_gaiku = '';
+							if (info2[0].banchi === "すべて" && info2[0].gaiku === "すべて"){
+								banchi_and_gaiku = 'すべて';
+							} else {
+								banchi_and_gaiku = info2[0].banchi + " " + info2[0].gaiku;
+							}
+							tooltip2[1].style("font-size", fontSize)
+										.style("font-weight", "bold")
+										.style("left", (centerX)+"px")
+										.style("top", "256px")
+										.text(banchi_and_gaiku);
+							//普通ごみ
+							var normal_str = info2[0].normalAM != "" ? info2[0].normalAM + "（午前）" : info2[0].normalPM + "（午後）";
+							tooltip2[2].style("font-size", fontSize)
+										.style("left", (centerX)+"px")
+										.style("top", "288px")
+										.text("普通ごみ：" + normal_str)
+							//資源ごみ
+							var res_str = info2[0].resAM != "" ? info2[0].resAM + "（午前）" : info2[0].resPM + "（午後）";
+							tooltip2[3].style("font-size", fontSize)
+										.style("left", (centerX)+"px")
+										.style("top", "320px")
+										.text("資源ごみ：" + res_str)
+							//容包プラ
+							var pla_str = info2[0].plaAM != "" ? info2[0].plaAM + "（午前）" : info2[0].plaPM + "（午後）";
+							tooltip2[4].style("font-size", fontSize)
+										.style("left", (centerX)+"px")
+										.style("top", "352px")
+										.text("容包プラ：" + pla_str)
+							//古紙衣類
+							var paper_str = '';
+							if (info2[0].paperAM != ""){
+								paper_str = info2[0].paperAM + "（午前）";
+							} else if (info2[0].paperPM != ""){
+								paper_str = info2[0].paperPM + "（午後）";
+							} else if (info2[0].paperCOM != ""){
+								paper_str = "ｺﾐｭﾆﾃｨ回収 " + info2[0].paperCOM;
+							}
+							tooltip2[5].style("font-size", fontSize)
+										.style("left", (centerX)+"px")
+										.style("top", "384px")
+										.text("古紙衣類：" + paper_str)
+							//ペットボトル　コミュニティ回収
+							//データが存在する場合のみ、表示するため他と異なりpet_strに"ペットボトル："を含んでいることに注意
+							var pet_str = '';
+							if (info2[0].petCOM != ""){
+								pet_str = "ペットボトル：ｺﾐｭﾆﾃｨ回収 " + info2[0].petCOM;
+							}
+							tooltip2[6].style("font-size", fontSize)
+										   .style("left", (centerX)+"px")
+										   .style("top", "416px")
+										   .text(pet_str);
+							//閉じるボタン
+							tooltip2[12].attr("class", "button")
+										.style("font-size", fontSize)
+										.style("font-weight", "bold")
+										.style("left", (centerX+100)+"px")
+										.style("top", "450px")
+										.text("閉じる")
+										.on('click', function(){
+											d3.selectAll(".infowindow").style("opacity", "0").style("pointer-events", "none");
+											d3.selectAll(".tooltip").style("opacity", "0").style("pointer-events", "none");
+											d3.selectAll(".tooltip2").style("opacity", "0").style("pointer-events", "none");
+											d3.selectAll(".infowindow2")
+											  .style("opacity", "0")
+											  .style("pointer-events", "none");
+											d3.select(this).style("opacity", "0")
+											  .style("pointer-events", "none");
+											//isInfowindowOpenフラグオフ
+											isInfowindowOpen = false;
+										})
+				//番地が複数存在する場合
+				} else {
+					//infowindowの下地と枠 lengthの数によってinfowindowのheight増加させる
 				infowindow.style("height", (length*30+30)+"px")
 						  .style("left", (posX)+"px")
 				          .style("top",  (posY)+"px")
@@ -507,7 +635,7 @@
 				//infowindow描画
 				//街区があるときはinfowindowのpointer-eventsをオンにする
 				//infowindow.style("pointer-events", "auto");
-				/*if (result[0].丁目==="すべて"){ result[0].丁目="";}
+				if (result[0].丁目==="すべて"){ result[0].丁目=""; }
 				info[0] = result[0].町名+result[0].丁目; //とりあえずヒットした先頭の町名を選択
 				tooltip[0].style("font-weight", "bold")
 				        .style("font-size", fontSize)
@@ -518,8 +646,14 @@
 					    .text(info[0]);
 				//街区 備考欄 描画
 				for (var i=0; i<length; i++){
-					info[i+1]	= result[i].備考;
-					info2[i] = new infoData(result[i].町名, result[i].丁目, result[i].備考, result[i].普通ごみ_午前, result[i].普通ごみ_午後, result[i].資源ごみ_午前, result[i].資源ごみ_午後, result[i].容器包装プラスチック_午前, result[i].容器包装プラスチック_午後, result[i].古紙衣類_午前, result[i].古紙衣類_午後, result[i].古紙衣類_コミュニティ回収実施地域, result[i].ペットボトル_コミュニティ回収実施地域)
+					if (result[i].番地==="" && result[i].備考===""){
+						info[i+1] = "▶";
+					} else {
+						var _banchi = result[i].番地 === "" ? "▶" : result[i].番地;
+						var _str = result[i].備考 === "" ? "" : result[i].備考;
+						info[i+1]	= _banchi+" "+_str;
+					}
+					info2[i] = new infoData(result[i].町名, result[i].丁目, result[i].番地, result[i].備考, result[i].普通ごみ_午前, result[i].普通ごみ_午後, result[i].資源ごみ_午前, result[i].資源ごみ_午後, result[i].容器包装プラスチック_午前, result[i].容器包装プラスチック_午後, result[i].古紙衣類_午前, result[i].古紙衣類_午後, result[i].古紙衣類_コミュニティ回収実施地域, result[i].ペットボトル_コミュニティ回収実施地域)
 					//tooltip　描画
 					tooltip[i+1].style("font-size", fontSize)
 				        .style("left", (posX)+"px")
@@ -529,7 +663,7 @@
 						.datum(i) //tooltipにインデックスをデータとしてバインディング。後でクリックしたときに配列result判別用
 					    .text(info[i+1])
 						.on('mouseover', function(d){
-							d3.select(this).style("background", "#FF0");
+							d3.select(this).style("background", "#ffd1d1");
 						})
 						.on('mouseout', function(d){
 							d3.select(this).style("background", "#FFF");
@@ -552,12 +686,19 @@
 										.style("left", (centerX)+"px")
 										.style("top", "224px")
 										.text(info2[index].town+info2[index].chome)
-							//街区名
+							//番地＋街区名
+							//番地：すべて　街区：すべての時、「すべて　すべて」と表示はさすがに見苦しいのですべて
+							var banchi_and_gaiku = '';
+							if (info2[index].banchi === "すべて" && info2[index].gaiku === "すべて"){
+								banchi_and_gaiku = 'すべて';
+							} else {
+								banchi_and_gaiku = info2[index].banchi + " " + info2[index].gaiku;
+							}
 							tooltip2[1].style("font-size", fontSize)
 										.style("font-weight", "bold")
 										.style("left", (centerX)+"px")
 										.style("top", "256px")
-										.text(info2[index].gaiku)
+										.text(banchi_and_gaiku);
 							//普通ごみ
 							var normal_str = info2[index].normalAM != "" ? info2[index].normalAM + "（午前）" : info2[index].normalPM + "（午後）";
 							tooltip2[2].style("font-size", fontSize)
@@ -620,8 +761,10 @@
 										})
 						})
 				}
-				//tooltip[length]-[49]までが残像残るので、消す
-				for(var i=length;i<49;i++){
+				
+				}
+				//tooltip[length]-[58]までが残像残るので、消す
+				for(var i=length;i<59;i++){
 					tooltip[i+1].text("").style("left", "0px").style("top", "0px");
 				}
 			})
@@ -629,17 +772,16 @@
 				d3.select(this)
 				.style("fill", function(d,i){
 					if(d.properties.JINKO=="0"){
-						return "#EEEEEE";
+						return "#8eb8ff";
 					}
-					return "#CEF6CE";
+					return "#8eb8ff";
 				})
 			})
 	});
-	*/
 
-	//地図なし　チェックボックスを押すと地図なしcssのkumap5.htmlに遷移
-	function displayMap(){
-		window.location.href="kumap16.html?ku="+ku+"&file="+file;
+	//地図なし　チェックボックスを押すと地図なしcssのkumap7.htmlに遷移
+	function hideMap(){
+		window.location.href="kumap7.html?ku="+ku+"&file="+file;
 	}
 
 	//24区選択画面に戻る
@@ -647,6 +789,15 @@
 		window.location.href="index.html";
 	}
 
+	//チェックボックスのON/OFFに応じて、駅と駅名を表示ON/OFF
+	function drawStation(){
+		//チェックをはずしていたら駅名　消去
+		if(!document.checkbox.elements[0].checked){
+			svg.selectAll(".station").attr("visibility", "hidden");
+		} else {
+			svg.selectAll(".station").attr("visibility", "visible");
+		}
+	}
 	//町丁目　街区名をクリックすると表示するアコーディオン生成
 	function addClickEvents(){
 		//親メニュー
