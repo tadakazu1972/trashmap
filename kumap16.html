@@ -286,8 +286,8 @@
 			}
 			//console.log($chome);
 			//番地
-			//西区の場合こちらのコード実行
-			if (element.行政区 === "西区"){
+			//西区、鶴見区の場合こちらのコード実行
+			if (element.行政区 === "此花区" ||element.行政区 === "西区"||element.行政区 === "生野区"|| element.行政区 === "鶴見区"){
 				if (banchi_old === ""){
 					banchi_old = element.番地 === "" ? "▼" : element.番地;
 					var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
@@ -305,7 +305,7 @@
 					var $banchi = "";
 				}
 			//他の区はこちらのコード実行
-			} else if (banchi_old === ""){
+			} else if (banchi_old === "" || element.町名 === "天王田"){
 				banchi_old = element.番地 === "" ? "▼" : element.番地;
 				var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 			} else if (banchi_old != element.番地){
