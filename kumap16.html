@@ -699,7 +699,7 @@
 						max_str_length = max_str_length < str_length ? str_length : max_str_length;
 						//console.log(max_str_length)
 					}
-					info2[i] = new infoData(result[0].町名, result[0].丁目, result[0].番地, result[0].備考, result[0].普通ごみ, result[0].普通ごみ_午前, result[0].普通ごみ_午後, result[0].資源ごみ, result[0].資源ごみ_午前, result[0].資源ごみ_午後, result[0].容器包装プラスチック, result[0].容器包装プラスチック_午前, result[0].容器包装プラスチック_午後, result[0].古紙衣類, result[0].古紙衣類_午前, result[0].古紙衣類_午後, result[0].古紙衣類_コミュニティ回収実施地域, result[0].ペットボトル_コミュニティ回収実施地域)
+					info2[i] = new infoData(result[i].町名, result[i].丁目, result[i].番地, result[i].備考, result[i].普通ごみ, result[i].普通ごみ_午前, result[i].普通ごみ_午後, result[i].資源ごみ, result[i].資源ごみ_午前, result[i].資源ごみ_午後, result[i].容器包装プラスチック, result[i].容器包装プラスチック_午前, result[i].容器包装プラスチック_午後, result[i].古紙衣類, result[i].古紙衣類_午前, result[i].古紙衣類_午後, result[i].古紙衣類_コミュニティ回収実施地域, result[i].ペットボトル_コミュニティ回収実施地域)
 					//tooltip　描画
 					tooltip[i+1].style("font-size", fontSize)
 				        .style("left", (posX)+"px")
@@ -723,8 +723,6 @@
 							d3.selectAll(".button").style("pointer-events", "auto").style("opacity", "1")
 							//自身にバインドされたインデックスを取り出してinfo2のインデックスとして使う
 							var index = d3.select(this).datum();
-							infowindow2.style("left", (centerX-20)+"px")
-									   .style("opacity", "1");
 							//町名
 							if (info2[index].chome==="すべて"){ info2[index].chome="" }
 							tooltip2[0].style("font-size", fontSize)
@@ -819,6 +817,12 @@
 											//isInfowindowOpenフラグオフ
 											isInfowindowOpen = false;
 										})
+							//infodindow2を表示
+							//infowindow2のwidthを計算
+							var window_width = 300 < banchi_and_gaiku.length*18 ? banchi_and_gaiku.length*18+30 : 300;
+							infowindow2.style("left", (centerX-20)+"px")
+									   .style("width", window_width+"px")
+									   .style("opacity", "1");
 						})
 				}
 				//infowindowの下地と枠 lengthの数によってinfowindowのheight増加させる
