@@ -288,7 +288,7 @@
 				banchi_old = element.番地 === "" ? "▼" : element.番地;
 				var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 			} else if (banchi_old != element.番地){
-				if (element.番地 === "1番" || element.番地 === "１番"){
+				if (element.番地 === "1番" || element.番地 === "１番" || element.番地 ==="A"){
 					//東住吉区田辺４丁目はすべての後に1番が出てくるので以下の処理をはさまないと崩れる※最終的にデータが１番からなるなら削除でよいが...
 					if (banchi_old === "▼" && isNextChome == false){
 						banchi_old = element.番地 === "" ? "▼" : element.番地;
