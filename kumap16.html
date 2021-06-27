@@ -268,7 +268,7 @@
 				//住吉区　丁目スペース対応　※平野区　平野元町がおかしくなる
 				} else if (element.丁目 === ""){
 					chome_old = "▼";
-					var $chome = '';
+					var $chome = "";
 				} else {
 					chome_old = element.丁目 === "" ? "▼" : element.丁目;
 					if (isNextTown) {
@@ -297,7 +297,7 @@
 						var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 					} else {
 						var $banchi = element.番地 === "" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
-						isNextBanchi = true;					
+						isNextBanchi = true;
 					}  	
 				} else if (isNextChome){
 					var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
@@ -310,6 +310,7 @@
 				var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 			} else if (banchi_old != element.番地){
 				if (element.番地 === "1番" || element.番地 === "１番"){
+					//東住吉区田辺４丁目はすべての後に1番が出てくるので以下の処理をはさまないと崩れる※最終的にデータが１番からなるなら削除でよいが...
 					if (banchi_old === "▼" && isNextChome == false){
 						banchi_old = element.番地 === "" ? "▼" : element.番地;
 						var $banchi = element.番地 === "" ?  '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
@@ -392,7 +393,7 @@
 			//ため込む
 			str = str + $town + $chome + $banchi + $gaiku + $content;
 		});
-		console.log(str);
+		//console.log(str);
 		//貼り付け
 		$('#accordion')
 			.append(str);
@@ -665,15 +666,6 @@
 										})
 				//番地が複数存在する場合
 				} else {
-					//infowindowの下地と枠 lengthの数によってinfowindowのheight増加させる
-				infowindow.style("height", (length*30+30)+"px")
-						  .style("left", (posX)+"px")
-				          .style("top",  (posY)+"px")
-						  .style("display", "block")
-						  .style("opacity", "1");
-				//isInfowindowOpenフラグオン
-				isInfowindowOpen = true;
-				//console.log(length);
 				//行数が１行しか無い場合の処理
 				/*
 				//infowindowのpointer-events: none;
@@ -692,6 +684,8 @@
 						.style("pointer-events", "auto")
 					    .text(info[0]);
 				//街区 備考欄 描画
+				var max_str_length = info[0].length; //infowindowのwidthを計算するため、番地＋備考の文字列　最大値格納用
+				//console.log(max_str_length)
 				for (var i=0; i<length; i++){
 					if (result[i].番地==="" && result[i].備考===""){
 						info[i+1] = "▶";
@@ -699,6 +693,11 @@
 						var _banchi = result[i].番地 === "" ? "▶" : result[i].番地;
 						var _str = result[i].備考 === "" ? "" : result[i].備考;
 						info[i+1]	= _banchi+" "+_str;
+						//文字列最大値を記録し、infowindowのwidthを調整する
+						var str_length = info[i+1].length;
+						//console.log(str_length) 
+						max_str_length = max_str_length < str_length ? str_length : max_str_length;
+						//console.log(max_str_length)
 					}
 					info2[i] = new infoData(result[0].町名, result[0].丁目, result[0].番地, result[0].備考, result[0].普通ごみ, result[0].普通ごみ_午前, result[0].普通ごみ_午後, result[0].資源ごみ, result[0].資源ごみ_午前, result[0].資源ごみ_午後, result[0].容器包装プラスチック, result[0].容器包装プラスチック_午前, result[0].容器包装プラスチック_午後, result[0].古紙衣類, result[0].古紙衣類_午前, result[0].古紙衣類_午後, result[0].古紙衣類_コミュニティ回収実施地域, result[0].ペットボトル_コミュニティ回収実施地域)
 					//tooltip　描画
@@ -822,6 +821,18 @@
 										})
 						})
 				}
+				//infowindowの下地と枠 lengthの数によってinfowindowのheight増加させる
+				//最低でも100px
+				var window_width = 200 < max_str_length*18 ? max_str_length*18+20 : 200;
+				infowindow.style("height", (length*30+30)+"px")
+						  .style("width", window_width+"px")
+						  .style("left", (posX)+"px")
+				          .style("top",  (posY)+"px")
+						  .style("display", "block")
+						  .style("opacity", "1");
+				//isInfowindowOpenフラグオン
+				isInfowindowOpen = true;
+				//console.log(length);
 				
 				}
 				//tooltip[length]-[58]までが残像残るので、消す
