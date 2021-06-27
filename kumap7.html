@@ -298,11 +298,16 @@
 						var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 					}
 				} else {
-					banchi_old = element.番地 === "" ? "▼" : element.番地;
-					if (isNextChome) {
-						var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
+					//番地がスペースだったら
+					if (element.番地 === ""){
+						var $banchi = '<li>▼<ul>';
 					} else {
-						var $banchi = element.番地 === "" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
+						banchi_old = element.番地 === "" ? "▼" : element.番地;
+						if (isNextChome) {
+						var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
+						} else {
+							var $banchi = element.番地 === "" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
+						}
 					}
 				}  	
 			} else if (isNextChome){

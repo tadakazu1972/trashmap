@@ -266,7 +266,7 @@
 					var $chome = '<li>'+element.丁目+'<ul>';
 					isNextChome = true;
 				//住吉区　丁目スペース対応　※平野区　平野元町がおかしくなる
-				} else if (element.丁目 === "" && element.町名 != "平野元町"){
+				} else if (element.丁目 === ""){
 					chome_old = "▼";
 					var $chome = "";
 				} else {
@@ -319,11 +319,16 @@
 						var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 					}
 				} else {
-					banchi_old = element.番地 === "" ? "▼" : element.番地;
-					if (isNextChome) {
-						var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
+					//番地がスペースだったら
+					if (element.番地 === ""){
+						var $banchi = '<li>▼<ul>';
 					} else {
-						var $banchi = element.番地 === "" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
+						banchi_old = element.番地 === "" ? "▼" : element.番地;
+						if (isNextChome) {
+							var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
+						} else {
+							var $banchi = element.番地 === "" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
+						}
 					}
 				}  	
 			} else if (isNextChome){
@@ -388,7 +393,7 @@
 			//ため込む
 			str = str + $town + $chome + $banchi + $gaiku + $content;
 		});
-		//console.log(str);
+		console.log(str);
 		//貼り付け
 		$('#accordion')
 			.append(str);
