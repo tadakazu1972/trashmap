@@ -267,8 +267,8 @@
 					isNextChome = true;
 				//住吉区　丁目スペース対応　※平野区　平野元町がおかしくなる
 				} else if (element.丁目 === ""){
-					chome_old = "▼";
-					var $chome = "";
+						chome_old = "▼";
+						var $chome = "";
 				} else {
 					chome_old = element.丁目 === "" ? "▼" : element.丁目;
 					if (isNextTown) {
@@ -287,7 +287,7 @@
 			//console.log($chome);
 			//番地
 			//西区、鶴見区の場合こちらのコード実行
-			if (element.行政区 === "此花区" ||element.行政区 === "西区"||element.行政区 === "生野区"|| element.行政区 === "鶴見区"){
+			if (element.行政区 === "此花区" || element.行政区 === "西区"||element.行政区 === "生野区"|| element.行政区 === "鶴見区"){
 				if (banchi_old === ""){
 					banchi_old = element.番地 === "" ? "▼" : element.番地;
 					var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
@@ -309,7 +309,8 @@
 				banchi_old = element.番地 === "" ? "▼" : element.番地;
 				var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 			} else if (banchi_old != element.番地){
-				if (element.番地 === "1番" || element.番地 === "１番"){
+				//Aは中央区上町対応
+				if (element.番地 === "1番" || element.番地 === "１番"|| element.番地==="A"){
 					//東住吉区田辺４丁目はすべての後に1番が出てくるので以下の処理をはさまないと崩れる※最終的にデータが１番からなるなら削除でよいが...
 					if (banchi_old === "▼" && isNextChome == false){
 						banchi_old = element.番地 === "" ? "▼" : element.番地;
@@ -321,13 +322,13 @@
 				} else {
 					//番地がスペースだったら
 					if (element.番地 === ""){
-						var $banchi = '<li>▼<ul>';
+						var $banchi = '<li>▼<ul>';						
 					} else {
 						banchi_old = element.番地 === "" ? "▼" : element.番地;
 						if (isNextChome) {
 							var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 						} else {
-							var $banchi = element.番地 === "" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
+								var $banchi = element.番地 === "" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
 						}
 					}
 				}  	
