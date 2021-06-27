@@ -341,8 +341,8 @@
 			}
 			//普通ごみ　午前　午後　判定
 			var $normal = '';
-			if (element.普通ごみ_午前 === "※" || element.普通ごみ_午後 === "※"){
-				$normal = '<li>普通ごみ：'+"※"+'</li>';
+			if (element.普通ごみ != ""){
+				$normal = '<li>普通ごみ：'+element.普通ごみ+"（要問合せ）"+'</li>';
 			} else if (element.普通ごみ_午前 != ""){
 				$normal = '<li>普通ごみ：'+element.普通ごみ_午前+"（午前）"+'</li>';
 			} else if (element.普通ごみ_午後 != ""){
@@ -350,8 +350,8 @@
 			}
 			//資源ごみ　午前　午後　判定
 			var $res = '';
-			if (element.資源ごみ_午前 === "※" || element.資源ごみ_午後 === "※"){
-				$res = '<li>資源ごみ：'+"※"+'</li>';
+			if (element.資源ごみ != ""){
+				$res = '<li>資源ごみ：'+element.資源ごみ+"（要問合せ）"+'</li>';
 			} else if (element.資源ごみ_午前 != ""){
 				$res = '<li>資源ごみ：'+element.資源ごみ_午前+"（午前）"+'</li>';
 			} else if (element.資源ごみ_午後 != ""){
@@ -359,8 +359,8 @@
 			}
 			//容器包装プラ　午前　午後　判定
 			var $pla = '';
-			if (element.容器包装プラスチック_午前 === "※" || element.容器包装プラスチック_午後 === "※"){
-				$pla = '<li>容器包装プラスチック：'+"※"+'</li>';
+			if (element.容器包装プラスチック != ""){
+				$pla = '<li>容器包装プラスチック：'+element.容器包装プラスチック+"（要問合せ）"+'</li>';
 			} else if (element.容器包装プラスチック_午前 != ""){
 				$pla = '<li>容器包装プラスチック：'+element.容器包装プラスチック_午前+"（午前）"+'</li>';
 			} else if (element.容器包装プラスチック_午後 != ""){
@@ -368,8 +368,8 @@
 			}
 			//古紙衣類　午前　午後　判定
 			var $paper = '';
-			if (element.古紙衣類_午前 === "※" || element.古紙衣類_午後 === "※"){
-				$paper = '<li>古紙衣類：'+"※"+'</li>';
+			if (element.古紙衣類 != ""){
+				$paper = '<li>古紙衣類：'+element.古紙衣類+"（要問合せ）"+'</li>';
 			} else if (element.古紙衣類_午前 != ""){
 				$paper = '<li>古紙衣類：'+element.古紙衣類_午前+"（午前）"+'</li>';
 			} else if (element.古紙衣類_午後 != ""){
@@ -425,17 +425,21 @@
 		tooltip2[i] = d3.select("body").append("div").attr("class", "tooltip2");
 	}
 	//info2でcsvから読み込んだごみ収集データを格納するクラス定義
-	function infoData(_town, _chome, _banchi, _gaiku, _normalAM, _normalPM, _resAM, _resPM, _plaAM, _plaPM, _paperAM, _paperPM, _paperCOM, _petCOM){
+	function infoData(_town, _chome, _banchi, _gaiku, _normalQ, _normalAM, _normalPM, _resQ, _resAM, _resPM, _plaQ, _plaAM, _plaPM, _paperQ, _paperAM, _paperPM, _paperCOM, _petCOM){
 		this.town = _town;
 		this.chome = _chome;
 		this.banchi = _banchi;
 		this.gaiku = _gaiku;
+		this.normalQ = _normalQ
 		this.normalAM = _normalAM;
 		this.normalPM = _normalPM;
+		this.resQ = _resQ;
 		this.resAM = _resAM;
 		this.resPM = _resPM;
+		this.plaQ = _plaQ;
 		this.plaAM = _plaAM;
 		this.plaPM = _plaPM;
+		this.paperQ = _paperQ;
 		this.paperAM = _paperAM;
 		this.paperPM = _paperPM;
 		this.paperCOM = _paperCOM;
@@ -549,7 +553,7 @@
 					} else {
 						info[1]	= result[0].番地+" "+result[0].備考;
 					}
-					info2[0] = new infoData(result[0].町名, result[0].丁目, result[0].番地, result[0].備考, result[0].普通ごみ_午前, result[0].普通ごみ_午後, result[0].資源ごみ_午前, result[0].資源ごみ_午後, result[0].容器包装プラスチック_午前, result[0].容器包装プラスチック_午後, result[0].古紙衣類_午前, result[0].古紙衣類_午後, result[0].古紙衣類_コミュニティ回収実施地域, result[0].ペットボトル_コミュニティ回収実施地域)
+					info2[0] = new infoData(result[0].町名, result[0].丁目, result[0].番地, result[0].備考, result[0].普通ごみ, result[0].普通ごみ_午前, result[0].普通ごみ_午後, result[0].資源ごみ, result[0].資源ごみ_午前, result[0].資源ごみ_午後, result[0].容器包装プラスチック, result[0].容器包装プラスチック_午前, result[0].容器包装プラスチック_午後, result[0].古紙衣類, result[0].古紙衣類_午前, result[0].古紙衣類_午後, result[0].古紙衣類_コミュニティ回収実施地域, result[0].ペットボトル_コミュニティ回収実施地域)
 					//infowindow2ポインターイベント復活
 					d3.selectAll(".infowindow2").style("pointer-events", "auto");
 							//透明度100%
@@ -582,26 +586,40 @@
 										.style("top", "256px")
 										.text(banchi_and_gaiku);
 							//普通ごみ
-							var normal_str = info2[0].normalAM != "" ? info2[0].normalAM + "（午前）" : info2[0].normalPM + "（午後）";
+							if (info2[0].normalQ != ""){
+								var normal_str = info2[0].normalQ + "（要問合せ）";
+							} else {
+								var normal_str = info2[0].normalAM != "" ? info2[0].normalAM + "（午前）" : info2[0].normalPM + "（午後）";
+							}
 							tooltip2[2].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "288px")
 										.text("普通ごみ：" + normal_str)
 							//資源ごみ
-							var res_str = info2[0].resAM != "" ? info2[0].resAM + "（午前）" : info2[0].resPM + "（午後）";
+							if (info2[0].resQ != ""){
+								var res_str = info2[0].resQ + "（要問合せ）";
+							} else {
+								var res_str = info2[0].resAM != "" ? info2[0].resAM + "（午前）" : info2[0].resPM + "（午後）";
+							}
 							tooltip2[3].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "320px")
 										.text("資源ごみ：" + res_str)
 							//容包プラ
-							var pla_str = info2[0].plaAM != "" ? info2[0].plaAM + "（午前）" : info2[0].plaPM + "（午後）";
+							if (info2[0].plaQ != ""){
+								var pla_str = info2[0].plaQ + "（要問合せ）";
+							} else {
+								var pla_str = info2[0].plaAM != "" ? info2[0].plaAM + "（午前）" : info2[0].plaPM + "（午後）";
+							}
 							tooltip2[4].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "352px")
 										.text("容包プラ：" + pla_str)
 							//古紙衣類
 							var paper_str = '';
-							if (info2[0].paperAM != ""){
+							if (info2[0].paperQ != ""){
+								paper_str = info2[0].paperQ + "（要問合せ）";
+							} else 	if (info2[0].paperAM != ""){
 								paper_str = info2[0].paperAM + "（午前）";
 							} else if (info2[0].paperPM != ""){
 								paper_str = info2[0].paperPM + "（午後）";
@@ -678,7 +696,7 @@
 						var _str = result[i].備考 === "" ? "" : result[i].備考;
 						info[i+1]	= _banchi+" "+_str;
 					}
-					info2[i] = new infoData(result[i].町名, result[i].丁目, result[i].番地, result[i].備考, result[i].普通ごみ_午前, result[i].普通ごみ_午後, result[i].資源ごみ_午前, result[i].資源ごみ_午後, result[i].容器包装プラスチック_午前, result[i].容器包装プラスチック_午後, result[i].古紙衣類_午前, result[i].古紙衣類_午後, result[i].古紙衣類_コミュニティ回収実施地域, result[i].ペットボトル_コミュニティ回収実施地域)
+					info2[i] = new infoData(result[0].町名, result[0].丁目, result[0].番地, result[0].備考, result[0].普通ごみ, result[0].普通ごみ_午前, result[0].普通ごみ_午後, result[0].資源ごみ, result[0].資源ごみ_午前, result[0].資源ごみ_午後, result[0].容器包装プラスチック, result[0].容器包装プラスチック_午前, result[0].容器包装プラスチック_午後, result[0].古紙衣類, result[0].古紙衣類_午前, result[0].古紙衣類_午後, result[0].古紙衣類_コミュニティ回収実施地域, result[0].ペットボトル_コミュニティ回収実施地域)
 					//tooltip　描画
 					tooltip[i+1].style("font-size", fontSize)
 				        .style("left", (posX)+"px")
@@ -725,26 +743,40 @@
 										.style("top", "256px")
 										.text(banchi_and_gaiku);
 							//普通ごみ
-							var normal_str = info2[index].normalAM != "" ? info2[index].normalAM + "（午前）" : info2[index].normalPM + "（午後）";
+							if (info2[0].normalQ != ""){
+								var normal_str = info2[index].normalQ + "（要問合せ）";
+							} else {
+								var normal_str = info2[index].normalAM != "" ? info2[index].normalAM + "（午前）" : info2[index].normalPM + "（午後）";
+							}
 							tooltip2[2].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "288px")
 										.text("普通ごみ：" + normal_str)
 							//資源ごみ
-							var res_str = info2[index].resAM != "" ? info2[index].resAM + "（午前）" : info2[index].resPM + "（午後）";
+							if (info2[0].resQ != ""){
+								var res_str = info2[index].resQ + "（要問合せ）";
+							} else {
+								var res_str = info2[index].resAM != "" ? info2[index].resAM + "（午前）" : info2[index].resPM + "（午後）";
+							}
 							tooltip2[3].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "320px")
 										.text("資源ごみ：" + res_str)
 							//容包プラ
-							var pla_str = info2[index].plaAM != "" ? info2[index].plaAM + "（午前）" : info2[index].plaPM + "（午後）";
+							if (info2[0].plaQ != ""){
+								var pla_str = info2[index].plaQ + "（要問合せ）";
+							} else {
+								var pla_str = info2[index].plaAM != "" ? info2[index].plaAM + "（午前）" : info2[index].plaPM + "（午後）";
+							}
 							tooltip2[4].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "352px")
 										.text("容包プラ：" + pla_str)
 							//古紙衣類
 							var paper_str = '';
-							if (info2[index].paperAM != ""){
+							if (info2[index].paperQ != ""){
+								paper_str = info2[index].paperQ + "（要問合せ）";
+							} else if (info2[index].paperAM != ""){
 								paper_str = info2[index].paperAM + "（午前）";
 							} else if (info2[index].paperPM != ""){
 								paper_str = info2[index].paperPM + "（午後）";
