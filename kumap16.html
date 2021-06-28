@@ -406,10 +406,12 @@
 			//ため込む
 			str = str + $town + $chome + $banchi + $gaiku + $content;
 		});
+		spaces = '<br><br><br><br><br>'
 		//console.log(str);
 		//貼り付け
 		$('#accordion')
-			.append(str);
+			.append(str)
+			.append(spaces);
 		addClickEvents();
 	});
 	
