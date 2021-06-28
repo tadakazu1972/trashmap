@@ -115,7 +115,7 @@
 		.town:hover {
 			background-color: #ffd1d1;
 		}
-		#accordion > ul > li  {
+		.accordion > ul > li  {
 			margin: 0 0 2px 0;
 			padding: 4px 0 0 4px;
 			border-radius: 5px;
@@ -123,10 +123,10 @@
 			background-color:#ffc753;
 			color: black
 		}
-		#accordion > ul > li:hover  {
+		.accordion > ul > li:hover  {
 			background-color:#ffd1d1;
 		}
-		#accordion > ul > li > ul > li  {
+		.accordion > ul > li > ul > li  {
 			margin: 0 0 4px 0;
 			padding: 0 0 0 0;
 			border-radius: 5px;
@@ -135,11 +135,11 @@
 			background-position: bottom;
 			color: black;
 		}
-		#accordion > ul > li > ul > li:hover  {
+		.accordion > ul > li > ul > li:hover  {
 			background-color:#ffd1d1;
 			color: black;
 		}
-		#accordion > ul > li > ul > li > ul > li {
+		.accordion > ul > li > ul > li > ul > li {
 			margin: 0 0 4px 0;
 			padding: 0 0 0 0;
 			border-radius: 5px;
@@ -148,9 +148,12 @@
 			background-position: bottom;
 			color: black;
 		}
-		#accordion > ul > li > ul > li > ul > li:hover  {
+		.accordion > ul > li > ul > li > ul > li:hover  {
 			background-color:#ffd1d1;
 			color: black;
+		}
+		.content > ul {
+			background-color: white;
 		}
 		/*RESPONSIVE: スマートフォンなどウィンドウ幅600px以下*/
 		@media screen and (max-width:600px) {
@@ -191,7 +194,7 @@
 	<div class="summary">
 		<p><div id="kuname2"></div></p>
 	</div>
-	<div id="accordion" style="position:absolute; top:85px; float:left; width:30%"></div>
+	<div class="accordion" style="position:absolute; top:85px; float:left; width:30%"></div>
 	<button class="checkMap" onClick="hideMap()">地図　なし</button>
 	<form name="checkbox" class="check">
 		<label><input type="checkbox" onclick="drawStation()">鉄道駅　表示</label>
@@ -389,14 +392,14 @@
 				$pet = '<li>ペットボトル(コミュニティ回収)：'+element.ペットボトル_コミュニティ回収実施地域+'</li>';
 			}
 			//ごみ収集情報　結合
-			var $content = '<ul class="content">'+ $normal + $res + $pla + $paper + $pet + '</ul></li>';
+			var $content = '<ul class="content" style="background:white">'+ $normal + $res + $pla + $paper + $pet + '</ul></li>';
 
 			//ため込む
 			str = str + $town + $chome + $banchi + $gaiku + $content;
 		});
 		//console.log(str);
 		//貼り付け
-		$('#accordion')
+		$('.accordion')
 			.append(str);
 		addClickEvents();
 	});
