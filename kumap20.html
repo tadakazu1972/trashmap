@@ -264,7 +264,7 @@
 						pattern = 8; //デフォに戻すこと忘れないように
 						break;
 					case 2:
-						var $town = '</ul><div class="town"><h3>'+element.町名+'</h3></div><ul>';
+						var $town = '</ul></li></ul><div class="town"><h3>'+element.町名+'</h3></div><ul>';
 						pattern = 8; //デフォに戻すこと忘れないように
 						break;
 					case 8:
@@ -298,8 +298,9 @@
 						var $chome = '<li>'+chome_old+'<ul>';
 					} else {
 						switch (pattern){
+							//丁目　あり　番地　なし　備考　なし
 							case 2:
-								var $chome = '</ul><ul><li>'+element.丁目+'<ul>';
+								var $chome = '</ul></li><li>'+element.丁目+'<ul>';
 								pattern = 8; //デフォに戻すこと忘れないように
 								break;
 							case 8:
@@ -454,7 +455,7 @@
 					break;
 				//　丁目　あり　番地　なし　備考　なし　
 				case 2:
-					var $content = '<id="content">'+ $normal + $res + $pla + $paper + $pet + '</li>';
+					var $content = '<id="content">'+ $normal + $res + $pla + $paper + $pet;
 					//ため込む
 					str = str + $town + $chome + $content;
 					break;
@@ -469,7 +470,7 @@
 			}				
 		});
 		spaces = '<br><br><br><br><br>'
-		console.log(str);
+		//console.log(str);
 		//貼り付け
 		$('.accordion')
 			.append(str)
@@ -934,7 +935,7 @@
 
 	//地図なし　チェックボックスを押すと地図なしcssのkumap7.htmlに遷移
 	function hideMap(){
-		window.location.href="kumap7.html?ku="+ku+"&file="+file;
+		window.location.href="kumap21.html?ku="+ku+"&file="+file;
 	}
 
 	//24区選択画面に戻る
