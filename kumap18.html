@@ -263,6 +263,10 @@
 						var $town = '</ul><div class="town"><h3>'+element.町名+'</h3></div><ul>';
 						pattern = 8; //デフォに戻すこと忘れないように
 						break;
+					case 2:
+						var $town = '</ul></li></ul><div class="town"><h3>'+element.町名+'</h3></div><ul>';
+						pattern = 8; //デフォに戻すこと忘れないように
+						break;
 					case 8:
 						var $town = '</ul></li></ul></ul><div class="town"><h3>'+element.町名+'</h3></div><ul>';
 						break;
@@ -424,13 +428,25 @@
 			if (element.丁目 == "" && element.番地 == "" && element.備考 == ""){
 				pattern = 1;
 			}
+			//丁目　あり　番地　なし　備考　なし　
+			if (element.丁目 != "" && element.番地 == "" && element.備考 == ""){
+				pattern = 2;
+			}
+			
 
 			//ごみ収集情報　結合
 			switch (pattern){
+				//　丁目　なし　番地　なし　備考　なし　
 				case 1:
 					var $content = '<id="content">'+ $normal + $res + $pla + $paper + $pet;
 					//ため込む
 					str = str + $town + $content;
+					break;
+				//　丁目　あり　番地　なし　備考　なし　
+				case 2:
+					var $content = '<id="content">'+ $normal + $res + $pla + $paper + $pet + '</ul></li>';
+					//ため込む
+					str = str + $town + $chome + $content;
 					break;
 				case 8:
 					var $content = '<ul id="content">'+ $normal + $res + $pla + $paper + $pet + '</ul></li>';
