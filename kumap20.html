@@ -669,37 +669,46 @@
 										.style("top", "256px")
 										.text(banchi_and_gaiku);
 							//普通ごみ
+							var normal_str = "";
 							if (info2[0].normalQ != ""){
-								var normal_str = info2[0].normalQ + "（要問合せ）";
-							} else {
-								var normal_str = info2[0].normalAM != "" ? info2[0].normalAM + "（午前）" : info2[0].normalPM + "（午後）";
+								normal_str = info2[0].normalQ + "（要問合せ）";
+							} else if (info2[0].normalAM != ""){
+								normal_str = info2[0].normalAM + "（午前）";
+							} else if (info2[0].normalPM != ""){
+								normal_str = info2[0].normalPM + "（午後）";
 							}
 							tooltip2[2].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "288px")
 										.text("普通ごみ：" + normal_str)
 							//資源ごみ
+							var res_str = "";
 							if (info2[0].resQ != ""){
-								var res_str = info2[0].resQ + "（要問合せ）";
-							} else {
-								var res_str = info2[0].resAM != "" ? info2[0].resAM + "（午前）" : info2[0].resPM + "（午後）";
+								res_str = info2[0].resQ + "（要問合せ）";
+							} else if (info2[0].resAM != ""){
+								res_str = info2[0].resAM + "（午前）"; 
+							} else if (info2[0].resPM != ""){
+								res_str = info2[0].resPM + "（午後）";
 							}
 							tooltip2[3].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "320px")
 										.text("資源ごみ：" + res_str)
 							//容包プラ
+							var pla_str = "";
 							if (info2[0].plaQ != ""){
-								var pla_str = info2[0].plaQ + "（要問合せ）";
-							} else {
-								var pla_str = info2[0].plaAM != "" ? info2[0].plaAM + "（午前）" : info2[0].plaPM + "（午後）";
+								pla_str = info2[0].plaQ + "（要問合せ）";
+							} else if (info2[0].plaAM != ""){
+								pla_str = info2[0].plaAM + "（午前）";
+							} else if (info2[0].plaPM != ""){
+								pla_str = info2[0].plaPM + "（午後）";
 							}
 							tooltip2[4].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "352px")
 										.text("容包プラ：" + pla_str)
 							//古紙衣類
-							var paper_str = '';
+							var paper_str = "";
 							if (info2[0].paperQ != ""){
 								paper_str = info2[0].paperQ + "（要問合せ）";
 							} else 	if (info2[0].paperAM != ""){
@@ -715,7 +724,7 @@
 										.text("古紙衣類：" + paper_str)
 							//ペットボトル　コミュニティ回収
 							//データが存在する場合のみ、表示するため他と異なりpet_strに"ペットボトル："を含んでいることに注意
-							var pet_str = '';
+							var pet_str = "";
 							if (info2[0].petCOM != ""){
 								pet_str = "ペットボトル：ｺﾐｭﾆﾃｨ回収 " + info2[0].petCOM;
 							}
@@ -822,37 +831,46 @@
 										.style("top", "256px")
 										.text(banchi_and_gaiku);
 							//普通ごみ
+							var normal_str = "";
 							if (info2[index].normalQ != ""){
-								var normal_str = info2[index].normalQ + "（要問合せ）";
-							} else {
-								var normal_str = info2[index].normalAM != "" ? info2[index].normalAM + "（午前）" : info2[index].normalPM + "（午後）";
+								normal_str = info2[index].normalQ + "（要問合せ）";
+							} else if (info2[index].normalAM != ""){
+								normal_str = info2[index].normalAM + "（午前）";
+							} else if (info2[index].normalPM != ""){
+								normal_str = info2[index].normalPM + "（午後）";
 							}
 							tooltip2[2].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "288px")
 										.text("普通ごみ：" + normal_str)
 							//資源ごみ
+							var res_str = "";
 							if (info2[index].resQ != ""){
-								var res_str = info2[index].resQ + "（要問合せ）";
-							} else {
-								var res_str = info2[index].resAM != "" ? info2[index].resAM + "（午前）" : info2[index].resPM + "（午後）";
+								res_str = info2[index].resQ + "（要問合せ）";
+							} else if (info2[index].resAM != ""){
+								res_str = info2[index].resAM + "（午前）"; 
+							} else if (info2[index].resPM != ""){
+								res_str = info2[index].resPM + "（午後）";
 							}
 							tooltip2[3].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "320px")
 										.text("資源ごみ：" + res_str)
 							//容包プラ
+							var pla_str = "";
 							if (info2[index].plaQ != ""){
-								var pla_str = info2[index].plaQ + "（要問合せ）";
-							} else {
-								var pla_str = info2[index].plaAM != "" ? info2[index].plaAM + "（午前）" : info2[index].plaPM + "（午後）";
+								pla_str = info2[index].plaQ + "（要問合せ）";
+							} else if (info2[index].plaAM != ""){
+								pla_str = info2[index].plaAM + "（午前）";
+							} else if (info2[index].plaPM != ""){
+								pla_str = info2[index].plaPM + "（午後）";
 							}
 							tooltip2[4].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "352px")
 										.text("容包プラ：" + pla_str)
 							//古紙衣類
-							var paper_str = '';
+							var paper_str = "";
 							if (info2[index].paperQ != ""){
 								paper_str = info2[index].paperQ + "（要問合せ）";
 							} else if (info2[index].paperAM != ""){
@@ -868,7 +886,7 @@
 										.text("古紙衣類：" + paper_str)
 							//ペットボトル　コミュニティ回収
 							//データが存在する場合のみ、表示するため他と異なりpet_strに"ペットボトル："を含んでいることに注意
-							var pet_str = '';
+							var pet_str = "";
 							if (info2[index].petCOM != ""){
 								pet_str = "ペットボトル：ｺﾐｭﾆﾃｨ回収 " + info2[index].petCOM;
 							}
