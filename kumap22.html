@@ -276,7 +276,7 @@
 						break;
 					default:
 						var $town = '</ul></li></ul></ul><div class="town"><h3>'+element.町名+'</h3></div><ul>';
-				}				
+				}
 				isNextTown = true;
 			} else {
 				var $town = "";
@@ -340,7 +340,7 @@
 					} else {
 						var $banchi = element.番地 === "" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
 						isNextBanchi = true;
-					}  	
+					}
 				} else if (isNextChome){
 					var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 				} else {
@@ -370,7 +370,7 @@
 				} else {
 					//番地がスペースだったら
 					if (element.番地 === ""){
-						var $banchi = '<li>▼<ul>';						
+						var $banchi = '<li>▼<ul>';
 					} else {
 						banchi_old = element.番地 === "" ? "▼" : element.番地;
 						//番地にスペースが混入していたことがあったので除去処理
@@ -381,7 +381,7 @@
 								var $banchi = element.番地 === "" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
 						}
 					}
-				}  	
+				}
 			} else if (isNextChome){
 				var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 			} else {
@@ -390,7 +390,7 @@
 			//console.log($banchi);
 			//号
 			//備考が「すべて」なら
-			if (element.備考===""){ 
+			if (element.備考===""){
 				var $gaiku = '<li>'+"▼";
 			} else {
 				var $gaiku = '<li>'+element.備考;
@@ -451,7 +451,7 @@
 			if (element.丁目 == "" && element.番地 == "" && element.備考 != ""){
 				pattern = 3;
 			}
-			
+
 			//ごみ収集情報　結合
 			switch (pattern){
 				//　丁目　なし　番地　なし　備考　なし　
@@ -480,7 +480,7 @@
 				default:
 					//ため込む
 					str = str + $town + $chome + $banchi + $gaiku + $content;
-			}				
+			}
 		});
 		spaces = '<br><br><br><br><br>'
 		//console.log(str);
@@ -490,7 +490,7 @@
 			.append(spaces);
 		addClickEvents();
 	});
-	
+
 	//
 	//------第３段階　町丁目境界データgeojsonを読み込み描画する
 	//描画エリア設定
@@ -631,7 +631,7 @@
 				//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
 				var posX = event.pageX > innerWidth/2 ? event.pageX - 320 : event.pageX+20;
 				var posY = event.pageY > innerHeight/2 ? event.pageY -80 : event.pageY;
-				
+
 				//町丁目名、情報をtooltipに表示
 				//マウスオーバーしているgeojsonの町丁目名と等しい町丁目名のレコードをcsvdataから検索する
 				//filterで町丁目名一致を返す
@@ -699,7 +699,7 @@
 							if (info2[0].resQ != ""){
 								res_str = info2[0].resQ + "（要問合せ）";
 							} else if (info2[0].resAM != ""){
-								res_str = info2[0].resAM + "（午前）"; 
+								res_str = info2[0].resAM + "（午前）";
 							} else if (info2[0].resPM != ""){
 								res_str = info2[0].resPM + "（午後）";
 							}
@@ -795,7 +795,7 @@
 						info[i+1]	= _banchi+" "+_str;
 						//文字列最大値を記録し、infowindowのwidthを調整する
 						var str_length = info[i+1].length;
-						//console.log(str_length) 
+						//console.log(str_length)
 						max_str_length = max_str_length < str_length ? str_length : max_str_length;
 						//console.log(max_str_length)
 					}
@@ -861,7 +861,7 @@
 							if (info2[index].resQ != ""){
 								res_str = info2[index].resQ + "（要問合せ）";
 							} else if (info2[index].resAM != ""){
-								res_str = info2[index].resAM + "（午前）"; 
+								res_str = info2[index].resAM + "（午前）";
 							} else if (info2[index].resPM != ""){
 								res_str = info2[index].resPM + "（午後）";
 							}
@@ -946,7 +946,7 @@
 				//isInfowindowOpenフラグオン
 				isInfowindowOpen = true;
 				//console.log(length);
-				
+
 				}
 				//tooltip[length]-[79]までが残像残るので、消す
 				for(var i=length;i<79;i++){
@@ -966,7 +966,7 @@
 
 	//地図なし　チェックボックスを押すと地図なしcssのkumap7.htmlに遷移
 	function hideMap(){
-		window.location.href="kumap21.html?ku="+ku+"&file="+file;
+		window.location.href="kumap23.html?ku="+ku+"&file="+file;
 	}
 
 	//24区選択画面に戻る
@@ -1006,6 +1006,6 @@
 	b.parentNode.insertBefore(sib,b);}());
 	//--></script>
 	<!-- /Sibulla tracking code end -->
-	
+
   </body>
 </html>
