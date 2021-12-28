@@ -4,13 +4,40 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,user-scalable=yes">
+	<title>大阪市ごみ収集マップ</title>
 	<!--d3.js v6を採用しようとしたが、IE11はv4しか対応していない-->
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <style>
+		html, body, div, span, applet, object, iframe, h1, h2, h4, h5, h6, p, blockquote, pre, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, input, textarea, legend, article, aside, footer, header, hgroup, menu, nav, section {
+			border: 0;
+			color: #000;
+			font-size: 100%;
+			font: inherit;
+			margin: 0;
+			padding: 0;
+			vertical-align: baseline;
+		}
+		h1, h2, h3, h4, h5, h6 {
+			font-weight: bold;
+		}
+		h1 {
+			font-size: xx-large;
+		}
 		body { font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif; }
+		h3 { text-align: left;}
 		h1,h2,p { padding: 5px; text-align: center; }
 		svg { background-color:#fff; }
 		path { fill:white; stroke:black; stroke-width:0.25;}
+		img { position:absolute; top:0px; left:0px; width:200px; height:64px; }
+		#department { position: absolute; bottom:0; left:0; z-index:9999; pointer-events: none; }
+		/*RESPONSIVE: スマートフォンなどウィンドウ幅600px以下*/
+		@media screen and (max-width:600px) {
+			/*iPhone5s１行におさめるには4.35vw*/
+			img { position:absolute; top:0px; left:0px; width:50px; height:16px; }
+			h1 { font-size: large; }
+			h1,h2,h3, p { padding: 0; text-align: center; }
+			#department { font-size:10px; position: fixed; bottom:0; left:0; z-index:9999; pointer-events: none; }
+		}
     </style>
 	<script>
 	  function draw(){
@@ -36,10 +63,7 @@
 			.enter()
 			.append("path")
 			.attr("d", path)
-			.style("fill", function(d){
-				//パステルの色は区ごとにあらかじめjsonファイル中に記述している
-					return d.properties.N03_002;
-			})
+			.style("fill", "#8eb8ff")
 			.attr("fill", function(d){
 				//これをしておかないと区名のテキストが下になって見えない
 					return "hsl(0,0%,80%)";
@@ -48,19 +72,28 @@
 			.on('mouseover', function(d){
 					//赤く塗る
 					d3.select(this)
-					.style("fill", "red");
+					.style("fill", "#ffd1d1");
 			})
 			.on('mouseout', function(d){
 				//初期設定の色に戻す
 					d3.select(this)
-					.style("fill", d.properties.N03_002);
+					.style("fill", "#8eb8ff");
 			})
 			.on('click', function(d) {
+					//ブラウザバックで戻ると一度タップした色が残っているので、ページ遷移の前に初期設定の色に戻す
+					d3.select(this)
+					.style("fill", "#8eb8ff");
 					//将来：d3.js v6ではeventがリスナの引数として必要になることに注意
 					//結局、IE11はd3.js v4しか動かないのでかなり先のこと
 					//次ページへパラメータ渡しつつ遷移
 					if(d.properties.N03_001!=""){
-						window.location.href="kumap4.html?ku="+d.properties.N03_004+"&file="+d.properties.N03_001;
+						//スマホなら地図なしのほうへ遷移する
+						if (navigator.userAgent.match(/iPhone|Android.+Mobile/)){
+							window.location.href="kumap25.html?ku="+d.properties.N03_004+"&file="+d.properties.N03_001+"?"+new Date().getTime();
+						} else {
+							//PC
+							window.location.href="kumap24.html?ku="+d.properties.N03_004+"&file="+d.properties.N03_001+"?"+new Date().getTime();
+						}
 					}
 			});
 			//区名　描画
@@ -96,8 +129,24 @@
 	</script>
   </head>
   <body onload="draw()">
-	<h2>大阪市ごみ収集マップ</h2>
-	<p>お住いの区をクリックしてください</p>
-	<p>大阪市ホームページ　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000370521.html">ごみの収集曜日一覧</a>
+	<a href="https://www.city.osaka.lg.jp/index.html"><img src="osakacity_logo.png" alt="大阪市 OSAKA CITY"></a>
+	<div class="header">
+		<h1>大阪市ごみ収集マップ</h1>
+		<p>お住まいの区を選択してください</p>
+		<a href="https://www.city.osaka.lg.jp/contents/wdu150/trashmap/text/index.html"><p>読み上げ版はこちら</p></a>
+	</div>
+	<div id="department">
+		<h2>このページの作成者・問合せ先</h2>
+		<h2>大阪市環境局事業部事業管理課</h2>
+		<h2>電話：０６−６６３０−３２２６</h2>
+	</div>
+	<!-- Sibulla tracking code start -->
+    <script type="text/javascript"><!--
+	(function(){ var b = document.getElementsByTagName('script')[0],sib = document.createElement('script');
+	sib.type = 'text/javascript';sib.async = true;
+	sib.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'ma001.sibulla.com/dekatag/access?id=aGaskA6u';
+	b.parentNode.insertBefore(sib,b);}());
+	//--></script>
+	<!-- /Sibulla tracking code end -->
   </body>
 </html>
