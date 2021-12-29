@@ -339,13 +339,12 @@
 						var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 					} else {
 						var $banchi = element.番地 === "" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
-						isNextBanchi = true;
 					}
-				} else if (isNextChome){
+				} /*else if (isNextChome){
 					var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 				} else {
 					var $banchi = "";
-				}
+				}*/
 			//他の区はこちらのコード実行
 			} else if (banchi_old === "" || element.町名 === "天王田"){
 				banchi_old = element.番地 === "" ? "▼" : element.番地;
@@ -378,7 +377,7 @@
 						if (isNextChome) {
 							var $banchi = element.番地 === "" ? '<li>▼<ul>' : '<li>'+element.番地+'<ul>';
 						} else {
-								var $banchi = element.番地 === "" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
+							var $banchi = element.番地 === "" ? '</ul></li><li>▼<ul>' : '</ul></li><li>'+element.番地+'<ul>';
 						}
 					}
 				}
