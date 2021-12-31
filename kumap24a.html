@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+  <head>
+    <meta charset="utf8">
+	<!--スマホレイアウトの調整つくまではviewport設定を無効にしておく-->
+	<!--<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0" />-->
+	<title>大阪市ごみ収集マップ</title>
+	<meta charset="utf-8">
+	<!--d3.js v6を採用しようとしたが、IE11はv4しか対応していない-->
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<!--jQueryライブラリ読み込み-->
+	<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	<style>
+		html, body, div, span, applet, object, iframe, h1, h2, h4, h5, h6, p, blockquote, pre, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, input, textarea, legend, article, aside, footer, header, hgroup, menu, nav, section {
+			border: 0;
+			color: #000;
+			font-size: 100%;
+			font: inherit;
+			margin: 0;
+			padding: 0;
+			vertical-align: baseline;
+		}
+		h1, h2, h3, h4, h5, h6 {
+			font-weight: bold;
+		}
+		h1 {
+			font-size: x-large;
+		}
+		body { font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif; }
+		h1,h2,p { text-align: center; }
+		h3 { text-align: left;}
+		path { fill:white; stroke:black; stroke-width:0.25; }
+		.tooltip {
+			position:absolute;
+			visibility: visible;
+			padding: 5px 12px 10px;
+			color : #666;
+			z-index:9998;
+		}
+		.tooltip2 {
+			pointer-events: none;
+			position: fixed;
+			padding: 5px 12px 10px;
+			color : #666;
+			z-index:9999;
+		}
+		.infowindow {
+			position: absolute;
+			padding: 5px 12px 10px;
+			width: 300px;
+			height: 160px;
+			background: #fff;
+			-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+			-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+			border-radius: 5px;
+			color : #666;
+			z-index:9997;
+			display: none;
+		}
+		.infowindow2 {
+			position: fixed;
+	      	pointer-events: none;
+			padding: 5px 12px 10px;
+			top: 210px;
+			/*left: 48%;
+			transform: translate(-50%, 0%);
+			-webkit-transform: translate(-50%, 0%);
+			-ms-transform: translate(-50%, 0%);*/
+			width: 300px;
+			height: 280px;
+			background: #ffe;
+			-webkit-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+			-moz-box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+			box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+			border-radius: 8px;
+			color : #666;
+			z-index:9998;
+		}
+		.button {
+			position: fixed;
+			left: 48%;
+			padding: 5px 12px 10px;
+			background: blue;
+			color: white;
+			border-radius: 5px;
+			z-index:9999;
+		}
+		.label { position:absolute; pointer-events: none; font-size: 8px; color: black; }
+		img { position:absolute; top:0px; left:0px; width:200px; height:64px; }
+		.header { position: fixed; top:0px; left:30%; }
+		.checkMap { font-size:small; position: fixed; top: 160px; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+		.check { font-size:small; position: fixed; top: 200px; right:8px; border: 2px solid red; z-index:9999; }
+		.backButton { font-size:small; position: fixed; bottom: 20%; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9998; }
+		.station { pointer-events: none; }
+		svg { position:absolute; left:30%; top:25%; border:1px; background-color: white; text-align:left; }
+		#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
+		/* アコーディオン */
+		ul {
+			list-style: none;
+			display: none;
+		}
+		li {
+			cursor: pointer;
+			background:#fff;
+		}
+		.town {
+			margin: 1px;
+			padding: 2px 20px;
+			border-radius: 5px;
+			cursor: pointer;
+			background:#8eb8ff;
+			font-weight: bold;
+			color: #333333;
+		}
+		.town:hover {
+			background-color: #ffd1d1;
+		}
+		.accordion > ul > li  {
+			margin: 0 0 2px 0;
+			padding: 4px 0 0 4px;
+			border-radius: 5px;
+			cursor: pointer;
+			background-color:#ffc753;
+			color: black
+		}
+		.accordion > ul > li:hover  {
+			background-color:#ffd1d1;
+		}
+		.accordion > ul > li > ul > li  {
+			margin: 0 0 4px 0;
+			padding: 0 0 0 0;
+			border-radius: 5px;
+			cursor: pointer;
+			background:#c7b2de;
+			background-position: bottom;
+			color: black;
+		}
+		.accordion > ul > li > ul > li:hover  {
+			background-color:#ffd1d1;
+			color: black;
+		}
+		.accordion > ul > li > ul > li > ul > li {
+			margin: 0 0 4px 0;
+			padding: 0 0 0 0;
+			border-radius: 5px;
+			cursor: pointer;
+			background:#cbf266;
+			background-position: bottom;
+			color: black;
+		}
+		.accordion > ul > li > ul > li > ul > li:hover  {
+			background-color:#ffd1d1;
+			color: black;
+		}
+		#content > li {
+			margin: 0 0 0 0;
+			padding: 0 0 4px 0;
+			border-radius: 0px;
+			background: white;
+		}
+		/*RESPONSIVE: スマートフォンなどウィンドウ幅600px以下*/
+		@media screen and (max-width:600px) {
+			/*iPhone5s１行におさめるには4.35vw*/
+			img { position:absolute; top:0px; left:0px; width:100px; height:32px; }
+			.header { position: fixed; top:0px; left:30%; }
+			#attention { position: fixed; top:110px; left: 30%; }
+			.checkMap { font-size:14px; position: fixed; top: 220px; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.check { font-size:14px; position: fixed; width:100px; top: 220px; left:40%; border: 2px solid red; z-index:9999; }
+			.backButton { font-size:16px; position: fixed; bottom: 20%; right:8px; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.station { pointer-events: none; }
+			svg { position:absolute; top:35%; left:30%; border:1px; background-color: white; text-align:left; }
+			#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
+		}
+		@media screen and (max-width:460px) {
+			img { position:absolute; top:0px; left:0px; width:100px; height:32px; }
+			.header { position: fixed; top:0px; left:30%; }
+			#attention { position: fixed; top:110px; left: 30%; }
+			.checkMap { font-size:14px; position: fixed; top: 260px; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.check { font-size:14px; position: fixed; width:100px; top: 260px; left:40%; border: 2px solid red; z-index:9999; }
+			.backButton { font-size:13px; position: fixed; bottom: 20%; right:2%; border: 2px solid green; border-radius: 5px; background: #7fffd4; z-index:9999; }
+			.station { pointer-events: none; }
+			svg { position:absolute; top:250px; left:30%; border:1px; background-color: white; text-align:left; }
+			#department { position: fixed; bottom:0; right:0; z-index:9999; pointer-events: none; }
+		}
+	</style>
+  </head>
+  <body>
+	<div id="logo">
+		<a href="https://www.city.osaka.lg.jp/index.html"><img src="osakacity_logo.png" alt="大阪市 OSAKA CITY"></a>
+	</div>
+	<div class="header">
+		<h1><div id="kuname"></div></h1>
+		<h2>お住まいの地域を選択していただくと、ごみ収集曜日が表示されます</h2>
+		<h4>コミュニティ回収を除くごみ収集については、午前８時30分・午後12時30分までにお出しください。</h4>
+		<p><a href="https://www.city.osaka.lg.jp/kankyo/page/0000009337.html">・ごみの出し方について</a>　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000539144.html">・コミュニティ回収の収集時間について</a>　<a href="https://www.city.osaka.lg.jp/kankyo/page/0000009981.html">・ごみ収集のお問い合わせ先</a></p>
+	</div>
+	<div class="summary">
+		<p><div id="kuname2"></div></p>
+	</div>
+	<div class="accordion" style="position:absolute; top:85px; float:left; width:30%"></div>
+	<button class="checkMap" onClick="hideMap()">地図　なし</button>
+	<form name="checkbox" class="check">
+		<label><input type="checkbox" onclick="drawStation()">鉄道駅　表示</label>
+	</form>
+	<button class="backButton" onClick="backIndex()">区選択へ戻る</button>
+	<div id="department">
+		<h2>このページの作成者・問合せ先</h2>
+		<h2>大阪市環境局事業部事業管理課</h2>
+			電話：０６−６６３０−３２２６</h3>
+	</div>
+	<script>
+	//
+	//-----第１段階　トップページでクリックした区の区名とcsv,geojsonのファイル名
+	//区名、マップ中心表示のための緯度経度パラメーターを前ページから受け取り、パースする処理
+	var param = location.search; // アドレスの「?」以降の引数(パラメータ)を取得
+	param = param.substring(1); //先頭の?をカット
+	var pair = param.split("&"); //&で引数を分割
+	var temp = "";
+	var key = new Array();
+	for (var i=0;i<pair.length;i++){
+		temp = pair[i].split("="); //配列を=で分割
+		keyName = temp[0];
+		keyValue = temp[1];
+		//キーと値の連想配列を生成
+		key[keyName] = keyValue;
+	}
+	var ku = decodeURIComponent(key["ku"]);
+	var file = decodeURIComponent(key["file"]);
+	//トップページからクリックで引き継いだ区名をidタグkunameに表示する処理
+	document.getElementById("kuname").innerHTML = ku + "　町丁目マップ";
+	//
+	//-----第２段階　町丁目ごとにデータを格納したCSV読み込み
+	//変数初期化
+	var csvfile = file + ".csv";  //町丁目ごとのデータを記録したCSVファイル
+	var geojsonfile = file + ".geojson";  //eStatから取得した境界データshpをQJISでgeojsonに変換したファイル
+	var fontSize = "20px";
+	var csvdata = [];  //CSV格納先
+	//ごみ収集情報　CSV読み込み
+	var str = "";
+	var town_old = "";
+	var chome_old = "";
+	var banchi_old = "";
+	var gaiku_old = "";
+	var depth = 1; //</ul>をつけるため、何階層目に存在したのか判別用 2:丁目がなく番地のみの時　3:通常　4:マンション名まで存在
+	//時間表示パターンの定義 16パターン　インデックス0-15
+	var timeDisplay = ["収集時間要問合せ","午前","午後","8:30~10:30","9:00~11:00","9:30~11:30","10:00~12:00","10:30~12:30","11:00~13:00","11:30~13:30","12:00~14:00","12:30~14:30","13:00~15:00","13:30~15:30","14:00~16:00","14:30~16:30"];
+	//アコーディオンの仕様
+	//令和３年７月版とアルゴリズムは全く異なっていることに注意
+	//令和４年１月版の基本的な考え方：事業管理課が作成するエクセルデータは、地区名１-５がすべて左詰めであることを前提とする。
+	//すなわち、列として丁目、番地を固定しない。以下のelement.町名などは令和３年７月のなごりで残っているが、意味合いは地区名２、３、４、５である。
+	//今回こうすることで、スペースが必要なくなった。ただし、そのかわりにデータは左詰めをする必要がある。中央区難波千日前は地区名３がスペースだった。それはダメ。
+	//よって、左詰めを事業管理課に徹底してもらう必要がある。３Rがそれで大丈夫かどうかは要確認＞列固定とするなら以下のコードは使えない。
+	//以下はその前提で、depth変数によって、アコーディオンの深さを判定し、それにより閉じタグを調節している。
+	d3.csv(csvfile, function(data){
+		//console.log(data);
+		//csvdataに格納
+		data.forEach(function(element){
+			//console.log(element);
+			csvdata.push(element);
+			//アコーディオンに書き込み
+			//町名
+			var isNextTown = false;
+			if (element.町名 != town_old){
+				if (element.町名 != ""){
+					switch (depth){
+						case 1:
+							str = str + '<div class="town"><h3>'+element.町名+'</h3></div>';
+							break;
+						case 2:
+							str = str + '</li></ul><div class="town"><h3>'+element.町名+'</h3></div>';
+							break;
+						case 3:
+							str = str + '</li></ul></li></ul><div class="town"><h3>'+element.町名+'</h3></div>';
+							break;
+						case 4:
+							str = str + '</li></ul></li></ul></li></ul><div class="town"><h3>'+element.町名+'</h3></div>';
+							break;
+					}
+					isNextTown = true;
+					town_old = element.町名;
+				}
+			}
+			// 
+			//丁目
+			var isNextChome = false;
+			//町名が変わった最初の時
+			if (isNextTown){
+				if (element.丁目 != ""){
+					depth = 2;
+					str = str + '<ul><li>'+element.丁目;
+					isNextChome = true;
+					chome_old = element.丁目;
+				}
+			}
+			//同じ町名で丁目が変わった場合
+			if (element.丁目 != chome_old){
+				if (element.丁目 != ""){
+					if (depth==4){
+						str = str + '</li></ul></li></ul></li><li>'+element.丁目;
+					} else  if (depth==3){
+						str = str + '</li></ul></li><li>'+element.丁目;
+					} else if (depth==2){
+						str = str + '</li><li>'+element.丁目;
+					}
+					depth = 2;
+					isNextChome = true;
+					chome_old = element.丁目;
+				}
+			}
+			//
+			//番地
+			var isNextBanchi = false;
+			//丁目が変わった最初の時
+			if (isNextChome){
+				if (element.番地 != ""){
+					depth = 3;
+					str = str + '<ul><li>'+element.番地;
+					isNextBanchi = true;
+					banchi_old = element.番地;
+				}
+			}
+			//同じ丁目で番地が変わった場合
+			if (element.番地 != banchi_old){
+				if (element.番地 != ""){
+					if (depth==4){
+						str = str + '</li></ul></li></ul><ul><li>'+element.番地;
+					} else {
+						str = str + '</li></ul><ul><li>'+element.番地;
+					} 
+					depth = 3;
+					isNextBanchi = true;
+					banchi_old = element.番地;
+				}
+			}
+			//
+			//地区名５
+			if (isNextBanchi){
+				if (element.備考 != ""){
+					depth = 4;
+					str = str + '<ul><li>'+element.備考;
+					isNextBanchi = false;
+				}
+			//同じ番地で地区名５が変わった場合
+			} else if (element.備考!=""){
+				depth = 4;
+				str = str + '</li></ul><ul><li>'+element.備考;
+			}
+			
+			//ここからごみ種別情報
+			//雑ごみ
+			var $zatsu = "";
+			if (element.雑ごみ !=""){
+				$zatsu = '<li>雑ごみ：'+element.雑ごみ+'</li>';
+			}
+			//普通ごみ　判定
+			var $normal = '';
+			if (element.普通ごみ_収集時間要問合せ != ""){
+				var day = element.普通ごみ_収集時間要問合せ.split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（収集時間要問合せ）"+'</li>';
+			} else if (element.普通ごみ_午前 !=""){
+				var day = element.普通ごみ_午前.split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（午前）"+'</li>';
+			} else if (element.普通ごみ_午後 !=""){
+				var day = element.普通ごみ_午後.split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（午後）"+'</li>';
+			} else if (element["普通ごみ_8:30~10:30"] != ""){
+				var day = element["普通ごみ_8:30~10:30"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（8:30~10:30）"+'</li>';
+			} else if (element["普通ごみ_9:00~11:00"] != ""){
+				var day = element["普通ごみ_9:00~11:00"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（9:00~11:00）"+'</li>';
+			} else if (element["普通ごみ_9:30~11:30"] != ""){
+				var day = element["普通ごみ_9:30~11:30"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（9:30~11:30）"+'</li>';
+			} else if (element["普通ごみ_10:00~12:00"] !=""){
+				var day = element["普通ごみ_10:00~12:00"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（10:00~12:00）"+'</li>';
+			} else if (element["普通ごみ_10:30~12:30"] !=""){
+				var day = element["普通ごみ_10:30~12:30"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（10:30~12:30）"+'</li>';
+			} else if (element["普通ごみ_11:00~13:00"] !=""){
+				var day = element["普通ごみ_11:00~13:00"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（11:00~13:00）"+'</li>';
+			} else if (element["普通ごみ_11:30~13:30"] !=""){
+				var day = element["普通ごみ_11:30~13:30"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（11:30~13:30）"+'</li>';
+			} else if (element["普通ごみ_12:00~14:00"] !=""){
+				var day = element["普通ごみ_12:00~14:00"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（12:00~14:00）"+'</li>';
+			} else if (element["普通ごみ_12:30~14:30"] !=""){
+				var day = element["普通ごみ_12:30~14:30"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（12:30~14:30）"+'</li>';
+			} else if (element["普通ごみ_13:00~15:00"] !=""){
+				var day = element["普通ごみ_13:00~15:00"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（13:00~15:00）"+'</li>';
+			} else if (element["普通ごみ_13:30~15:30"] !=""){
+				var day = element["普通ごみ_13:30~15:30"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（13:30~15:30）"+'</li>';
+			} else if (element["普通ごみ_14:00~16:00"] !=""){
+				var day = element["普通ごみ_14:00~16:00"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（14:00~16:00）"+'</li>';
+			} else if (element["普通ごみ_14:30~16:30"] !=""){
+				var day = element["普通ごみ_14:30~16:30"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（14:30~16:30）"+'</li>';
+			}
+			//資源ごみ　判定
+			var $res = '';
+			if (element.資源ごみ_収集時間要問合せ != ""){
+				$res = '<li>資源ごみ：'+element.資源ごみ_収集時間要問合せ+"曜日（収集時間要問合せ）"+'</li>';
+			} else if (element.資源ごみ_午前 !=""){
+				$res = '<li>資源ごみ：'+element.資源ごみ_午前+"曜日（午前）"+'</li>';
+			} else if (element.資源ごみ_午後 !=""){
+				$res = '<li>資源ごみ：'+element.資源ごみ_午後+"曜日（午後）"+'</li>';
+			} else if (element["資源ごみ_8:30~10:30"] != ""){
+				$res = '<li>資源ごみ：'+element["資源ごみ_8:30~10:30"]+"曜日（8:30~10:30）"+'</li>';
+			} else if (element["資源ごみ_9:00~11:00"] != ""){
+				$res = '<li>資源ごみ：'+element["資源ごみ_9:00~11:00"]+"曜日（9:00~11:00）"+'</li>';
+			} else if (element["資源ごみ_9:30~11:30"] != ""){
+				$res = '<li>資源ごみ：'+element["資源ごみ_9:30~11:30"]+"曜日（9:30~11:30）"+'</li>';
+			} else if (element["資源ごみ_10:00~12:00"] !=""){
+				$res = '<li>資源ごみ：'+element["資源ごみ_10:00~12:00"]+"曜日（10:00~12:00）"+'</li>';
+			} else if (element["資源ごみ_10:30~12:30"] !=""){
+				$res = '<li>資源ごみ：'+element["資源ごみ_10:30~12:30"]+"曜日（10:30~12:30）"+'</li>';
+			} else if (element["資源ごみ_11:00~13:00"] !=""){
+				$res = '<li>資源ごみ：'+element["資源ごみ_11:00~13:00"]+"曜日（11:00~13:00）"+'</li>';
+			} else if (element["資源ごみ_11:30~13:30"] !=""){
+				$res = '<li>資源ごみ：'+element["資源ごみ_11:30~13:30"]+"曜日（11:30~13:30）"+'</li>';
+			} else if (element["資源ごみ_12:00~14:00"] !=""){
+				$res = '<li>資源ごみ：'+element["資源ごみ_12:00~14:00"]+"曜日（12:00~14:00）"+'</li>';
+			} else if (element["資源ごみ_12:30~14:30"] !=""){
+				$res = '<li>資源ごみ：'+element["資源ごみ_12:30~14:30"]+"曜日（12:30~14:30）"+'</li>';
+			} else if (element["資源ごみ_13:00~15:00"] !=""){
+				$res = '<li>資源ごみ：'+element["資源ごみ_13:00~15:00"]+"曜日（13:00~15:00）"+'</li>';
+			} else if (element["資源ごみ_13:30~15:30"] !=""){
+				$res = '<li>資源ごみ：'+element["資源ごみ_13:30~15:30"]+"曜日（13:30~15:30）"+'</li>';
+			} else if (element["資源ごみ_14:00~16:00"] !=""){
+				$res = '<li>資源ごみ：'+element["資源ごみ_14:00~16:00"]+"曜日（14:00~16:00）"+'</li>';
+			} else if (element["資源ごみ_14:30~16:30"] !=""){
+				$res = '<li>資源ごみ：'+element["資源ごみ_14:30~16:30"]+"曜日（14:30~16:30）"+'</li>';
+			}
+			//容器包装プラ　判定
+			var $pla = '';
+			if (element.容器包装プラスチック_収集時間要問合せ != ""){
+				$pla = '<li>容器包装プラスチック：'+element.容器包装プラスチック_収集時間要問合せ+"曜日（収集時間要問合せ）"+'</li>';
+			} else if (element.容器包装プラスチック_午前 !=""){
+				$pla = '<li>容器包装プラスチック：'+element.容器包装プラスチック_午前+"曜日（午前）"+'</li>';
+			} else if (element.容器包装プラスチック_午後 !=""){
+				$pla = '<li>容器包装プラスチック：'+element.容器包装プラスチック_午後+"曜日（午後）"+'</li>';
+			} else if (element["容器包装プラスチック_8:30~10:30"] != ""){
+				$pla = '<li>容器包装プラスチック：'+element["容器包装プラスチック_8:30~10:30"]+"曜日（8:30~10:30）"+'</li>';
+			} else if (element["容器包装プラスチック_9:00~11:00"] != ""){
+				$pla = '<li>容器包装プラスチック：'+element["容器包装プラスチック_9:00~11:00"]+"曜日（9:00~11:00）"+'</li>';
+			} else if (element["容器包装プラスチック_9:30~11:30"] != ""){
+				$pla = '<li>容器包装プラスチック：'+element["容器包装プラスチック_9:30~11:30"]+"曜日（9:30~11:30）"+'</li>';
+			} else if (element["容器包装プラスチック_10:00~12:00"] !=""){
+				$pla = '<li>容器包装プラスチック：'+element["容器包装プラスチック_10:00~12:00"]+"曜日（10:00~12:00）"+'</li>';
+			} else if (element["容器包装プラスチック_10:30~12:30"] !=""){
+				$pla = '<li>容器包装プラスチック：'+element["容器包装プラスチック_10:30~12:30"]+"曜日（10:30~12:30）"+'</li>';
+			} else if (element["容器包装プラスチック_11:00~13:00"] !=""){
+				$pla = '<li>容器包装プラスチック：'+element["容器包装プラスチック_11:00~13:00"]+"曜日（11:00~13:00）"+'</li>';
+			} else if (element["容器包装プラスチック_11:30~13:30"] !=""){
+				$pla = '<li>容器包装プラスチック：'+element["容器包装プラスチック_11:30~13:30"]+"曜日（11:30~13:30）"+'</li>';
+			} else if (element["容器包装プラスチック_12:00~14:00"] !=""){
+				$pla = '<li>容器包装プラスチック：'+element["容器包装プラスチック_12:00~14:00"]+"曜日（12:00~14:00）"+'</li>';
+			} else if (element["容器包装プラスチック_12:30~14:30"] !=""){
+				$pla = '<li>容器包装プラスチック：'+element["容器包装プラスチック_12:30~14:30"]+"曜日（12:30~14:30）"+'</li>';
+			} else if (element["容器包装プラスチック_13:00~15:00"] !=""){
+				$pla = '<li>容器包装プラスチック：'+element["容器包装プラスチック_13:00~15:00"]+"曜日（13:00~15:00）"+'</li>';
+			} else if (element["容器包装プラスチック_13:30~15:30"] !=""){
+				$pla = '<li>容器包装プラスチック：'+element["容器包装プラスチック_13:30~15:30"]+"曜日（13:30~15:30）"+'</li>';
+			} else if (element["容器包装プラスチック_14:00~16:00"] !=""){
+				$pla = '<li>容器包装プラスチック：'+element["容器包装プラスチック_14:00~16:00"]+"曜日（14:00~16:00）"+'</li>';
+			} else if (element["容器包装プラスチック_14:30~16:30"] !=""){
+				$pla = '<li>容器包装プラスチック：'+element["容器包装プラスチック_14:30~16:30"]+"曜日（14:30~16:30）"+'</li>';
+			}
+			//古紙衣類　判定
+			var $paper = '';
+			if (element.古紙衣類_収集時間要問合せ != ""){
+				$paper = '<li>古紙衣類：'+element.古紙衣類_収集時間要問合せ+"曜日（収集時間要問合せ）"+'</li>';
+			} else if (element.古紙衣類_午前 !=""){
+				$paper = '<li>古紙衣類：'+element.古紙衣類_午前+"曜日（午前）"+'</li>';
+			} else if (element.古紙衣類_午後 !=""){
+				$paper = '<li>古紙衣類：'+element.古紙衣類_午後+"曜日（午後）"+'</li>';
+			} else if (element["古紙衣類_8:30~10:30"] != ""){
+				$paper = '<li>古紙衣類：'+element["古紙衣類_8:30~10:30"]+"曜日（8:30~10:30）"+'</li>';
+			} else if (element["古紙衣類_9:00~11:00"] != ""){
+				$paper = '<li>古紙衣類：'+element["古紙衣類_9:00~11:00"]+"曜日（9:00~11:00）"+'</li>';
+			} else if (element["古紙衣類_9:30~11:30"] != ""){
+				$paper = '<li>古紙衣類：'+element["古紙衣類_9:30~11:30"]+"曜日（9:30~11:30）"+'</li>';
+			} else if (element["古紙衣類_10:00~12:00"] !=""){
+				$paper = '<li>古紙衣類：'+element["古紙衣類_10:00~12:00"]+"曜日（10:00~12:00）"+'</li>';
+			} else if (element["古紙衣類_10:30~12:30"] !=""){
+				$paper = '<li>古紙衣類：'+element["古紙衣類_10:30~12:30"]+"曜日（10:30~12:30）"+'</li>';
+			} else if (element["古紙衣類_11:00~13:00"] !=""){
+				$paper = '<li>古紙衣類：'+element["古紙衣類_11:00~13:00"]+"曜日（11:00~13:00）"+'</li>';
+			} else if (element["古紙衣類_11:30~13:30"] !=""){
+				$paper = '<li>古紙衣類：'+element["古紙衣類_11:30~13:30"]+"曜日（11:30~13:30）"+'</li>';
+			} else if (element["古紙衣類_12:00~14:00"] !=""){
+				$paper = '<li>古紙衣類：'+element["古紙衣類_12:00~14:00"]+"曜日（12:00~14:00）"+'</li>';
+			} else if (element["古紙衣類_12:30~14:30"] !=""){
+				$paper = '<li>古紙衣類：'+element["古紙衣類_12:30~14:30"]+"曜日（12:30~14:30）"+'</li>';
+			} else if (element["古紙衣類_13:00~15:00"] !=""){
+				$paper = '<li>古紙衣類：'+element["古紙衣類_13:00~15:00"]+"曜日（13:00~15:00）"+'</li>';
+			} else if (element["古紙衣類_13:30~15:30"] !=""){
+				$paper = '<li>古紙衣類：'+element["古紙衣類_13:30~15:30"]+"曜日（13:30~15:30）"+'</li>';
+			} else if (element["古紙衣類_14:00~16:00"] !=""){
+				$paper = '<li>古紙衣類：'+element["古紙衣類_14:00~16:00"]+"曜日（14:00~16:00）"+'</li>';
+			} else if (element["古紙衣類_14:30~16:30"] !=""){
+				$paper = '<li>古紙衣類：'+element["古紙衣類_14:30~16:30"]+"曜日（14:30~16:30）"+'</li>';
+			}
+			//ごみ収集情報統合
+			str = str + '<ul id="content">'+ $zatsu + $normal + $res + $pla + $paper + '</ul>';
+		});
+		str = str + '</li></ul>';
+		spaces = '<br><br><br><br><br>'
+		//console.log(str);
+		//貼り付け
+		$('.accordion')
+			.append(str)
+			.append(spaces);
+		addClickEvents();
+	});
+
+	//
+	//------第３段階　町丁目境界データgeojsonを読み込み描画する
+	//描画エリア設定
+	var width  = window.innerWidth * 0.7;
+	var height = window.innerHeight * 0.9;
+	var centerX = width / 2;
+	var centerY = height / 2;
+	//svg
+	var svg = d3.select("body").append("svg").attr("width", width).attr("height", height);
+	var projection;
+	//町丁目名を表示するツールチップを設定（コメントアウト分はSVGは改行できない）
+	var tooltip0 = ""; // mouseoverの時の丁目名表示用
+	var isInfowindowOpen = false; //infowindowsが表示されるとtooltip0は表示しないフラグ
+	tooltip0 = d3.select("body").append("div").attr("class", "tooltip").style("pointer-events", "none");
+	//click時に街区（備考欄）の表示用
+	//東住吉区駒川３丁目は71個あるので80枠を用意しておく。
+	var tooltip = [];
+	var info = []; //tooltipに表示する文字列格納用変数
+	for (var i=0;i<80;i++){
+		tooltip[i] = d3.select("body").append("div").attr("class", "tooltip");
+		info[i] = "";
+	}
+	//ごみ収集情報を表示するツールチップ設定
+	//普通ごみ_午前～ﾍﾟｯﾄﾎﾞﾄﾙｺﾐｭﾆﾃｨと閉じるボタンまで12個枠を用意しておく
+	var tooltip2 = [];
+	var info2 = [];
+	for (var i=0;i<13;i++){
+		tooltip2[i] = d3.select("body").append("div").attr("class", "tooltip2");
+	}
+	//info2でcsvから読み込んだごみ収集データを格納するクラス定義
+	function infoData(_town, _chome, _banchi, _gaiku, _zatsu, _normalQ, _normalAM, _normalPM, _normal830, _normal900, _normal930, _normal1000, _normal1030, _normal1100, _normal1130, _normal1200, _normal1230, _normal1300, _normal1330, _normal1400, _normal1430, _resQ, _resAM, _resPM, _res830, _res900, _res930, _res1000, _res1030, _res1100, _res1130, _res1200, _res1230, _res1300, _res1330, _res1400, _res1430, _plaQ, _plaAM, _plaPM, _pla830, _pla900, _pla930, _pla1000, _pla1030, _pla1100, _pla1130, _pla1200, _pla1230, _pla1300, _pla1330, _pla1400, _pla1430, _paperQ, _paperAM, _paperPM, _paper830, _paper900, _paper930, _paper1000, _paper1030, _paper1100, _paper1130, _paper1200, _paper1230, _paper1300, _paper1330, _paper1400, _paper1430){
+		this.town = _town;
+		this.chome = _chome;
+		this.banchi = _banchi;
+		this.gaiku = _gaiku;
+		this.zatsu = _zatsu;
+		this.normalQ = _normalQ
+		this.normalAM = _normalAM;
+		this.normalPM = _normalPM;
+		this.normal830 = _normal830;
+		this.normal900 = _normal900;
+		this.normal930 = _normal930;
+		this.normal1000 = _normal1000;
+		this.normal1030 = _normal1030;
+		this.normal1100 = _normal1100;
+		this.normal1130 = _normal1130;
+		this.normal1200 = _normal1200;
+		this.normal1230 = _normal1230;
+		this.normal1300 = _normal1300;
+		this.normal1330 = _normal1330;
+		this.normal1400 = _normal1400;
+		this.normal1430 = _normal1430;
+		this.resQ = _resQ;
+		this.resAM = _resAM;
+		this.resPM = _resPM;
+		this.res830 = _res830;
+		this.res900 = _res900;
+		this.res930 = _res930;
+		this.res1000 = _res1000;
+		this.res1030 = _res1030;
+		this.res1100 = _res1100;
+		this.res1130 = _res1130;
+		this.res1200 = _res1200;
+		this.res1230 = _res1230;
+		this.res1300 = _res1300;
+		this.res1330 = _res1330;
+		this.res1400 = _res1400;
+		this.res1430 = _res1430;
+		this.plaQ = _plaQ;
+		this.plaAM = _plaAM;
+		this.plaPM = _plaPM;
+		this.pla830 = _pla830;
+		this.pla900 = _pla900;
+		this.pla930 = _pla930;
+		this.pla1000 = _pla1000;
+		this.pla1030 = _pla1030;
+		this.pla1100 = _pla1100;
+		this.pla1130 = _pla1130;
+		this.pla1200 = _pla1200;
+		this.pla1230 = _pla1230;
+		this.pla1300 = _pla1300;
+		this.pla1330 = _pla1330;
+		this.pla1400 = _pla1400;
+		this.pla1430 = _pla1430;
+		this.paperQ = _paperQ;
+		this.paperAM = _paperAM;
+		this.paperPM = _paperPM;
+		this.paper830 = _paper830;
+		this.paper900 = _paper900;
+		this.paper930 = _paper930;
+		this.paper1000 = _paper1000;
+		this.paper1030 = _paper1030;
+		this.paper1100 = _paper1100;
+		this.paper1130 = _paper1130;
+		this.paper1200 = _paper1200;
+		this.paper1230 = _paper1230;
+		this.paper1300 = _paper1300;
+		this.paper1330 = _paper1330;
+		this.paper1400 = _paper1400;
+		this.paper1430 = _paper1430;
+	}
+	//町丁目検索したデータ格納用配列（あとでforループの中で使うのでグローバル変数にしておく）
+	var result = [];
+	//infowindow設定
+	var infowindow = d3.select("body").append("rect").attr("class", "infowindow");
+	var infowindow2 = d3.select("body").append("rect").attr("class", "infowindow2").style("opacity", "0");
+	//町丁目geojson読み込み
+	d3.json(geojsonfile, function(json){
+		//描画レスポンシブ対応 中心と移動も画面サイズで自動調整
+		projection = d3.geoMercator()
+	    .fitExtent([[0, 0],[width, height-100]], json);
+		//駅名表示　ただし、読み込んだ当初はvisibility hiddenで隠している
+		//国土数値情報　鉄道をQGISを用いて大阪市でクリッピング
+		//geojson読み込み　ロードを確実にするため、ここに書いている
+		var lonlat;
+		var xy;
+		d3.json("station_osakacity.geojson", function(json){
+			//path設定
+			var path = d3.geoPath(projection);
+			//駅　描画
+			svg.append("g").selectAll("path")
+				.data(json.features)
+				.enter()
+				.append("path")
+				.attr("class", "station")
+				.attr("visibility", "hidden")
+				.attr("d", path)
+				.style("stroke-width", "5")
+				.style("stroke", "#ffc753");
+			//駅名　描画
+			svg.append("g").selectAll("text")
+				.data(json.features)
+				.enter()
+				.append("text")
+				.attr("class", "station")
+				.attr("visibility", "hidden")
+				.style("font-size", "14px")
+				.style("text-anchor", "middle")
+				.attr("x", function(d){
+					lonlat = d.geometry.coordinates[0];
+					xy = projection(lonlat[0]);
+					return xy[0];
+				})
+				.attr("y", function(d){
+					lonlat = d.geometry.coordinates[0];
+					xy = projection(lonlat[0]);
+					return xy[1]-10;
+				})
+				.text(function(d){
+					return d.properties.駅名;
+				});
+		});
+		//町丁目　描画
+		//path設定
+		var path = d3.geoPath(projection);
+		//描画、マウス反応
+		svg.append("g").selectAll("path")
+		    .data(json.features)
+			.enter()
+			.append("path")
+			.attr("d", path)
+			.style("fill", function(d,i){
+				if(d.properties.JINKO=="0"){
+					return "#8eb8ff";
+				}
+				return "#8eb8ff";
+			})
+			.on('mouseover', function(d){
+				d3.select(this)
+				.style("fill","#ffd1d1");
+				if (!isInfowindowOpen){
+					//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-X) 3項演算子
+				var posX0 = event.pageX > innerWidth/2 ? event.pageX-100 : event.pageX;
+				var posY0 = event.pageY > innerHeight/2 ? event.pageY-40 : event.pageY;
+				tooltip0.style("font-weight", "bold")
+				        .style("font-size", fontSize)
+				        .style("left", (posX0)+"px")
+					    .style("top",  (posY0)+"px")
+						.style("opacity", "1")
+						.style("pointer-events", "none")
+					    .text(d.properties.S_NAME); //geojsonの丁目名
+				}
+			})
+			.on('click', function(d){
+				d3.select(this)
+				.style("fill","#ffd1d1");
+				//mouseover丁目名非表示
+				tooltip0.style("opacity", "0");
+				//画面端になるとinfowindow内文字が見えなくなるのを防ぐ(画面半分超えると座標-350) 3項演算子
+				var posX = event.pageX > innerWidth/2 ? event.pageX - 320 : event.pageX+20;
+				var posY = event.pageY > innerHeight/2 ? event.pageY -80 : event.pageY;
+
+				//町丁目名、情報をtooltipに表示
+				//マウスオーバーしているgeojsonの町丁目名と等しい町丁目名のレコードをcsvdataから検索する
+				//filterで町丁目名一致を返す
+				result = csvdata.filter(function (v) {
+					//丁目にすべてが入っている場合はそのまま足すとgeojsonと一致しないので""にする
+					var v_chome = v.丁目 != "すべて" ? v.丁目 : "";
+					//2021-12-19追加　geojsonファイルの町名は全角だが、１月からのcsvファイル町名は半角のため、geojsonファイルの町名を半角変換してマッチング判定させる
+					//ファイル後段に全角半角変換関数 zenkaku2Hankaku()を追記している
+					var hankaku_chome = zenkaku2Hankaku(d.properties.S_NAME);
+					//console.log(hankaku_chome);
+					//return v.町名+v_chome === d.properties.S_NAME;
+					return v.町名+v_chome === hankaku_chome;
+				});
+				console.log(result);
+				var length = result.length;
+				//もし、length===1ならば、次の番地の選択の余地がないので、一気にごみ収集情報を表示させる
+				if (length < 2){
+					if (result[0].番地==="すべて" && result[0].備考==="すべて"){
+						info[1] = "すべて";
+					} else {
+						info[1]	= result[0].番地+" "+result[0].備考;
+					}
+					info2[0] = new infoData(result[0].町名, result[0].丁目, result[0].番地, result[0].備考, result[0].雑ごみ, result[0].普通ごみ_収集時間要問合せ, result[0].普通ごみ_午前, result[0].普通ごみ_午後, result[0]["普通ごみ_8:30~10:30"], result[0]["普通ごみ_9:00~11:00"],result[0]["普通ごみ_9:30~11:30"],result[0]["普通ごみ_10:00~12:00"],result[0]["普通ごみ_10:30~12:30"],result[0]["普通ごみ_11:00~13:00"],result[0]["普通ごみ_11:30~13:30"],result[0]["普通ごみ_12:00~14:00"],result[0]["普通ごみ_12:30~14:30"],result[0]["普通ごみ_13:00~15:00"],result[0]["普通ごみ_13:30~15:30"],result[0]["普通ごみ_14:00~16:00"],result[0]["普通ごみ_14:30~16:30"], result[0].資源ごみ_収集時間要問合せ, result[0].資源ごみ_午前, result[0].資源ごみ_午後, result[0]["資源ごみ_8:30~10:30"], result[0]["資源ごみ_9:00~11:00"],result[0]["資源ごみ_9:30~11:30"],result[0]["資源ごみ_10:00~12:00"],result[0]["資源ごみ_10:30~12:30"],result[0]["資源ごみ_11:00~13:00"],result[0]["資源ごみ_11:30~13:30"],result[0]["資源ごみ_12:00~14:00"],result[0]["資源ごみ_12:30~14:30"],result[0]["資源ごみ_13:00~15:00"],result[0]["資源ごみ_13:30~15:30"],result[0]["資源ごみ_14:00~16:00"],result[0]["資源ごみ_14:30~16:30"],result[0].容器包装プラスチック_収集時間要問合せ, result[0].容器包装プラスチック_午前, result[0].容器包装プラスチック_午後, result[0]["容器包装プラスチック_8:30~10:30"],result[0]["容器包装プラスチック_9:00~11:00"],result[0]["容器包装プラスチック_9:30~11:30"],result[0]["容器包装プラスチック_10:00~12:00"],result[0]["容器包装プラスチック_10:30~12:30"],result[0]["容器包装プラスチック_11:00~13:00"],result[0]["容器包装プラスチック_11:30~13:30"],result[0]["容器包装プラスチック_12:00~14:00"],result[0]["容器包装プラスチック_12:30~14:30"],result[0]["容器包装プラスチック_13:00~15:00"],result[0]["容器包装プラスチック_13:30~15:30"],result[0]["容器包装プラスチック_14:00~16:00"],result[0]["容器包装プラスチック_14:30~16:30"],result[0].古紙衣類_収集時間要問合せ, result[0].古紙衣類_午前, result[0].古紙衣類_午後, result[0]["古紙衣類_8:30~10:30"], result[0]["古紙衣類_9:00~11:00"],result[0]["古紙衣類_9:30~11:30"],result[0]["古紙衣類_10:00~12:00"],result[0]["古紙衣類_10:30~12:30"],result[0]["古紙衣類_11:00~13:00"],result[0]["古紙衣類_11:30~13:30"],result[0]["古紙衣類_12:00~14:00"],result[0]["古紙衣類_12:30~14:30"],result[0]["古紙衣類_13:00~15:00"],result[0]["古紙衣類_13:30~15:30"],result[0]["古紙衣類_14:00~16:00"],result[0]["古紙衣類_14:30~16:30"])
+					//infowindow2ポインターイベント復活
+					d3.selectAll(".infowindow2").style("pointer-events", "auto");
+							//透明度100%
+							d3.selectAll(".tooltip2").style("opacity", "1")
+							//ボタン復活
+							d3.selectAll(".button").style("pointer-events", "auto").style("opacity", "1")
+							//自身にバインドされたインデックスを取り出してinfo2のインデックスとして使う
+							var index = d3.select(this).datum();
+							//console.log(index)
+							infowindow2.style("left", (centerX-20)+"px")
+									   .style("opacity", "1");
+							//町名
+							if (info2[0].chome==="すべて"){ info2[0].chome="" }
+							tooltip2[0].style("font-size", fontSize)
+										.style("font-weight", "bold")
+										.style("left", (centerX)+"px")
+										.style("top", "224px")
+										.text(info2[0].town+info2[0].chome)
+							//番地＋街区名
+							//番地：すべて　街区：すべての時、「すべて　すべて」と表示はさすがに見苦しいのですべて
+							var banchi_and_gaiku = '';
+							if (info2[0].banchi === "すべて" && info2[0].gaiku === "すべて"){
+								banchi_and_gaiku = 'すべて';
+							} else {
+								banchi_and_gaiku = info2[0].banchi + " " + info2[0].gaiku;
+							}
+							tooltip2[1].style("font-size", fontSize)
+										.style("font-weight", "bold")
+										.style("left", (centerX)+"px")
+										.style("top", "256px")
+										.text(banchi_and_gaiku);
+							//普通ごみ
+							var normal_str = "";
+							if (info2[0].normalQ != ""){
+								var day = info2[0].normalQ.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（要問合せ）";
+							} else if (info2[0].normalAM != ""){
+								var day = info2[0].normalAM.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（午前）";
+							} else if (info2[0].normalPM != ""){
+								var day = info2[0].normalPM.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（午後）";
+							} else if (info2[0].normal830 != ""){
+								var day = info2[0].normal830.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（8:30~10:30）";
+							} else if (info2[0].normal900 != ""){
+								var day = info2[0].normal900.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（9:00~11:00）";
+							} else if (info2[0].normal930 != ""){
+								var day = info2[0].normal930.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（9:30~11:30）";
+							} else if (info2[0].normal1000 !=""){
+								var day = info2[0].normal1000.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（10:00~12:00）";
+							} else if (info2[0].normal1030 !=""){
+								var day = info2[0].normal1030.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（10:30~12:30）";
+							} else if (info2[0].normal1100 !=""){
+								var day = info2[0].normal1100.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（11:00~13:00）";
+							} else if (info2[0].normal1130 !=""){
+								var day = info2[0].normal1130.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（11:30~13:30）";
+							} else if (info2[0].normal1200 !=""){
+								var day = info2[0].normal1200.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（12:00~14:00）";
+							} else if (info2[0].normal1230 !=""){
+								var day = info2[0].normal1230.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（12:30~14:30）";
+							} else if (info2[0].normal1300 !=""){
+								var day = info2[0].normal1300.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（13:00~15:00）";
+							} else if (info2[0].normal1330 !=""){
+								var day = info2[0].normal1330.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（13:30~15:30）";
+							} else if (info2[0].normal1400 !=""){
+								var day = info2[0].normal1400.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（14:00~16:00）";
+							} else if (info2[0].normal1430 !=""){
+								var day = info2[0].normal1430.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（14:30~16:30）";
+							}
+							tooltip2[2].style("font-size", fontSize)
+										.style("left", (centerX)+"px")
+										.style("top", "288px")
+										.text("普通ごみ：" + normal_str)
+							//資源ごみ
+							var res_str = "";
+							if (info2[0].resQ != ""){
+								res_str = info2[0].resQ + "曜日（要問合せ）";
+							} else if (info2[0].resAM != ""){
+								res_str = info2[0].resAM + "曜日（午前）";
+							} else if (info2[0].resPM != ""){
+								res_str = info2[0].resPM + "曜日（午後）";
+							} else if (info2[0].res830 != ""){
+								res_str = info2[0].res830 + "曜日（8:30~10:30）";
+							} else if (info2[0].res900 != ""){
+								res_str = info2[0].res900 + "曜日（9:00~11:00）";
+							} else if (info2[0].res930 != ""){
+								res_str = info2[0].res930 + "曜日（9:30~11:30）";
+							} else if (info2[0].res1000 !=""){
+								res_str = info2[0].res1000 + "曜日（10:00~12:00）";
+							} else if (info2[0].res1030 !=""){
+								res_str = info2[0].res1030 + "曜日（10:30~12:30）";
+							} else if (info2[0].res1100 !=""){
+								res_str = info2[0].res1100 + "曜日（11:00~13:00）";
+							} else if (info2[0].res1130 !=""){
+								res_str = info2[0].res1130 + "曜日（11:30~13:30）";
+							} else if (info2[0].res1200 !=""){
+								res_str = info2[0].res1200 + "曜日（12:00~14:00）";
+							} else if (info2[0].res1230 !=""){
+								res_str = info2[0].res1230 + "曜日（12:30~14:30）";
+							} else if (info2[0].res1300 !=""){
+								res_str = info2[0].res1300 + "曜日（13:00~15:00）";
+							} else if (info2[0].res1330 !=""){
+								res_str = info2[0].res1330 + "曜日（13:30~15:30）";
+							} else if (info2[0].res1400 !=""){
+								res_str = info2[0].res1400 + "曜日（14:00~16:00）";
+							} else if (info2[0].res1430 !=""){
+								res_str = info2[0].res1430 + "曜日（14:30~16:30）";
+							}
+							tooltip2[3].style("font-size", fontSize)
+										.style("left", (centerX)+"px")
+										.style("top", "320px")
+										.text("資源ごみ：" + res_str)
+							//容包プラ
+							var pla_str = "";
+							if (info2[0].plaQ != ""){
+								pla_str = info2[0].plaQ + "曜日（要問合せ）";
+							} else if (info2[0].plaAM != ""){
+								pla_str = info2[0].plaAM + "曜日（午前）";
+							} else if (info2[0].plaPM != ""){
+								pla_str = info2[0].plaPM + "曜日（午後）";
+							} else if (info2[0].pla830 != ""){
+								pla_str = info2[0].pla830 + "曜日（8:30~10:30）";
+							} else if (info2[0].pla900 != ""){
+								pla_str = info2[0].pla900 + "曜日（9:00~11:00）";
+							} else if (info2[0].pla930 != ""){
+								pla_str = info2[0].pla930 + "曜日（9:30~11:30）";
+							} else if (info2[0].pla1000 !=""){
+								pla_str = info2[0].pla1000 + "曜日（10:00~12:00）";
+							} else if (info2[0].pla1030 !=""){
+								pla_str = info2[0].pla1030 + "曜日（10:30~12:30）";
+							} else if (info2[0].pla1100 !=""){
+								pla_str = info2[0].pla1100 + "曜日（11:00~13:00）";
+							} else if (info2[0].pla1130 !=""){
+								pla_str = info2[0].pla1130 + "曜日（11:30~13:30）";
+							} else if (info2[0].pla1200 !=""){
+								pla_str = info2[0].pla1200 + "曜日（12:00~14:00）";
+							} else if (info2[0].pla1230 !=""){
+								pla_str = info2[0].pla1230 + "曜日（12:30~14:30）";
+							} else if (info2[0].pla1300 !=""){
+								pla_str = info2[0].pla1300 + "曜日（13:00~15:00）";
+							} else if (info2[0].pla1330 !=""){
+								pla_str = info2[0].pla1330 + "曜日（13:30~15:30）";
+							} else if (info2[0].pla1400 !=""){
+								pla_str = info2[0].pla1400 + "曜日（14:00~16:00）";
+							} else if (info2[0].pla1430 !=""){
+								pla_str = info2[0].pla1430 + "曜日（14:30~16:30）";
+							}
+							tooltip2[4].style("font-size", fontSize)
+										.style("left", (centerX)+"px")
+										.style("top", "352px")
+										.text("容包プラ：" + pla_str)
+							//古紙衣類
+							var paper_str = "";
+							if (info2[0].paperQ != ""){
+								paper_str = info2[0].paperQ + "曜日（要問合せ）";
+							} else if (info2[0].paperAM != ""){
+								paper_str = info2[0].paperAM + "曜日（午前）";
+							} else if (info2[0].paperPM != ""){
+								paper_str = info2[0].paperPM + "曜日（午後）";
+							} else if (info2[0].paper830 != ""){
+								paper_str = info2[0].paper830 + "曜日（8:30~10:30）";
+							} else if (info2[0].paper900 != ""){
+								paper_str = info2[0].paper900 + "曜日（9:00~11:00）";
+							} else if (info2[0].paper930 != ""){
+								paper_str = info2[0].paper930 + "曜日（9:30~11:30）";
+							} else if (info2[0].paper1000 !=""){
+								paper_str = info2[0].paper1000 + "曜日（10:00~12:00）";
+							} else if (info2[0].paper1030 !=""){
+								paper_str = info2[0].paper1030 + "曜日（10:30~12:30）";
+							} else if (info2[0].paper1100 !=""){
+								paper_str = info2[0].paper1100 + "曜日（11:00~13:00）";
+							} else if (info2[0].paper1130 !=""){
+								paper_str = info2[0].paper1130 + "曜日（11:30~13:30）";
+							} else if (info2[0].paper1200 !=""){
+								paper_str = info2[0].paper1200 + "曜日（12:00~14:00）";
+							} else if (info2[0].paper1230 !=""){
+								paper_str = info2[0].paper1230 + "曜日（12:30~14:30）";
+							} else if (info2[0].paper1300 !=""){
+								paper_str = info2[0].paper1300 + "曜日（13:00~15:00）";
+							} else if (info2[0].paper1330 !=""){
+								paper_str = info2[0].paper1330 + "曜日（13:30~15:30）";
+							} else if (info2[0].paper1400 !=""){
+								paper_str = info2[0].paper1400 + "曜日（14:00~16:00）";
+							} else if (info2[0].paper1430 !=""){
+								paper_str = info2[0].paper1430 + "曜日（14:30~16:30）";
+							}
+							//閉じるボタン
+							tooltip2[12].attr("class", "button")
+										.style("font-size", fontSize)
+										.style("font-weight", "bold")
+										.style("left", (centerX+100)+"px")
+										.style("top", "450px")
+										.text("閉じる")
+										.on('click', function(){
+											d3.selectAll(".infowindow").style("opacity", "0").style("pointer-events", "none");
+											d3.selectAll(".tooltip").style("opacity", "0").style("pointer-events", "none");
+											d3.selectAll(".tooltip2").style("opacity", "0").style("pointer-events", "none");
+											d3.selectAll(".infowindow2")
+											  .style("opacity", "0")
+											  .style("pointer-events", "none");
+											d3.select(this).style("opacity", "0")
+											  .style("pointer-events", "none");
+											//isInfowindowOpenフラグオフ
+											isInfowindowOpen = false;
+										})
+				//番地が複数存在する場合
+				} else {
+				//行数が１行しか無い場合の処理
+				/*
+				//infowindowのpointer-events: none;
+				infowindow.style("pointer-events", "none");
+				*/
+				//infowindow描画
+				//街区があるときはinfowindowのpointer-eventsをオンにする
+				//infowindow.style("pointer-events", "auto");
+				if (result[0].丁目==="すべて"){ result[0].丁目=""; }
+				info[0] = result[0].町名+result[0].丁目; //とりあえずヒットした先頭の町名を選択
+				tooltip[0].style("font-weight", "bold")
+				        .style("font-size", fontSize)
+				        .style("left", (posX)+"px")
+					    .style("top",  (posY)+"px")
+						.style("opacity", "1")
+						.style("pointer-events", "auto")
+					    .text(info[0]);
+				//街区 備考欄 描画
+				var max_str_length = info[0].length; //infowindowのwidthを計算するため、番地＋備考の文字列　最大値格納用
+				//console.log(max_str_length)
+				for (var i=0; i<length; i++){
+					if (result[i].番地==="" && result[i].備考===""){
+						info[i+1] = "▶";
+					} else {
+						var _banchi = result[i].番地 === "" ? "▶" : result[i].番地;
+						var _str = result[i].備考 === "" ? "" : result[i].備考;
+						info[i+1]	= _banchi+" "+_str;
+						//文字列最大値を記録し、infowindowのwidthを調整する
+						var str_length = info[i+1].length;
+						//console.log(str_length)
+						max_str_length = max_str_length < str_length ? str_length : max_str_length;
+						//console.log(max_str_length)
+					}
+					info2[i] = new infoData(result[i].町名, result[i].丁目, result[i].番地, result[i].備考, result[i].雑ごみ, result[i].普通ごみ_収集時間要問合せ, result[i].普通ごみ_午前, result[i].普通ごみ_午後, result[i]["普通ごみ_8:30~10:30"], result[i]["普通ごみ_9:00~11:00"],result[i]["普通ごみ_9:30~11:30"],result[i]["普通ごみ_10:00~12:00"],result[i]["普通ごみ_10:30~12:30"],result[i]["普通ごみ_11:00~13:00"],result[i]["普通ごみ_11:30~13:30"],result[i]["普通ごみ_12:00~14:00"],result[i]["普通ごみ_12:30~14:30"],result[i]["普通ごみ_13:00~15:00"],result[i]["普通ごみ_13:30~15:30"],result[i]["普通ごみ_14:00~16:00"],result[i]["普通ごみ_14:30~16:30"], result[i].資源ごみ_収集時間要問合せ, result[i].資源ごみ_午前, result[i].資源ごみ_午後, result[i]["資源ごみ_8:30~10:30"], result[i]["資源ごみ_9:00~11:00"],result[i]["資源ごみ_9:30~11:30"],result[i]["資源ごみ_10:00~12:00"],result[i]["資源ごみ_10:30~12:30"],result[i]["資源ごみ_11:00~13:00"],result[i]["資源ごみ_11:30~13:30"],result[i]["資源ごみ_12:00~14:00"],result[i]["資源ごみ_12:30~14:30"],result[i]["資源ごみ_13:00~15:00"],result[i]["資源ごみ_13:30~15:30"],result[i]["資源ごみ_14:00~16:00"],result[i]["資源ごみ_14:30~16:30"],result[i].容器包装プラスチック_収集時間要問合せ, result[i].容器包装プラスチック_午前, result[i].容器包装プラスチック_午後, result[i]["容器包装プラスチック_8:30~10:30"],result[i]["容器包装プラスチック_9:00~11:00"],result[i]["容器包装プラスチック_9:30~11:30"],result[i]["容器包装プラスチック_10:00~12:00"],result[i]["容器包装プラスチック_10:30~12:30"],result[i]["容器包装プラスチック_11:00~13:00"],result[i]["容器包装プラスチック_11:30~13:30"],result[i]["容器包装プラスチック_12:00~14:00"],result[i]["容器包装プラスチック_12:30~14:30"],result[i]["容器包装プラスチック_13:00~15:00"],result[i]["容器包装プラスチック_13:30~15:30"],result[i]["容器包装プラスチック_14:00~16:00"],result[i]["容器包装プラスチック_14:30~16:30"],result[i].古紙衣類_収集時間要問合せ, result[i].古紙衣類_午前, result[i].古紙衣類_午後, result[i]["古紙衣類_8:30~10:30"], result[i]["古紙衣類_9:00~11:00"],result[i]["古紙衣類_9:30~11:30"],result[i]["古紙衣類_10:00~12:00"],result[i]["古紙衣類_10:30~12:30"],result[i]["古紙衣類_11:00~13:00"],result[i]["古紙衣類_11:30~13:30"],result[i]["古紙衣類_12:00~14:00"],result[i]["古紙衣類_12:30~14:30"],result[i]["古紙衣類_13:00~15:00"],result[i]["古紙衣類_13:30~15:30"],result[i]["古紙衣類_14:00~16:00"],result[i]["古紙衣類_14:30~16:30"]);
+					console.log(info2[i]);
+					//tooltip　描画
+					tooltip[i+1].style("font-size", fontSize)
+				        .style("left", (posX)+"px")
+					    .style("top",  (posY+(i+1)*30)+"px")
+						.style("opacity", "1")
+						.style("pointer-events", "auto")
+						.datum(i) //tooltipにインデックスをデータとしてバインディング。後でクリックしたときに配列result判別用
+					    .text(info[i+1])
+						.on('mouseover', function(d){
+							d3.select(this).style("background", "#ffd1d1");
+						})
+						.on('mouseout', function(d){
+							d3.select(this).style("background", "#FFF");
+						})
+						.on('click', function(d){
+							//infowindow2ポインターイベント復活
+							d3.selectAll(".infowindow2").style("pointer-events", "auto");
+							//透明度100%
+							d3.selectAll(".tooltip2").style("opacity", "1")
+							//ボタン復活
+							d3.selectAll(".button").style("pointer-events", "auto").style("opacity", "1")
+							//自身にバインドされたインデックスを取り出してinfo2のインデックスとして使う
+							var index = d3.select(this).datum();
+							//町名
+							if (info2[index].chome==="すべて"){ info2[index].chome="" }
+							tooltip2[0].style("font-size", fontSize)
+										.style("font-weight", "bold")
+										.style("left", (centerX)+"px")
+										.style("top", "224px")
+										.text(info2[index].town+info2[index].chome)
+							//番地＋街区名
+							//番地：すべて　街区：すべての時、「すべて　すべて」と表示はさすがに見苦しいのですべて
+							var banchi_and_gaiku = '';
+							if (info2[index].banchi === "すべて" && info2[index].gaiku === "すべて"){
+								banchi_and_gaiku = 'すべて';
+							} else {
+								banchi_and_gaiku = info2[index].banchi + " " + info2[index].gaiku;
+							}
+							tooltip2[1].style("font-size", fontSize)
+										.style("font-weight", "bold")
+										.style("left", (centerX)+"px")
+										.style("top", "256px")
+										.text(banchi_and_gaiku);
+							//普通ごみ
+							var normal_str = "";
+							if (info2[index].normalQ != ""){
+								var day = info2[index].normalQ.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（要問合せ）";
+							} else if (info2[index].normalAM != ""){
+								var day = info2[index].normalAM.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（午前）";
+							} else if (info2[index].normalPM != ""){
+								var day = info2[index].normalPM.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（午後）";
+							} else if (info2[index].normal830 != ""){
+								var day = info2[index].normal830.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（8:30~10:30）";
+							} else if (info2[index].normal900 != ""){
+								var day = info2[index].normal900.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（9:00~11:00）";
+							} else if (info2[index].normal930 != ""){
+								var day = info2[index].normal930.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（9:30~11:30）";
+							} else if (info2[index].normal1000 !=""){
+								var day = info2[index].normal1000.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（10:00~12:00）";
+							} else if (info2[index].normal1030 !=""){
+								var day = info2[index].normal1030.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（10:30~12:30）";
+							} else if (info2[index].normal1100 !=""){
+								var day = info2[index].normal1100.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（11:00~13:00）";
+							} else if (info2[index].normal1130 !=""){
+								var day = info2[index].normal1130.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（11:30~13:30）";
+							} else if (info2[index].normal1200 !=""){
+								var day = info2[index].normal1200.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（12:00~14:00）";
+							} else if (info2[index].normal1230 !=""){
+								var day = info2[index].normal1230.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（12:30~14:30）";
+							} else if (info2[index].normal1300 !=""){
+								var day = info2[index].normal1300.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（13:00~15:00）";
+							} else if (info2[index].normal1330 !=""){
+								var day = info2[index].normal1330.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（13:30~15:30）";
+							} else if (info2[index].normal1400 !=""){
+								var day = info2[index].normal1400.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（14:00~16:00）";
+							} else if (info2[index].normal1430 !=""){
+								var day = info2[index].normal1430.split('');
+								normal_str = day[0]+"曜日 "+day[1]+"曜日（14:30~16:30）";
+							}
+							tooltip2[2].style("font-size", fontSize)
+										.style("left", (centerX)+"px")
+										.style("top", "288px")
+										.text("普通ごみ：" + normal_str)
+							//資源ごみ
+							var res_str = "";
+							if (info2[index].resQ != ""){
+								res_str = info2[index].resQ + "曜日（要問合せ）";
+							} else if (info2[index].resAM != ""){
+								res_str = info2[index].resAM + "曜日（午前）";
+							} else if (info2[index].resPM != ""){
+								res_str = info2[index].resPM + "曜日（午後）";
+							} else if (info2[index].res830 != ""){
+								res_str = info2[index].res830 + "曜日（8:30~10:30）";
+							} else if (info2[index].res900 != ""){
+								res_str = info2[index].res900 + "曜日（9:00~11:00）";
+							} else if (info2[index].res930 != ""){
+								res_str = info2[index].res930 + "曜日（9:30~11:30）";
+							} else if (info2[index].res1000 !=""){
+								res_str = info2[index].res1000 + "曜日（10:00~12:00）";
+							} else if (info2[index].res1030 !=""){
+								res_str = info2[index].res1030 + "曜日（10:30~12:30）";
+							} else if (info2[index].res1100 !=""){
+								res_str = info2[index].res1100 + "曜日（11:00~13:00）";
+							} else if (info2[index].res1130 !=""){
+								res_str = info2[index].res1130 + "曜日（11:30~13:30）";
+							} else if (info2[index].res1200 !=""){
+								res_str = info2[index].res1200 + "曜日（12:00~14:00）";
+							} else if (info2[index].res1230 !=""){
+								res_str = info2[index].res1230 + "曜日（12:30~14:30）";
+							} else if (info2[index].res1300 !=""){
+								res_str = info2[index].res1300 + "曜日（13:00~15:00）";
+							} else if (info2[index].res1330 !=""){
+								res_str = info2[index].res1330 + "曜日（13:30~15:30）";
+							} else if (info2[index].res1400 !=""){
+								res_str = info2[index].res1400 + "曜日（14:00~16:00）";
+							} else if (info2[index].res1430 !=""){
+								res_str = info2[index].res1430 + "曜日（14:30~16:30）";
+							}
+							tooltip2[3].style("font-size", fontSize)
+										.style("left", (centerX)+"px")
+										.style("top", "320px")
+										.text("資源ごみ：" + res_str)
+							//容包プラ
+							var pla_str = "";
+							if (info2[index].plaQ != ""){
+								pla_str = info2[index].plaQ + "曜日（要問合せ）";
+							} else if (info2[index].plaAM != ""){
+								pla_str = info2[index].plaAM + "曜日（午前）";
+							} else if (info2[index].plaPM != ""){
+								pla_str = info2[index].plaPM + "曜日（午後）";
+							} else if (info2[index].pla830 != ""){
+								pla_str = info2[index].pla830 + "曜日（8:30~10:30）";
+							} else if (info2[index].pla900 != ""){
+								pla_str = info2[index].pla900 + "曜日（9:00~11:00）";
+							} else if (info2[index].pla930 != ""){
+								pla_str = info2[index].pla930 + "曜日（9:30~11:30）";
+							} else if (info2[index].pla1000 !=""){
+								pla_str = info2[index].pla1000 + "曜日（10:00~12:00）";
+							} else if (info2[index].pla1030 !=""){
+								pla_str = info2[index].pla1030 + "曜日（10:30~12:30）";
+							} else if (info2[index].pla1100 !=""){
+								pla_str = info2[index].pla1100 + "曜日（11:00~13:00）";
+							} else if (info2[index].pla1130 !=""){
+								pla_str = info2[index].pla1130 + "曜日（11:30~13:30）";
+							} else if (info2[index].pla1200 !=""){
+								pla_str = info2[index].pla1200 + "曜日（12:00~14:00）";
+							} else if (info2[index].pla1230 !=""){
+								pla_str = info2[index].pla1230 + "曜日（12:30~14:30）";
+							} else if (info2[index].pla1300 !=""){
+								pla_str = info2[index].pla1300 + "曜日（13:00~15:00）";
+							} else if (info2[index].pla1330 !=""){
+								pla_str = info2[index].pla1330 + "曜日（13:30~15:30）";
+							} else if (info2[index].pla1400 !=""){
+								pla_str = info2[index].pla1400 + "曜日（14:00~16:00）";
+							} else if (info2[index].pla1430 !=""){
+								pla_str = info2[index].pla1430 + "曜日（14:30~16:30）";
+							}
+							tooltip2[4].style("font-size", fontSize)
+										.style("left", (centerX)+"px")
+										.style("top", "352px")
+										.text("容包プラ：" + pla_str)
+							//古紙衣類
+							var paper_str = "";
+							if (info2[index].paperQ != ""){
+								paper_str = info2[index].paperQ + "曜日（要問合せ）";
+							} else if (info2[index].paperAM != ""){
+								paper_str = info2[index].paperAM + "曜日（午前）";
+							} else if (info2[index].paperPM != ""){
+								paper_str = info2[index].paperPM + "曜日（午後）";
+							} else if (info2[index].paper830 != ""){
+								paper_str = info2[index].paper830 + "曜日（8:30~10:30）";
+							} else if (info2[index].paper900 != ""){
+								paper_str = info2[index].paper900 + "曜日（9:00~11:00）";
+							} else if (info2[index].paper930 != ""){
+								paper_str = info2[index].paper930 + "曜日（9:30~11:30）";
+							} else if (info2[index].paper1000 !=""){
+								paper_str = info2[index].paper1000 + "曜日（10:00~12:00）";
+							} else if (info2[index].paper1030 !=""){
+								paper_str = info2[index].paper1030 + "曜日（10:30~12:30）";
+							} else if (info2[index].paper1100 !=""){
+								paper_str = info2[index].paper1100 + "曜日（11:00~13:00）";
+							} else if (info2[index].paper1130 !=""){
+								paper_str = info2[index].paper1130 + "曜日（11:30~13:30）";
+							} else if (info2[index].paper1200 !=""){
+								paper_str = info2[index].paper1200 + "曜日（12:00~14:00）";
+							} else if (info2[index].paper1230 !=""){
+								paper_str = info2[index].paper1230 + "曜日（12:30~14:30）";
+							} else if (info2[index].paper1300 !=""){
+								paper_str = info2[index].paper1300 + "曜日（13:00~15:00）";
+							} else if (info2[index].paper1330 !=""){
+								paper_str = info2[index].paper1330 + "曜日（13:30~15:30）";
+							} else if (info2[index].paper1400 !=""){
+								paper_str = info2[index].paper1400 + "曜日（14:00~16:00）";
+							} else if (info2[index].paper1430 !=""){
+								paper_str = info2[index].paper1430 + "曜日（14:30~16:30）";
+							}
+							tooltip2[5].style("font-size", fontSize)
+										.style("left", (centerX)+"px")
+										.style("top", "384px")
+										.text("古紙衣類：" + paper_str)
+							//閉じるボタン
+							tooltip2[12].attr("class", "button")
+										.style("font-size", fontSize)
+										.style("font-weight", "bold")
+										.style("left", (centerX+100)+"px")
+										.style("top", "450px")
+										.text("閉じる")
+										.on('click', function(){
+											d3.selectAll(".infowindow").style("opacity", "0").style("pointer-events", "none");
+											d3.selectAll(".tooltip").style("opacity", "0").style("pointer-events", "none");
+											d3.selectAll(".tooltip2").style("opacity", "0").style("pointer-events", "none");
+											d3.selectAll(".infowindow2")
+											  .style("opacity", "0")
+											  .style("pointer-events", "none");
+											d3.select(this).style("opacity", "0")
+											  .style("pointer-events", "none");
+											//isInfowindowOpenフラグオフ
+											isInfowindowOpen = false;
+										})
+							//infodindow2を表示
+							//infowindow2のwidthを計算
+							var window_width = 300 < banchi_and_gaiku.length*18 ? banchi_and_gaiku.length*18+30 : 300;
+							infowindow2.style("left", (centerX-20)+"px")
+									   .style("width", window_width+"px")
+									   .style("opacity", "1");
+						})
+				}
+				//infowindowの下地と枠 lengthの数によってinfowindowのheight増加させる
+				//最低でも100px
+				var window_width = 200 < max_str_length*18 ? max_str_length*18+20 : 200;
+				infowindow.style("height", (length*30+30)+"px")
+						  .style("width", window_width+"px")
+						  .style("left", (posX)+"px")
+				          .style("top",  (posY)+"px")
+						  .style("display", "block")
+						  .style("opacity", "1");
+				//isInfowindowOpenフラグオン
+				isInfowindowOpen = true;
+				//console.log(length);
+
+				}
+				//tooltip[length]-[79]までが残像残るので、消す
+				for(var i=length;i<79;i++){
+					tooltip[i+1].text("").style("left", "0px").style("top", "0px");
+				}
+			})
+			.on('mouseout', function(d,i){
+				d3.select(this)
+				.style("fill", function(d,i){
+					if(d.properties.JINKO=="0"){
+						return "#8eb8ff";
+					}
+					return "#8eb8ff";
+				})
+			})
+	});
+
+	//地図なし　チェックボックスを押すと地図なしcssのkumap7.htmlに遷移
+	function hideMap(){
+		window.location.href="kumap25.html?ku="+ku+"&file="+file;
+	}
+
+	//24区選択画面に戻る
+	function backIndex(){
+		window.location.href="index.html";
+	}
+
+	//チェックボックスのON/OFFに応じて、駅と駅名を表示ON/OFF
+	function drawStation(){
+		//チェックをはずしていたら駅名　消去
+		if(!document.checkbox.elements[0].checked){
+			svg.selectAll(".station").attr("visibility", "hidden");
+		} else {
+			svg.selectAll(".station").attr("visibility", "visible");
+		}
+	}
+	//町丁目　街区名をクリックすると表示するアコーディオン生成
+	function addClickEvents(){
+		//親メニュー
+		$('.town').click(function(){
+			//メニュー表示/非表示
+			$(this).next('ul').slideToggle('fast');
+		});
+		//子メニュー
+		$('li').click(function(e){
+			//メニュー表示/非表示
+			$(this).children('ul').slideToggle('fast');
+			e.stopPropagation();
+		})
+	}
+	//全角を半角変換
+	function zenkaku2Hankaku(str) {
+    	return str.replace(/[Ａ-Ｚａ-ｚ０-９]/g, function(s) {
+        	return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    	});
+	}
+	</script>
+	<!-- Sibulla tracking code start -->
+    <script type="text/javascript"><!--
+	(function(){ var b = document.getElementsByTagName('script')[0],sib = document.createElement('script');
+	sib.type = 'text/javascript';sib.async = true;
+	sib.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'ma001.sibulla.com/dekatag/access?id=aGaskA6u';
+	b.parentNode.insertBefore(sib,b);}());
+	//--></script>
+	<!-- /Sibulla tracking code end -->
+
+  </body>
+</html>
