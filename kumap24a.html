@@ -717,24 +717,41 @@
 				//マウスオーバーしているgeojsonの町丁目名と等しい町丁目名のレコードをcsvdataから検索する
 				//filterで町丁目名一致を返す
 				result = csvdata.filter(function (v) {
-					//丁目にすべてが入っている場合はそのまま足すとgeojsonと一致しないので""にする
-					var v_chome = v.丁目 != "すべて" ? v.丁目 : "";
+					//丁目が存在しない場合そのまま足すと番地が入ってgeojsonと一致しないので番地を削除する
+					var v_chome = v.丁目.match("丁目") ? v.丁目 : "";
 					//2021-12-19追加　geojsonファイルの町名は全角だが、１月からのcsvファイル町名は半角のため、geojsonファイルの町名を半角変換してマッチング判定させる
 					//ファイル後段に全角半角変換関数 zenkaku2Hankaku()を追記している
 					var hankaku_chome = zenkaku2Hankaku(d.properties.S_NAME);
 					//console.log(hankaku_chome);
 					//return v.町名+v_chome === d.properties.S_NAME;
 					return v.町名+v_chome === hankaku_chome;
+					console.log(v.町名+v_chome);
 				});
 				console.log(result);
 				var length = result.length;
+				//もし、length===0ならば、そこはごみ収集データが存在しない地域なのでなにもしない
+				if (length === 0){
+					console.log("この地域のデータなし")
 				//もし、length===1ならば、次の番地の選択の余地がないので、一気にごみ収集情報を表示させる
-				if (length < 2){
-					if (result[0].番地==="すべて" && result[0].備考==="すべて"){
-						info[1] = "すべて";
+				} else if (length === 1){
+					//地区名３が丁目ではない場合は、１つずらして地区名３に番地、地区名４にマンション名が入っているのを代入する
+					if (!result[0].丁目.match("丁目")){
+						var _banchi = result[0].丁目;
+						var _str = result[0].番地;
+						info[1]	= _banchi+" "+_str;
+						//文字列最大値を記録し、infowindowのwidthを調整する
+						var str_length = info[1].length;
+						max_str_length = max_str_length < str_length ? str_length : max_str_length;
 					} else {
-						info[1]	= result[0].番地+" "+result[0].備考;
+						var _banchi = result[0].番地 === "" ? "▶" : result[0].番地;
+						var _str = result[0].備考 === "" ? "" : result[0].備考;
+						info[1]	= _banchi+" "+_str;
+						//文字列最大値を記録し、infowindowのwidthを調整する
+						var str_length = info[1].length;
+						max_str_length = max_str_length < str_length ? str_length : max_str_length;
 					}
+					//info[1]	= result[0].番地+" "+result[0].備考;
+					//console.log(result[0].番地);
 					info2[0] = new infoData(result[0].町名, result[0].丁目, result[0].番地, result[0].備考, result[0].雑ごみ, result[0].普通ごみ_収集時間要問合せ, result[0].普通ごみ_午前, result[0].普通ごみ_午後, result[0]["普通ごみ_8:30~10:30"], result[0]["普通ごみ_9:00~11:00"],result[0]["普通ごみ_9:30~11:30"],result[0]["普通ごみ_10:00~12:00"],result[0]["普通ごみ_10:30~12:30"],result[0]["普通ごみ_11:00~13:00"],result[0]["普通ごみ_11:30~13:30"],result[0]["普通ごみ_12:00~14:00"],result[0]["普通ごみ_12:30~14:30"],result[0]["普通ごみ_13:00~15:00"],result[0]["普通ごみ_13:30~15:30"],result[0]["普通ごみ_14:00~16:00"],result[0]["普通ごみ_14:30~16:30"], result[0].資源ごみ_収集時間要問合せ, result[0].資源ごみ_午前, result[0].資源ごみ_午後, result[0]["資源ごみ_8:30~10:30"], result[0]["資源ごみ_9:00~11:00"],result[0]["資源ごみ_9:30~11:30"],result[0]["資源ごみ_10:00~12:00"],result[0]["資源ごみ_10:30~12:30"],result[0]["資源ごみ_11:00~13:00"],result[0]["資源ごみ_11:30~13:30"],result[0]["資源ごみ_12:00~14:00"],result[0]["資源ごみ_12:30~14:30"],result[0]["資源ごみ_13:00~15:00"],result[0]["資源ごみ_13:30~15:30"],result[0]["資源ごみ_14:00~16:00"],result[0]["資源ごみ_14:30~16:30"],result[0].容器包装プラスチック_収集時間要問合せ, result[0].容器包装プラスチック_午前, result[0].容器包装プラスチック_午後, result[0]["容器包装プラスチック_8:30~10:30"],result[0]["容器包装プラスチック_9:00~11:00"],result[0]["容器包装プラスチック_9:30~11:30"],result[0]["容器包装プラスチック_10:00~12:00"],result[0]["容器包装プラスチック_10:30~12:30"],result[0]["容器包装プラスチック_11:00~13:00"],result[0]["容器包装プラスチック_11:30~13:30"],result[0]["容器包装プラスチック_12:00~14:00"],result[0]["容器包装プラスチック_12:30~14:30"],result[0]["容器包装プラスチック_13:00~15:00"],result[0]["容器包装プラスチック_13:30~15:30"],result[0]["容器包装プラスチック_14:00~16:00"],result[0]["容器包装プラスチック_14:30~16:30"],result[0].古紙衣類_収集時間要問合せ, result[0].古紙衣類_午前, result[0].古紙衣類_午後, result[0]["古紙衣類_8:30~10:30"], result[0]["古紙衣類_9:00~11:00"],result[0]["古紙衣類_9:30~11:30"],result[0]["古紙衣類_10:00~12:00"],result[0]["古紙衣類_10:30~12:30"],result[0]["古紙衣類_11:00~13:00"],result[0]["古紙衣類_11:30~13:30"],result[0]["古紙衣類_12:00~14:00"],result[0]["古紙衣類_12:30~14:30"],result[0]["古紙衣類_13:00~15:00"],result[0]["古紙衣類_13:30~15:30"],result[0]["古紙衣類_14:00~16:00"],result[0]["古紙衣類_14:30~16:30"])
 					//infowindow2ポインターイベント復活
 					d3.selectAll(".infowindow2").style("pointer-events", "auto");
@@ -748,20 +765,14 @@
 							infowindow2.style("left", (centerX-20)+"px")
 									   .style("opacity", "1");
 							//町名
-							if (info2[0].chome==="すべて"){ info2[0].chome="" }
 							tooltip2[0].style("font-size", fontSize)
 										.style("font-weight", "bold")
 										.style("left", (centerX)+"px")
 										.style("top", "224px")
 										.text(info2[0].town+info2[0].chome)
 							//番地＋街区名
-							//番地：すべて　街区：すべての時、「すべて　すべて」と表示はさすがに見苦しいのですべて
 							var banchi_and_gaiku = '';
-							if (info2[0].banchi === "すべて" && info2[0].gaiku === "すべて"){
-								banchi_and_gaiku = 'すべて';
-							} else {
-								banchi_and_gaiku = info2[0].banchi + " " + info2[0].gaiku;
-							}
+							banchi_and_gaiku = info2[0].banchi + " " + info2[0].gaiku;
 							tooltip2[1].style("font-size", fontSize)
 										.style("font-weight", "bold")
 										.style("left", (centerX)+"px")
@@ -964,8 +975,8 @@
 				//infowindow描画
 				//街区があるときはinfowindowのpointer-eventsをオンにする
 				//infowindow.style("pointer-events", "auto");
-				if (result[0].丁目==="すべて"){ result[0].丁目=""; }
-				info[0] = result[0].町名+result[0].丁目; //とりあえずヒットした先頭の町名を選択
+				//丁目が存在しない場合、そのまま足すと番地が入るので丁目は足さない
+				info[0] = result[0].丁目.match("丁目") ?  result[0].町名+result[0].丁目 : result[0].町名;
 				tooltip[0].style("font-weight", "bold")
 				        .style("font-size", fontSize)
 				        .style("left", (posX)+"px")
@@ -977,17 +988,21 @@
 				var max_str_length = info[0].length; //infowindowのwidthを計算するため、番地＋備考の文字列　最大値格納用
 				//console.log(max_str_length)
 				for (var i=0; i<length; i++){
-					if (result[i].番地==="" && result[i].備考===""){
-						info[i+1] = "▶";
+					//地区名３が丁目ではない場合は、１つずらして地区名３に番地、地区名４にマンション名が入っているのを代入する
+					if (!result[i].丁目.match("丁目")){
+						var _banchi = result[i].丁目;
+						var _str = result[i].番地;
+						info[i+1]	= _banchi+" "+_str;
+						//文字列最大値を記録し、infowindowのwidthを調整する
+						var str_length = info[i+1].length;
+						max_str_length = max_str_length < str_length ? str_length : max_str_length;
 					} else {
 						var _banchi = result[i].番地 === "" ? "▶" : result[i].番地;
 						var _str = result[i].備考 === "" ? "" : result[i].備考;
 						info[i+1]	= _banchi+" "+_str;
 						//文字列最大値を記録し、infowindowのwidthを調整する
 						var str_length = info[i+1].length;
-						//console.log(str_length)
 						max_str_length = max_str_length < str_length ? str_length : max_str_length;
-						//console.log(max_str_length)
 					}
 					info2[i] = new infoData(result[i].町名, result[i].丁目, result[i].番地, result[i].備考, result[i].雑ごみ, result[i].普通ごみ_収集時間要問合せ, result[i].普通ごみ_午前, result[i].普通ごみ_午後, result[i]["普通ごみ_8:30~10:30"], result[i]["普通ごみ_9:00~11:00"],result[i]["普通ごみ_9:30~11:30"],result[i]["普通ごみ_10:00~12:00"],result[i]["普通ごみ_10:30~12:30"],result[i]["普通ごみ_11:00~13:00"],result[i]["普通ごみ_11:30~13:30"],result[i]["普通ごみ_12:00~14:00"],result[i]["普通ごみ_12:30~14:30"],result[i]["普通ごみ_13:00~15:00"],result[i]["普通ごみ_13:30~15:30"],result[i]["普通ごみ_14:00~16:00"],result[i]["普通ごみ_14:30~16:30"], result[i].資源ごみ_収集時間要問合せ, result[i].資源ごみ_午前, result[i].資源ごみ_午後, result[i]["資源ごみ_8:30~10:30"], result[i]["資源ごみ_9:00~11:00"],result[i]["資源ごみ_9:30~11:30"],result[i]["資源ごみ_10:00~12:00"],result[i]["資源ごみ_10:30~12:30"],result[i]["資源ごみ_11:00~13:00"],result[i]["資源ごみ_11:30~13:30"],result[i]["資源ごみ_12:00~14:00"],result[i]["資源ごみ_12:30~14:30"],result[i]["資源ごみ_13:00~15:00"],result[i]["資源ごみ_13:30~15:30"],result[i]["資源ごみ_14:00~16:00"],result[i]["資源ごみ_14:30~16:30"],result[i].容器包装プラスチック_収集時間要問合せ, result[i].容器包装プラスチック_午前, result[i].容器包装プラスチック_午後, result[i]["容器包装プラスチック_8:30~10:30"],result[i]["容器包装プラスチック_9:00~11:00"],result[i]["容器包装プラスチック_9:30~11:30"],result[i]["容器包装プラスチック_10:00~12:00"],result[i]["容器包装プラスチック_10:30~12:30"],result[i]["容器包装プラスチック_11:00~13:00"],result[i]["容器包装プラスチック_11:30~13:30"],result[i]["容器包装プラスチック_12:00~14:00"],result[i]["容器包装プラスチック_12:30~14:30"],result[i]["容器包装プラスチック_13:00~15:00"],result[i]["容器包装プラスチック_13:30~15:30"],result[i]["容器包装プラスチック_14:00~16:00"],result[i]["容器包装プラスチック_14:30~16:30"],result[i].古紙衣類_収集時間要問合せ, result[i].古紙衣類_午前, result[i].古紙衣類_午後, result[i]["古紙衣類_8:30~10:30"], result[i]["古紙衣類_9:00~11:00"],result[i]["古紙衣類_9:30~11:30"],result[i]["古紙衣類_10:00~12:00"],result[i]["古紙衣類_10:30~12:30"],result[i]["古紙衣類_11:00~13:00"],result[i]["古紙衣類_11:30~13:30"],result[i]["古紙衣類_12:00~14:00"],result[i]["古紙衣類_12:30~14:30"],result[i]["古紙衣類_13:00~15:00"],result[i]["古紙衣類_13:30~15:30"],result[i]["古紙衣類_14:00~16:00"],result[i]["古紙衣類_14:30~16:30"]);
 					console.log(info2[i]);
@@ -1015,20 +1030,14 @@
 							//自身にバインドされたインデックスを取り出してinfo2のインデックスとして使う
 							var index = d3.select(this).datum();
 							//町名
-							if (info2[index].chome==="すべて"){ info2[index].chome="" }
 							tooltip2[0].style("font-size", fontSize)
 										.style("font-weight", "bold")
 										.style("left", (centerX)+"px")
 										.style("top", "224px")
 										.text(info2[index].town+info2[index].chome)
 							//番地＋街区名
-							//番地：すべて　街区：すべての時、「すべて　すべて」と表示はさすがに見苦しいのですべて
 							var banchi_and_gaiku = '';
-							if (info2[index].banchi === "すべて" && info2[index].gaiku === "すべて"){
-								banchi_and_gaiku = 'すべて';
-							} else {
-								banchi_and_gaiku = info2[index].banchi + " " + info2[index].gaiku;
-							}
+							banchi_and_gaiku = info2[index].banchi + " " + info2[index].gaiku;
 							tooltip2[1].style("font-size", fontSize)
 										.style("font-weight", "bold")
 										.style("left", (centerX)+"px")
@@ -1226,8 +1235,8 @@
 											isInfowindowOpen = false;
 										})
 							//infodindow2を表示
-							//infowindow2のwidthを計算
-							var window_width = 300 < banchi_and_gaiku.length*18 ? banchi_and_gaiku.length*18+30 : 300;
+							//infowindow2のwidthを計算　R4/1よりwidthを300->420に拡大
+							var window_width = 420 < banchi_and_gaiku.length*18 ? banchi_and_gaiku.length*18+30 : 420;
 							infowindow2.style("left", (centerX-20)+"px")
 									   .style("width", window_width+"px")
 									   .style("opacity", "1");
@@ -1304,12 +1313,12 @@
 	}
 	</script>
 	<!-- Sibulla tracking code start -->
-    <script type="text/javascript"><!--
+    <script type="text/javascript">
 	(function(){ var b = document.getElementsByTagName('script')[0],sib = document.createElement('script');
 	sib.type = 'text/javascript';sib.async = true;
 	sib.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'ma001.sibulla.com/dekatag/access?id=aGaskA6u';
 	b.parentNode.insertBefore(sib,b);}());
-	//--></script>
+	</script>
 	<!-- /Sibulla tracking code end -->
 
   </body>
