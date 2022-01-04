@@ -231,7 +231,8 @@
 	//
 	//-----第２段階　町丁目ごとにデータを格納したCSV読み込み
 	//変数初期化
-	var csvfile = file + ".csv";  //町丁目ごとのデータを記録したCSVファイル
+	var csvfile = file + ".csv?time="+new Date().getTime();  //町丁目ごとのデータを記録したCSVファイル
+	//var csvfile = file + ".csv"
 	var geojsonfile = file + ".geojson";  //eStatから取得した境界データshpをQJISでgeojsonに変換したファイル
 	var fontSize = "20px";
 	var csvdata = [];  //CSV格納先
@@ -1314,10 +1315,12 @@
 	</script>
 	<!-- Sibulla tracking code start -->
     <script type="text/javascript">
+	/*
 	(function(){ var b = document.getElementsByTagName('script')[0],sib = document.createElement('script');
 	sib.type = 'text/javascript';sib.async = true;
 	sib.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'ma001.sibulla.com/dekatag/access?id=aGaskA6u';
 	b.parentNode.insertBefore(sib,b);}());
+	*/
 	</script>
 	<!-- /Sibulla tracking code end -->
 
