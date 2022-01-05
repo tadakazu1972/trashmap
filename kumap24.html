@@ -256,7 +256,7 @@
 		//console.log(data);
 		//csvdataに格納
 		data.forEach(function(element){
-			console.log(element);
+			//console.log(element);
 			csvdata.push(element);
 			//アコーディオンに書き込み
 			//町名
@@ -356,54 +356,133 @@
 			//普通ごみ　判定
 			var $normal = '';
 			if (element.普通ごみ_収集時間要問合せ != ""){
-				
-				var day = element.普通ごみ_収集時間要問合せ.split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（収集時間要問合せ）"+'</li>';
+				if (element.普通ごみ_収集時間要問合せ.length > 1){
+					var day = element.普通ごみ_収集時間要問合せ.split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（収集時間要問合せ）</li>';
+				} else {
+					var day = element.普通ごみ_収集時間要問合せ;
+					$normal = '<li>普通ごみ：'+day+'曜日（収集時間要問合せ）</li>';
+				}				
 			} else if (element.普通ごみ_午前 !=""){
-				var day = element.普通ごみ_午前.split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（午前）"+'</li>';
+				if (element.普通ごみ_午前.length > 1){
+					var day = element.普通ごみ_午前.split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（午前）</li>';
+				} else {
+					var day = element.普通ごみ_午前;
+					$normal = '<li>普通ごみ：'+day+'曜日（午前）</li>';
+				}
 			} else if (element.普通ごみ_午後 !=""){
-				var day = element.普通ごみ_午後.split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（午後）"+'</li>';
+				if (element.普通ごみ_午後.length > 1){
+					var day = element.普通ごみ_午後.split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（午後）</li>';
+				} else {
+					var day = element.普通ごみ_午後;
+					$normal = '<li>普通ごみ：'+day+'曜日（午後）</li>';
+				}
 			} else if (element["普通ごみ_8:30~10:30"] != ""){
-				var day = element["普通ごみ_8:30~10:30"].split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（8:30~10:30）"+'</li>';
+				if (element["普通ごみ_8:30~10:30"].length > 1){
+					var day = element["普通ごみ_8:30~10:30"].split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（8:30~10:30）</li>';
+				} else {
+					var day = element["普通ごみ_8:30~10:30"];
+					$normal = '<li>普通ごみ：'+day+'曜日（8:30~10:30）</li>';
+				}
 			} else if (element["普通ごみ_9:00~11:00"] != ""){
-				var day = element["普通ごみ_9:00~11:00"].split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（9:00~11:00）"+'</li>';
+				if (element["普通ごみ_9:00~11:00"].length > 1){
+					var day = element["普通ごみ_9:00~11:00"].split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（9:00~11:00）</li>';
+				} else {
+					var day = element["普通ごみ_9:00~11:00"];
+					$normal = '<li>普通ごみ：'+day+'曜日（9:00~11:00）</li>';
+				}
 			} else if (element["普通ごみ_9:30~11:30"] != ""){
-				var day = element["普通ごみ_9:30~11:30"].split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（9:30~11:30）"+'</li>';
+				if (element["普通ごみ_9:30~11:30"].length > 1){
+					var day = element["普通ごみ_9:30~11:30"].split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（9:30~11:30）</li>';
+				} else {
+					var day = element["普通ごみ_9:30~11:30"];
+					$normal = '<li>普通ごみ：'+day+'曜日（9:30~11:30）</li>';
+				}
 			} else if (element["普通ごみ_10:00~12:00"] !=""){
-				var day = element["普通ごみ_10:00~12:00"].split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（10:00~12:00）"+'</li>';
+				if (element["普通ごみ_10:00~12:00"].length > 1){
+					var day = element["普通ごみ_10:00~12:00"].split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（10:00~12:00）</li>';
+				} else {
+					var day = element["普通ごみ_10:00~12:00"];
+					$normal = '<li>普通ごみ：'+day+'曜日（10:00~12:00）</li>'
+				}				
 			} else if (element["普通ごみ_10:30~12:30"] !=""){
-				var day = element["普通ごみ_10:30~12:30"].split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（10:30~12:30）"+'</li>';
+				if (element["普通ごみ_10:30~12:30"].length > 1){
+					var day = element["普通ごみ_10:30~12:30"].split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（10:30~12:30）</li>';
+				} else {
+					var day = element["普通ごみ_10:30~12:30"];
+					$normal = '<li>普通ごみ：'+day+'曜日（10:30~12:30）</li>';
+				}
 			} else if (element["普通ごみ_11:00~13:00"] !=""){
-				var day = element["普通ごみ_11:00~13:00"].split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（11:00~13:00）"+'</li>';
+				if (element["普通ごみ_11:00~13:00"].length > 1){
+					var day = element["普通ごみ_11:00~13:00"].split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（11:00~13:00）</li>';
+				} else {
+					var day = element["普通ごみ_11:00~13:00"];
+					$normal = '<li>普通ごみ：'+day+'曜日（11:00~13:00）</li>';
+				}				
 			} else if (element["普通ごみ_11:30~13:30"] !=""){
-				var day = element["普通ごみ_11:30~13:30"].split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（11:30~13:30）"+'</li>';
+				if (element["普通ごみ_11:30~13:30"].length > 1){
+					var day = element["普通ごみ_11:30~13:30"].split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（11:30~13:30）</li>';
+				} else {
+					var day = element["普通ごみ_11:30~13:30"];
+					$normal = '<li>普通ごみ：'+day+'曜日（11:30~13:30）</li>';
+				}				
 			} else if (element["普通ごみ_12:00~14:00"] !=""){
-				var day = element["普通ごみ_12:00~14:00"].split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（12:00~14:00）"+'</li>';
+				if (element["普通ごみ_12:00~14:00"].length > 1){
+					var day = element["普通ごみ_12:00~14:00"].split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（12:00~14:00）</li>';
+				} else {
+					var day = element["普通ごみ_12:00~14:00"];
+					$normal = '<li>普通ごみ：'+day+'曜日（12:00~14:00）</li>';
+				}
 			} else if (element["普通ごみ_12:30~14:30"] !=""){
-				var day = element["普通ごみ_12:30~14:30"].split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（12:30~14:30）"+'</li>';
+				if (element["普通ごみ_12:30~14:30"].length > 1){
+					var day = element["普通ごみ_12:30~14:30"].split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（12:30~14:30）</li>';
+				} else {
+					var day = element["普通ごみ_12:30~14:30"];
+					$normal = '<li>普通ごみ：'+day+'曜日（12:30~14:30）</li>';
+				}
 			} else if (element["普通ごみ_13:00~15:00"] !=""){
-				var day = element["普通ごみ_13:00~15:00"].split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（13:00~15:00）"+'</li>';
+				if (element["普通ごみ_13:00~15:00"].length > 1){
+					var day = element["普通ごみ_13:00~15:00"].split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（13:00~15:00）</li>';
+				} else {
+					var day = element["普通ごみ_13:00~15:00"];
+					$normal = '<li>普通ごみ：'+day+'曜日（13:00~15:00）</li>';
+				}
 			} else if (element["普通ごみ_13:30~15:30"] !=""){
-				var day = element["普通ごみ_13:30~15:30"].split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（13:30~15:30）"+'</li>';
+				if (element["普通ごみ_13:30~15:30"].length > 1){
+					var day = element["普通ごみ_13:30~15:30"].split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（13:30~15:30）</li>';
+				} else {
+					var day = element["普通ごみ_13:30~15:30"];
+					$normal = '<li>普通ごみ：'+day+'曜日（13:30~15:30）</li>';
+				}
 			} else if (element["普通ごみ_14:00~16:00"] !=""){
-				var day = element["普通ごみ_14:00~16:00"].split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（14:00~16:00）"+'</li>';
+				if (element["普通ごみ_14:00~16:00"].length > 1){
+					var day = element["普通ごみ_14:00~16:00"].split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（14:00~16:00）</li>';
+				} else {
+					var day = element["普通ごみ_14:00~16:00"];
+					$normal = '<li>普通ごみ：'+day+'曜日（14:00~16:00）</li>';
+				}				
 			} else if (element["普通ごみ_14:30~16:30"] !=""){
-				var day = element["普通ごみ_14:30~16:30"].split('');
-				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（14:30~16:30）"+'</li>';
+				if (element["普通ごみ_14:30~16:30"].length > 1){
+					var day = element["普通ごみ_14:30~16:30"].split('');
+					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（14:30~16:30）</li>';
+				} else {
+					var day = element["普通ごみ_14:30~16:30"];
+					$normal = '<li>普通ごみ：'+day+'曜日（14:30~16:30）</li>';
+				}
 			}
 			//資源ごみ　判定
 			var $res = '';
@@ -729,7 +808,7 @@
 					return v.地区名2+v_chome === hankaku_chome;
 					console.log(v.地区名2+v_chome);
 				});
-				console.log(result);
+				//console.log(result);
 				var length = result.length;
 				//もし、length===0ならば、そこはごみ収集データが存在しない地域なのでなにもしない
 				if (length === 0){
@@ -783,53 +862,133 @@
 							//普通ごみ
 							var normal_str = "";
 							if (info2[0].normalQ != ""){
-								var day = info2[0].normalQ.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（要問合せ）";
+                                if (info2[0].normalQ.length > 1){
+                                    var day = info2[0].normalQ.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（要問合せ）";
+                                } else {
+                                    var day = info2[0].normalQ;
+    								normal_str = day+"曜日（要問合せ）";
+                                }							
 							} else if (info2[0].normalAM != ""){
-								var day = info2[0].normalAM.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（午前）";
+                                if (info2[0].normalAM.length > 1){
+                                    var day = info2[0].normalAM.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（午前）";
+                                } else {
+                                    var day = info2[0].normalAM;
+	    							normal_str = day+"曜日（午前）";
+                                }
 							} else if (info2[0].normalPM != ""){
-								var day = info2[0].normalPM.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（午後）";
+                                if (info2[0].normalPM.length > 1){
+                                    var day = info2[0].normalPM.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（午後）";
+                                } else {
+                                    var day = info2[0].normalPM;
+    								normal_str = day+"曜日（午後）";
+                                }							
 							} else if (info2[0].normal830 != ""){
-								var day = info2[0].normal830.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（8:30~10:30）";
+                                if (info2[0].normal830.length > 1){
+                                    var day = info2[0].normal830.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（8:30~10:30）";
+                                } else {
+                                    var day = info2[0].normal830;
+    								normal_str = day+"曜日（8:30~10:30）";
+                                }								
 							} else if (info2[0].normal900 != ""){
-								var day = info2[0].normal900.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（9:00~11:00）";
+                                if (info2[0].normal900.length > 1){
+                                    var day = info2[0].normal900.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（9:00~11:00）";
+                                } else {
+                                    var day = info2[0].normal900;
+    								normal_str = day+"曜日（9:00~11:00）";
+                                }							
 							} else if (info2[0].normal930 != ""){
-								var day = info2[0].normal930.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（9:30~11:30）";
+                                if (info2[0].normal930.length > 1){
+                                    var day = info2[0].normal930.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（9:30~11:30）";
+                                } else {
+                                    var day = info2[0].normal930;
+    								normal_str = day+"曜日（9:30~11:30）";
+                                }
 							} else if (info2[0].normal1000 !=""){
-								var day = info2[0].normal1000.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（10:00~12:00）";
+                                if (info2[0].normal1000.length > 1){
+                                    var day = info2[0].normal1000.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（10:00~12:00）";
+                                } else {
+                                    var day = info2[0].normal1000;
+    								normal_str = day+"曜日（10:00~12:00）";
+                                }
 							} else if (info2[0].normal1030 !=""){
-								var day = info2[0].normal1030.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（10:30~12:30）";
+                                if (info2[0].normal1030.length > 1){
+                                    var day = info2[0].normal1030.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（10:30~12:30）";
+                                } else {
+                                    var day = info2[0].normal1030;
+    								normal_str = day+"曜日（10:30~12:30）";
+                                }
 							} else if (info2[0].normal1100 !=""){
-								var day = info2[0].normal1100.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（11:00~13:00）";
+                                if (info2[0].normal1100.length > 1){
+                                    var day = info2[0].normal1100.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（11:00~13:00）";
+                                } else {
+                                    var day = info2[0].normal1100;
+    								normal_str = day+"曜日（11:00~13:00）";
+                                }							
 							} else if (info2[0].normal1130 !=""){
-								var day = info2[0].normal1130.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（11:30~13:30）";
+                                if (info2[0].normal1130.length > 1){
+                                    var day = info2[0].normal1130.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（11:30~13:30）";
+                                } else {
+                                    var day = info2[0].normal1130;
+    								normal_str = day+"曜日（11:30~13:30）";
+                                }								
 							} else if (info2[0].normal1200 !=""){
-								var day = info2[0].normal1200.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（12:00~14:00）";
+                                if (info2[0].normal1200.length > 1){
+                                    var day = info2[0].normal1200.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（12:00~14:00）";
+                                } else {
+                                    var day = info2[0].normal1200;
+    								normal_str = day+"曜日（12:00~14:00）";
+                                }
 							} else if (info2[0].normal1230 !=""){
-								var day = info2[0].normal1230.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（12:30~14:30）";
+                                if (info2[0].normal1230.length > 1){
+                                    var day = info2[0].normal1230.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（12:30~14:30）";
+                                } else {
+                                    var day = info2[0].normal1230;
+    								normal_str = day+"曜日（12:30~14:30）";
+                                }
 							} else if (info2[0].normal1300 !=""){
-								var day = info2[0].normal1300.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（13:00~15:00）";
+                                if (info2[0].normal1300.length > 1){
+                                    var day = info2[0].normal1300.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（13:00~15:00）";
+                                } else {
+                                    var day = info2[0].normal1300;
+    								normal_str = day+"曜日（13:00~15:00）";
+                                }							
 							} else if (info2[0].normal1330 !=""){
-								var day = info2[0].normal1330.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（13:30~15:30）";
+                                if (info2[0].normal1330.length > 1){
+                                    var day = info2[0].normal1330.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（13:30~15:30）";
+                                } else {
+                                    var day = info2[0].normal1330;
+    								normal_str = day+"曜日（13:30~15:30）";
+                                }							
 							} else if (info2[0].normal1400 !=""){
-								var day = info2[0].normal1400.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（14:00~16:00）";
+                                if (info2[0].normal1400.length > 1){
+                                    var day = info2[0].normal1400.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（14:00~16:00）";
+                                } else {
+                                    var day = info2[0].normal1400;
+    								normal_str = day+"曜日（14:00~16:00）";
+                                }							
 							} else if (info2[0].normal1430 !=""){
-								var day = info2[0].normal1430.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（14:30~16:30）";
+                                if (info2[0].normal1430.length > 1){
+                                    var day = info2[0].normal1430.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（14:30~16:30）";
+                                } else {
+                                    var day = info2[0].normal1430;
+    								normal_str = day+"曜日（14:30~16:30）";
+                                }
 							}
 							tooltip2[2].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
@@ -1047,54 +1206,134 @@
 										.text(banchi_and_gaiku);
 							//普通ごみ
 							var normal_str = "";
-							if (info2[index].normalQ != ""){
-								var day = info2[index].normalQ.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（要問合せ）";
+                            if (info2[index].normalQ != ""){
+                                if (info2[index].normalQ.length > 1){
+                                    var day = info2[index].normalQ.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（要問合せ）";
+                                } else {
+                                    var day = info2[index].normalQ;
+    								normal_str = day+"曜日（要問合せ）";
+                                }							
 							} else if (info2[index].normalAM != ""){
-								var day = info2[index].normalAM.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（午前）";
+                                if (info2[index].normalAM.length > 1){
+                                    var day = info2[index].normalAM.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（午前）";
+                                } else {
+                                    var day = info2[index].normalAM;
+	    							normal_str = day+"曜日（午前）";
+                                }
 							} else if (info2[index].normalPM != ""){
-								var day = info2[index].normalPM.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（午後）";
+                                if (info2[index].normalPM.length > 1){
+                                    var day = info2[index].normalPM.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（午後）";
+                                } else {
+                                    var day = info2[index].normalPM;
+    								normal_str = day+"曜日（午後）";
+                                }							
 							} else if (info2[index].normal830 != ""){
-								var day = info2[index].normal830.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（8:30~10:30）";
+                                if (info2[index].normal830.length > 1){
+                                    var day = info2[index].normal830.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（8:30~10:30）";
+                                } else {
+                                    var day = info2[index].normal830;
+    								normal_str = day+"曜日（8:30~10:30）";
+                                }								
 							} else if (info2[index].normal900 != ""){
-								var day = info2[index].normal900.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（9:00~11:00）";
+                                if (info2[index].normal900.length > 1){
+                                    var day = info2[index].normal900.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（9:00~11:00）";
+                                } else {
+                                    var day = info2[index].normal900;
+    								normal_str = day+"曜日（9:00~11:00）";
+                                }							
 							} else if (info2[index].normal930 != ""){
-								var day = info2[index].normal930.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（9:30~11:30）";
+                                if (info2[index].normal930.length > 1){
+                                    var day = info2[index].normal930.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（9:30~11:30）";
+                                } else {
+                                    var day = info2[index].normal930;
+    								normal_str = day+"曜日（9:30~11:30）";
+                                }
 							} else if (info2[index].normal1000 !=""){
-								var day = info2[index].normal1000.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（10:00~12:00）";
+                                if (info2[index].normal1000.length > 1){
+                                    var day = info2[index].normal1000.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（10:00~12:00）";
+                                } else {
+                                    var day = info2[index].normal1000;
+    								normal_str = day+"曜日（10:00~12:00）";
+                                }
 							} else if (info2[index].normal1030 !=""){
-								var day = info2[index].normal1030.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（10:30~12:30）";
+                                if (info2[index].normal1030.length > 1){
+                                    var day = info2[index].normal1030.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（10:30~12:30）";
+                                } else {
+                                    var day = info2[index].normal1030;
+    								normal_str = day+"曜日（10:30~12:30）";
+                                }
 							} else if (info2[index].normal1100 !=""){
-								var day = info2[index].normal1100.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（11:00~13:00）";
+                                if (info2[index].normal1100.length > 1){
+                                    var day = info2[index].normal1100.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（11:00~13:00）";
+                                } else {
+                                    var day = info2[index].normal1100;
+    								normal_str = day+"曜日（11:00~13:00）";
+                                }							
 							} else if (info2[index].normal1130 !=""){
-								var day = info2[index].normal1130.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（11:30~13:30）";
+                                if (info2[index].normal1130.length > 1){
+                                    var day = info2[index].normal1130.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（11:30~13:30）";
+                                } else {
+                                    var day = info2[index].normal1130;
+    								normal_str = day+"曜日（11:30~13:30）";
+                                }								
 							} else if (info2[index].normal1200 !=""){
-								var day = info2[index].normal1200.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（12:00~14:00）";
+                                if (info2[index].normal1200.length > 1){
+                                    var day = info2[index].normal1200.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（12:00~14:00）";
+                                } else {
+                                    var day = info2[index].normal1200;
+    								normal_str = day+"曜日（12:00~14:00）";
+                                }
 							} else if (info2[index].normal1230 !=""){
-								var day = info2[index].normal1230.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（12:30~14:30）";
+                                if (info2[index].normal1230.length > 1){
+                                    var day = info2[index].normal1230.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（12:30~14:30）";
+                                } else {
+                                    var day = info2[index].normal1230;
+    								normal_str = day+"曜日（12:30~14:30）";
+                                }
 							} else if (info2[index].normal1300 !=""){
-								var day = info2[index].normal1300.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（13:00~15:00）";
+                                if (info2[index].normal1300.length > 1){
+                                    var day = info2[index].normal1300.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（13:00~15:00）";
+                                } else {
+                                    var day = info2[index].normal1300;
+    								normal_str = day+"曜日（13:00~15:00）";
+                                }							
 							} else if (info2[index].normal1330 !=""){
-								var day = info2[index].normal1330.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（13:30~15:30）";
+                                if (info2[index].normal1330.length > 1){
+                                    var day = info2[index].normal1330.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（13:30~15:30）";
+                                } else {
+                                    var day = info2[index].normal1330;
+    								normal_str = day+"曜日（13:30~15:30）";
+                                }							
 							} else if (info2[index].normal1400 !=""){
-								var day = info2[index].normal1400.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（14:00~16:00）";
+                                if (info2[index].normal1400.length > 1){
+                                    var day = info2[index].normal1400.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（14:00~16:00）";
+                                } else {
+                                    var day = info2[index].normal1400;
+    								normal_str = day+"曜日（14:00~16:00）";
+                                }							
 							} else if (info2[index].normal1430 !=""){
-								var day = info2[index].normal1430.split('');
-								normal_str = day[0]+"曜日 "+day[1]+"曜日（14:30~16:30）";
+                                if (info2[index].normal1430.length > 1){
+                                    var day = info2[index].normal1430.split('');
+    								normal_str = day[0]+"曜日 "+day[1]+"曜日（14:30~16:30）";
+                                } else {
+                                    var day = info2[index].normal1430;
+    								normal_str = day+"曜日（14:30~16:30）";
+                                }
 							}
 							tooltip2[2].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
@@ -1316,12 +1555,10 @@
 	</script>
 	<!-- Sibulla tracking code start -->
     <script type="text/javascript">
-	/*
 	(function(){ var b = document.getElementsByTagName('script')[0],sib = document.createElement('script');
 	sib.type = 'text/javascript';sib.async = true;
 	sib.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'ma001.sibulla.com/dekatag/access?id=aGaskA6u';
 	b.parentNode.insertBefore(sib,b);}());
-	*/
 	</script>
 	<!-- /Sibulla tracking code end -->
 

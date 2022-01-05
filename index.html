@@ -89,10 +89,10 @@
 					if(d.properties.N03_001!=""){
 						//スマホなら地図なしのほうへ遷移する
 						if (navigator.userAgent.match(/iPhone|Android.+Mobile/)){
-							window.location.href="kumap25.html?ku="+d.properties.N03_004+"&file="+d.properties.N03_001+"&time="+new Date().getTime();
+							window.location.href="kumap25.html?ku="+d.properties.N03_004+"&file="+d.properties.N03_001;
 						} else {
 							//PC
-							window.location.href="kumap24a.html?ku="+d.properties.N03_004+"&file="+d.properties.N03_001+"&time="+new Date().getTime();
+							window.location.href="kumap24.html?ku="+d.properties.N03_004+"&file="+d.properties.N03_001;
 						}
 					}
 			});

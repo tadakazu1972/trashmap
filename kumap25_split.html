@@ -333,133 +333,53 @@
 			//普通ごみ　判定
 			var $normal = '';
 			if (element.普通ごみ_収集時間要問合せ != ""){
-				if (element.普通ごみ_収集時間要問合せ.length > 1){
-					var day = element.普通ごみ_収集時間要問合せ.split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（収集時間要問合せ）</li>';
-				} else {
-					var day = element.普通ごみ_収集時間要問合せ;
-					$normal = '<li>普通ごみ：'+day+'曜日（収集時間要問合せ）</li>';
-				}				
+				var day = element.普通ごみ_収集時間要問合せ.split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（収集時間要問合せ）"+'</li>';
 			} else if (element.普通ごみ_午前 !=""){
-				if (element.普通ごみ_午前.length > 1){
-					var day = element.普通ごみ_午前.split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（午前）</li>';
-				} else {
-					var day = element.普通ごみ_午前;
-					$normal = '<li>普通ごみ：'+day+'曜日（午前）</li>';
-				}
+				var day = element.普通ごみ_午前.split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（午前）"+'</li>';
 			} else if (element.普通ごみ_午後 !=""){
-				if (element.普通ごみ_午後.length > 1){
-					var day = element.普通ごみ_午後.split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（午後）</li>';
-				} else {
-					var day = element.普通ごみ_午後;
-					$normal = '<li>普通ごみ：'+day+'曜日（午後）</li>';
-				}
+				var day = element.普通ごみ_午後.split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（午後）"+'</li>';
 			} else if (element["普通ごみ_8:30~10:30"] != ""){
-				if (element["普通ごみ_8:30~10:30"].length > 1){
-					var day = element["普通ごみ_8:30~10:30"].split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（8:30~10:30）</li>';
-				} else {
-					var day = element["普通ごみ_8:30~10:30"];
-					$normal = '<li>普通ごみ：'+day+'曜日（8:30~10:30）</li>';
-				}
+				var day = element["普通ごみ_8:30~10:30"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（8:30~10:30）"+'</li>';
 			} else if (element["普通ごみ_9:00~11:00"] != ""){
-				if (element["普通ごみ_9:00~11:00"].length > 1){
-					var day = element["普通ごみ_9:00~11:00"].split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（9:00~11:00）</li>';
-				} else {
-					var day = element["普通ごみ_9:00~11:00"];
-					$normal = '<li>普通ごみ：'+day+'曜日（9:00~11:00）</li>';
-				}
+				var day = element["普通ごみ_9:00~11:00"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（9:00~11:00）"+'</li>';
 			} else if (element["普通ごみ_9:30~11:30"] != ""){
-				if (element["普通ごみ_9:30~11:30"].length > 1){
-					var day = element["普通ごみ_9:30~11:30"].split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（9:30~11:30）</li>';
-				} else {
-					var day = element["普通ごみ_9:30~11:30"];
-					$normal = '<li>普通ごみ：'+day+'曜日（9:30~11:30）</li>';
-				}
+				var day = element["普通ごみ_9:30~11:30"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（9:30~11:30）"+'</li>';
 			} else if (element["普通ごみ_10:00~12:00"] !=""){
-				if (element["普通ごみ_10:00~12:00"].length > 1){
-					var day = element["普通ごみ_10:00~12:00"].split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（10:00~12:00）</li>';
-				} else {
-					var day = element["普通ごみ_10:00~12:00"];
-					$normal = '<li>普通ごみ：'+day+'曜日（10:00~12:00）</li>'
-				}				
+				var day = element["普通ごみ_10:00~12:00"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（10:00~12:00）"+'</li>';
 			} else if (element["普通ごみ_10:30~12:30"] !=""){
-				if (element["普通ごみ_10:30~12:30"].length > 1){
-					var day = element["普通ごみ_10:30~12:30"].split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（10:30~12:30）</li>';
-				} else {
-					var day = element["普通ごみ_10:30~12:30"];
-					$normal = '<li>普通ごみ：'+day+'曜日（10:30~12:30）</li>';
-				}
+				var day = element["普通ごみ_10:30~12:30"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（10:30~12:30）"+'</li>';
 			} else if (element["普通ごみ_11:00~13:00"] !=""){
-				if (element["普通ごみ_11:00~13:00"].length > 1){
-					var day = element["普通ごみ_11:00~13:00"].split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（11:00~13:00）</li>';
-				} else {
-					var day = element["普通ごみ_11:00~13:00"];
-					$normal = '<li>普通ごみ：'+day+'曜日（11:00~13:00）</li>';
-				}				
+				var day = element["普通ごみ_11:00~13:00"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（11:00~13:00）"+'</li>';
 			} else if (element["普通ごみ_11:30~13:30"] !=""){
-				if (element["普通ごみ_11:30~13:30"].length > 1){
-					var day = element["普通ごみ_11:30~13:30"].split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（11:30~13:30）</li>';
-				} else {
-					var day = element["普通ごみ_11:30~13:30"];
-					$normal = '<li>普通ごみ：'+day+'曜日（11:30~13:30）</li>';
-				}				
+				var day = element["普通ごみ_11:30~13:30"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（11:30~13:30）"+'</li>';
 			} else if (element["普通ごみ_12:00~14:00"] !=""){
-				if (element["普通ごみ_12:00~14:00"].length > 1){
-					var day = element["普通ごみ_12:00~14:00"].split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（12:00~14:00）</li>';
-				} else {
-					var day = element["普通ごみ_12:00~14:00"];
-					$normal = '<li>普通ごみ：'+day+'曜日（12:00~14:00）</li>';
-				}
+				var day = element["普通ごみ_12:00~14:00"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（12:00~14:00）"+'</li>';
 			} else if (element["普通ごみ_12:30~14:30"] !=""){
-				if (element["普通ごみ_12:30~14:30"].length > 1){
-					var day = element["普通ごみ_12:30~14:30"].split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（12:30~14:30）</li>';
-				} else {
-					var day = element["普通ごみ_12:30~14:30"];
-					$normal = '<li>普通ごみ：'+day+'曜日（12:30~14:30）</li>';
-				}
+				var day = element["普通ごみ_12:30~14:30"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（12:30~14:30）"+'</li>';
 			} else if (element["普通ごみ_13:00~15:00"] !=""){
-				if (element["普通ごみ_13:00~15:00"].length > 1){
-					var day = element["普通ごみ_13:00~15:00"].split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（13:00~15:00）</li>';
-				} else {
-					var day = element["普通ごみ_13:00~15:00"];
-					$normal = '<li>普通ごみ：'+day+'曜日（13:00~15:00）</li>';
-				}
+				var day = element["普通ごみ_13:00~15:00"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（13:00~15:00）"+'</li>';
 			} else if (element["普通ごみ_13:30~15:30"] !=""){
-				if (element["普通ごみ_13:30~15:30"].length > 1){
-					var day = element["普通ごみ_13:30~15:30"].split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（13:30~15:30）</li>';
-				} else {
-					var day = element["普通ごみ_13:30~15:30"];
-					$normal = '<li>普通ごみ：'+day+'曜日（13:30~15:30）</li>';
-				}
+				var day = element["普通ごみ_13:30~15:30"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（13:30~15:30）"+'</li>';
 			} else if (element["普通ごみ_14:00~16:00"] !=""){
-				if (element["普通ごみ_14:00~16:00"].length > 1){
-					var day = element["普通ごみ_14:00~16:00"].split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（14:00~16:00）</li>';
-				} else {
-					var day = element["普通ごみ_14:00~16:00"];
-					$normal = '<li>普通ごみ：'+day+'曜日（14:00~16:00）</li>';
-				}				
+				var day = element["普通ごみ_14:00~16:00"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（14:00~16:00）"+'</li>';
 			} else if (element["普通ごみ_14:30~16:30"] !=""){
-				if (element["普通ごみ_14:30~16:30"].length > 1){
-					var day = element["普通ごみ_14:30~16:30"].split('');
-					$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+'曜日（14:30~16:30）</li>';
-				} else {
-					var day = element["普通ごみ_14:30~16:30"];
-					$normal = '<li>普通ごみ：'+day+'曜日（14:30~16:30）</li>';
-				}
+				var day = element["普通ごみ_14:30~16:30"].split('');
+				$normal = '<li>普通ごみ：'+day[0]+"曜日 "+day[1]+"曜日（14:30~16:30）"+'</li>';
 			}
 			//資源ごみ　判定
 			var $res = '';
@@ -604,10 +524,12 @@
 	</script>
 	<!-- Sibulla tracking code start -->
     <script type="text/javascript">
+	/*
 	(function(){ var b = document.getElementsByTagName('script')[0],sib = document.createElement('script');
 	sib.type = 'text/javascript';sib.async = true;
 	sib.src = ('https:' == document.location.protocol ? 'https://' : 'http://') + 'ma001.sibulla.com/dekatag/access?id=aGaskA6u';
 	b.parentNode.insertBefore(sib,b);}());
+	*/
 	</script>
 	<!-- /Sibulla tracking code end -->	
   </body>
