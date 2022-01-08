@@ -351,7 +351,7 @@
 			//雑ごみ
 			var $zatsu = "";
 			if (element.雑ごみ !=""){
-				$zatsu = '<li>雑ごみ：'+element.雑ごみ+'曜日</li>';
+				$zatsu = '<li>雑ごみ　：'+element.雑ごみ+'曜日</li>';
 			}
 			//普通ごみ　判定
 			var $normal = '';
@@ -859,6 +859,18 @@
 										.style("left", (centerX)+"px")
 										.style("top", "256px")
 										.text(banchi_and_gaiku);
+							//雑ごみは南港ポートタウンのみ。雑ごみデータがあると普通ごみは存在しないため、tooltip2[2]はどちらかを表示させる
+							//よって雑ごみが普通ごみのifをネストさせる
+							//雑ごみ
+							var zatsu_str = "";
+							if (info2[0].zatsu != ""){
+								zatsu_str = info2[0].zatsu + "曜日";
+								tooltip2[2].style("font-size", fontSize)
+										.style("left", (centerX)+"px")
+										.style("top", "288px")
+										.text("雑ごみ　：" + zatsu_str)
+							} else {
+							
 							//普通ごみ
 							var normal_str = "";
 							if (info2[0].normalQ != ""){
@@ -993,7 +1005,10 @@
 							tooltip2[2].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "288px")
-										.text("普通ごみ：" + normal_str)
+										.text("普通ごみ　：" + normal_str)
+
+							}
+
 							//資源ごみ
 							var res_str = "";
 							if (info2[0].resQ != ""){
@@ -1204,6 +1219,18 @@
 										.style("left", (centerX)+"px")
 										.style("top", "256px")
 										.text(banchi_and_gaiku);
+							//雑ごみは南港ポートタウンのみ。雑ごみデータがあると普通ごみは存在しないため、tooltip2[2]はどちらかを表示させる
+							//よって雑ごみが普通ごみのifをネストさせる
+							//雑ごみ
+							var zatsu_str = "";
+							if (info2[index].zatsu != ""){
+								zatsu_str = info2[index].zatsu + "曜日";
+								tooltip2[2].style("font-size", fontSize)
+										.style("left", (centerX)+"px")
+										.style("top", "288px")
+										.text("雑ごみ　：" + zatsu_str)
+							} else {
+
 							//普通ごみ
 							var normal_str = "";
                             if (info2[index].normalQ != ""){
@@ -1339,6 +1366,9 @@
 										.style("left", (centerX)+"px")
 										.style("top", "288px")
 										.text("普通ごみ：" + normal_str)
+							
+							}
+
 							//資源ごみ
 							var res_str = "";
 							if (info2[index].resQ != ""){
