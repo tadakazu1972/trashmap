@@ -1122,6 +1122,14 @@
 							} else if (info2[0].paper1430 !=""){
 								paper_str = info2[0].paper1430 + "曜日（14:30~16:30）";
 							}
+							//古紙衣類データが存在しない場合はラベル表記もない（コミュニティ回収と混同を防ぐため）
+							if (paper_data != ""){
+								tooltip2[5].style("font-size", fontSize)
+										.style("left", (centerX)+"px")
+										.style("top", "384px")
+										.text("古紙衣類：" + paper_str)
+							}
+				
 							//閉じるボタン
 							tooltip2[12].attr("class", "button")
 										.style("font-size", fontSize)
@@ -1368,7 +1376,6 @@
 										.text("普通ごみ：" + normal_str)
 							
 							}
-
 							//資源ごみ
 							var res_str = "";
 							if (info2[index].resQ != ""){
@@ -1482,10 +1489,14 @@
 							} else if (info2[index].paper1430 !=""){
 								paper_str = info2[index].paper1430 + "曜日（14:30~16:30）";
 							}
-							tooltip2[5].style("font-size", fontSize)
+							//古紙衣類データが存在しない場合はラベル表記もない（コミュニティ回収と混同を防ぐため）
+							if (paper_str !=""){
+								tooltip2[5].style("font-size", fontSize)
 										.style("left", (centerX)+"px")
 										.style("top", "384px")
 										.text("古紙衣類：" + paper_str)
+							}
+							
 							//閉じるボタン
 							tooltip2[12].attr("class", "button")
 										.style("font-size", fontSize)
